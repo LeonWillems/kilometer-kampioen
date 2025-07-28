@@ -1,3 +1,22 @@
+"""
+Got the distances from https://github.com/nanderv/trainkms. They are in the following format:
+[
+    {
+        "fromStation": "ehv",
+        "toStation": "ehs",
+        "distance": 26  # in hectometers
+    },
+    ...
+]
+
+...and we convert them to a dictionary with the following structure:
+
+{
+    "Ehv": {"Ehs": 2.6, ...},
+    ...
+}
+"""
+
 import json
 
 DISTANCES_FILE = "./data/station_distances.json"
