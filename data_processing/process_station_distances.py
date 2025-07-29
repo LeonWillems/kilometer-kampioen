@@ -41,3 +41,4 @@ for station_distance in data:
 
 with open(DISTANCES_PROCESSED_FILE, mode='w') as f:
     json.dump(station_distances_processed, f)
+    
