@@ -43,12 +43,24 @@ might exist. If latter, implement Dijkstra's algorithm instead.
 
 class BFS:
     def __init__(self, adjacency_list: dict[str, dict[str, float]]):
-        """Only need the grap G, represented as an adjacency list with distances."""
+        """Only need the grap G, represented as an adjacency list with distances.
+        
+        Args:
+        - adjacency_list (dict): A dictionary where keys are station names and 
+          values are dictionaries of neighboring stations with their distances.
+          Example: {"Bhv": {"Utm": 6.2, "Uto": 5.6, "Dld": 2.9}, ...}
+        """
         self.graph = adjacency_list
 
-    def _reconstruct_path(self, parent, goal):
+    def _reconstruct_path(self, parent: dict[str, str], goal: str):
         """Reconstruct the path from start to goal using parent links.
-        In other words, backwards tracing from goal to start."""
+        In other words, backwards tracing from goal to start.
+        
+        Args:
+        - parent (dict): A dictionary mapping each node to its parent in 
+          the BFS tree
+        - goal (str): The goal node to reconstruct the path to
+        """
         path = []
         total_distance = 0.0  # Keep track of distance travelled
         
@@ -60,7 +72,16 @@ class BFS:
         return path[::-1], total_distance  # Return reversed path & distance
 
     def search(self, start: str, goal: str):
-        """Perform BFS to find the shortest path from start to goal."""
+        """Perform BFS to find the shortest path from start to goal.
+        
+        Args:
+        - start (str): The starting station
+        - goal (str): The destination station
+        
+        Returns:
+        - tuple: A tuple containing the path as a list of station names and
+          the total distance as a float. If no path is found, returns (None, 0.0)
+        """
         queue = [start]
         visited = {start}
         parent = {start: None}

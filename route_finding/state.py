@@ -9,6 +9,7 @@ class State:
         self.route_indicator = RouteIndicator()
         self.current_time = None
         self.current_station = None
+        self.id_last_train = None
 
     def set_initial_state(self, current_time, current_station):
         self.current_time = current_time
@@ -22,6 +23,7 @@ class State:
         new_state.route_indicator = self.route_indicator.copy()
         new_state.current_time = self.current_time
         new_state.current_station = self.current_station
+        new_state.id_last_train = self.id_last_train 
         return new_state
     
     

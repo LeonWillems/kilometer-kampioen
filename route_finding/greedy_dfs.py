@@ -47,7 +47,7 @@ class GreedyDFS:
         transfer_options = transfer_options.sort_values(by='Score', ascending=False)
 
         # TODO: delete after testing
-        transfer_options = transfer_options.head(3)
+        transfer_options = transfer_options.head(2)
 
         # 4. Add 'Section_Driven' for current train type as column
         transfer_options['Section_Driven'] = transfer_options.apply(
@@ -71,7 +71,8 @@ class GreedyDFS:
             current_time=current_state.current_time,
             end_time=self.end_time,
             min_transfer_time=self.min_transfer_time,
-            max_transfer_time=self.max_transfer_time
+            max_transfer_time=self.max_transfer_time,
+            id_last_train=current_state.id_last_train
         )
 
         # 2. If no options are available, return
@@ -87,15 +88,16 @@ class GreedyDFS:
             new_state = current_state.copy()
             
             # b. Update new state with this ride
-            new_state.current_station = row['To']
             new_state.current_time = row['Arrival']
+            new_state.current_station = row['To']
+            new_state.id_last_train = row['ID']
             new_state.route_indicator.update_indicator(row)
 
             # Only add distance if the section has not been driven yet by train type
             if row['Section_Driven'] == 0:
                 new_state.total_distance += row['Distance']
 
-            columns_to_keep = ['Station', 'To', 'Departure', 'Arrival', 'Distance', 'Type']
+            columns_to_keep = ['ID', 'Station', 'To', 'Departure', 'Arrival', 'Distance', 'Type']
             new_state.route.append(row[columns_to_keep].tolist())
 
             # c. Update best state if better
@@ -110,8 +112,8 @@ class GreedyDFS:
 def main():
     greedy_dfs = GreedyDFS(
         end_time=pd.Timestamp('15:00'),
-        min_transfer_time=0,
-        max_transfer_time=20,
+        min_transfer_time=3,
+        max_transfer_time=15,
     )
 
     initial_state = State()
