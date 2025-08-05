@@ -16,3 +16,16 @@ Drive as many kilometers by train as possible within 24 hours - with the help of
 - Other stations: Vught, Boxtel, Best, Oisterwijk, Eindhoven Strijp-S
 - Timeframe: Saturday, 12:00 - 15:00
 - Actual train times for Saturday August 2nd, 2025
+
+## Algorithm
+- Implementation: Greedy Depth-First Search
+- Scoring function: distance/(waiting_time + travel_time)
+- Limited to top 2 options per station to reduce computational complexity
+- Simple section-driven tracking (only counting unique section-traintype combinations)
+
+## Known Limitations
+- Does not fully implement Kilometer Kampioen rules
+- Limited to a 3-hour timeframe
+- Only considers a small subset of stations
+- Greedy approach may miss better solutions
+- Simplified transfer rules

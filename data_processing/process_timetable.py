@@ -1,7 +1,8 @@
 import json
 import pandas as pd
 from copy import deepcopy
-from find_intercity_distance import BFS
+from data_processing.data_utils import read_timetable, save_timetable, add_duration_in_minutes
+from data_processing.find_intercity_distance import BFS
 
 DATA_FOLDER = "./data/"
 DISTANCES_PROCESSED_FILE = "./data/station_distances_processed.json"
@@ -10,49 +11,54 @@ DISTANCES_PROCESSED_FILE = "./data/station_distances_processed.json"
 class TimetableProcessor:
     def __init__(
             self,
-            timetable_name: str,
-            processed_timetable_name: str,
+            timetable_file: str,
     ) -> None:
         """Class to process/enhance the timetable with distances and average speeds.
-        Also, extend the distances dictionary with intercity connections."""
-        self.timetable_name = timetable_name
-        self.processed_timetable_name = processed_timetable_name
+        Also, extend the distances dictionary with intercity connections.
+        
+        Args:
+        - timetable_file (str): Name of the timetable CSV file to process
 
-        self.timetable_path = DATA_FOLDER + self.timetable_name
-        self.processed_timetable_path = DATA_FOLDER + self.processed_timetable_name
+        Attributes:
+        - timetable_path: Full path to the timetable file
+        - processed_timetable_path: Path where the processed timetable will be saved
+        - distances: Dictionary containing distances between stations
+        - timetable_df: DataFrame containing the timetable data
+        
+        Methods:
+        - _load_distances: Load distances from a JSON file
+        - add_duration: Calculate duration between departure and arrival
+        - enhance_distances_dict: Add distances for station pairs not in the distances dictionary
+        - add_distances: Add distances to the timetable DataFrame
+        - add_average_speed: Calculate average speed based on distance and duration
+        - process_timetable: Run all processing steps in order
+        - save_timetable: Save the processed timetable to a CSV file
+        - filter_and_sort: Filter and sort the timetable based on station, time, and transfer conditions
+        """
+        self.timetable_file = timetable_file
+
+        self.timetable_path = DATA_FOLDER + self.timetable_file
+        self.processed_timetable_path = self.timetable_path.replace(
+            ".csv", "_processed.csv"
+        )
 
         self.distances = self._load_distances()
-        self.timetable_df = self._read_timetable()
+        self.timetable_df = read_timetable(self.timetable_path)
 
     def _load_distances(self):
         """Load the distances dictionary from a JSON file. 
-        For structure, see the find_intercity_distance.py file"""
+        For the file's structure, see the find_intercity_distance.py file."""
         with open(DISTANCES_PROCESSED_FILE, mode='r') as f:
             return json.load(f)
 
-    def _read_timetable(self):
-        """Read the timetable CSV file into a pandas DataFrame. Interpret the 
-        'Departure' and 'Arrival' columns as datetime objects. (Format: '14:20')"""
-        timetable_df = pd.read_csv(
-            self.timetable_path,
-            sep=';',
-            header=0,
-            index_col=False,
-        )
-
-        for col in ['Departure', 'Arrival']:
-            timetable_df[col] = pd.to_datetime(
-                timetable_df[col], format='%H:%M'
-            )
-
-        return timetable_df
-
     def add_duration(self):
         """Calculate time taken between departure and arrival, in minutes."""
-        self.timetable_df['Duration'] = (
-            (self.timetable_df['Arrival'] - self.timetable_df['Departure']) \
-            .dt.total_seconds() / 60
-        ).astype(int)
+        self.timetable_df = add_duration_in_minutes(
+            self.timetable_df,
+            start_col='Departure',
+            end_col='Arrival',
+            duration_col='Duration',
+        )
 
     def enhance_distances_dict(self):
         """Add a distance for each pair of stations from the timetable,
@@ -101,12 +107,54 @@ class TimetableProcessor:
 
     def save_timetable(self):
         """Save the processed timetable to a CSV file."""
-        self.timetable_df.to_csv(
-            self.processed_timetable_path,
-            sep=';',
-            index=False,
-            float_format='%.1f'  # Format distances and speeds to one decimal place
+        save_timetable(
+            processed_timetable=self.timetable_df,
+            processed_timetable_path=self.processed_timetable_path
         )
+
+    def filter_and_sort(
+            self,
+            station: str, 
+            current_time: pd.Timestamp,
+            end_time: pd.Timestamp,
+            min_transfer_time: int,
+            max_transfer_time: int,
+            id_last_train: int
+        ) -> pd.DataFrame:
+        """Filter and sort the timetable based on station, time, and transfer conditions.
+
+        Args:
+        - station (str): The station to filter by
+        - current_time (pd.Timestamp): The current time to filter departures
+        - end_time (pd.Timestamp): The end time to filter arrivals
+        - min_transfer_time (int): Minimum transfer time in minutes
+        - max_transfer_time (int): Maximum transfer time in minutes
+        - id_last_train (int): ID of the last train to consider for transfers
+        """
+        df_copy = deepcopy(self.timetable_df)
+
+        # Filter on departures from our current station
+        df_station = df_copy[df_copy['Station'] == station]
+
+        # Calculate time window
+        min_time = current_time + pd.Timedelta(minutes=min_transfer_time)
+        max_time = current_time + pd.Timedelta(minutes=max_transfer_time)
+
+        # Either we are driving the same train with 0 minutes transer (or
+        # slightly more, if trains stops for a while), or we are looking for
+        # a new train between min_time and max_time, indicating margins in 
+        # which we look. Arrival time must be before we reach the end time.
+        df_time = df_station[
+            ((df_station['Departure'] >= min_time) \
+                | ((df_station['Departure'] >= current_time) \
+                    & (df_station['ID'] == id_last_train))) \
+            & (df_station['Departure'] <= max_time) \
+            & (df_station['Arrival'] <= end_time)
+        ]
+
+        # Sort by 'Departure'
+        df_time_sorted = df_time.sort_values(by='Departure')
+        return df_time_sorted
 
 
 def main():
@@ -114,8 +162,7 @@ def main():
     Run this script to generate the processed timetable file."""
 
     timetable_processor = TimetableProcessor(
-        timetable_name="mock_timetable.csv",
-        processed_timetable_name="mock_timetable_processed.csv"
+        timetable_file="mock_timetable.csv",
     )
 
     timetable_processor.process_timetable()
@@ -124,4 +171,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
+
