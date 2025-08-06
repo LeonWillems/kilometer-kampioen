@@ -22,26 +22,32 @@ The current data structure is more compact, and allows for quick lookups.
 Also, the big matrix (regarding tariffs) does not match one-to-one with the
 distances used by Kilometer Kampioen, so we cannot use it directly.
 """
-
+from project.settings import Settings
 import json
-
-DISTANCES_FILE = "./data/station_distances.json"
-DISTANCES_PROCESSED_FILE = "./data/station_distances_processed.json"
 
 
 class StationDistanceProcessor:
     def __init__(self):
-        """Class to process station distances."""
+        """Class to process station distances.
+        
+        Attributes:
+        - distances: Unprocessed distances
+        - processed_distances: Processed distances
+        """
         self.distances = self._load_distances()
         self.processed_distances = self._process_distances()
 
-    def _load_distances(self) -> list:
-        # JSON contains a list of structured dictionaries
-        with open(DISTANCES_FILE, mode='r') as f:
+    def _load_distances(self) -> list[dict]:
+        """Loads station distances. See explanation above for structure."""
+        with open(Settings.DISTANCES_PATH, mode='r') as f:
             return json.load(f)
 
-    def _process_distances(self):
-        """Convert the list of distances to a dictionary for quick lookups."""
+    def _process_distances(self) -> dict[str, dict[str, float]]:
+        """Convert the list of distances to a dictionary for quick lookups.
+        
+        Returns:
+        - dict: See explanation above for exact structure.
+        """
         station_distances_processed = {}
 
         for station_distance in self.distances:
@@ -57,12 +63,12 @@ class StationDistanceProcessor:
         return station_distances_processed
 
     def save_processed_distances(self):
-        # Save to JSON file again, but now in the processed format
-        with open(DISTANCES_PROCESSED_FILE, mode='w') as f:
+        """Save to JSON file again, but now in the processed format."""
+        with open(Settings.PROCESSED_DISTANCES_PATH, mode='w') as f:
             json.dump(self.processed_distances, f)
 
 
-def main():
+def perform_distances_preprocessing():
     """Main function to process and save the station distances.
     Run this script to generate the processed distances file."""
 
@@ -72,5 +78,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    perform_distances_preprocessing()
 
