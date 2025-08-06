@@ -1,4 +1,6 @@
 from route_finding.route_indicator import RouteIndicator
+from data_processing.timetable_utils import read_timetable
+import pandas as pd
 
 
 class State:
@@ -7,18 +9,18 @@ class State:
     Attributes:
     - visited_stations (set): A set of stations that have been visited
     - total_distance (float): The total distance of the route
-      (according to the Kilometer Kampioen rules)
+        (according to the Kilometer Kampioen rules)
     - route (list): A list of tuples representing the route
     - route_indicator (RouteIndicator): An instance of RouteIndicator
     - current_time (datetime): The current time in the route finding process,
-      usually the time of the last train arrival
+        usually the time of the last train arrival
     - current_station (str): The station where the route finding is currently,
-      usually the arrival station of the last train
+        usually the arrival station of the last train
     - id_last_train (str): The ID of the last train used in the route finding
 
     Methods:
     - set_initial_state(current_time, current_station): Sets the initial state
-      with the current time and starting station
+        with the current time and starting station
     - copy(): Returns a deep copy of the current state
     """
     def __init__(self):
@@ -30,15 +32,25 @@ class State:
         self.current_station = None
         self.id_last_train = None
 
-    def set_initial_state(self, current_time, current_station):
+    def set_initial_state(
+            self,
+            version: str,
+            current_time: pd.Timestamp,
+            current_station: pd.Timestamp,
+        ):
         """Sets the initial state with the current time and starting station.
 
         Args:
+        - version (str): Version of the timetable data (example: 'v0')
         - current_time (datetime): The current time in the route finding process
         - current_station (str): The station where the route finding starts
         """
+        timetable_df = read_timetable(version=version, processed=True)
+        stations = timetable_df['Station'].unique()
+        
         self.current_time = current_time
         self.current_station = current_station
+        self.route_indicator.init_indicator_table(stations)
 
     def copy(self):
         """Returns a deep copy of the current state.

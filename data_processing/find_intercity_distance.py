@@ -47,8 +47,8 @@ class BFS:
         
         Args:
         - adjacency_list (dict): A dictionary where keys are station names and 
-          values are dictionaries of neighboring stations with their distances.
-          Example: {"Bhv": {"Utm": 6.2, "Uto": 5.6, "Dld": 2.9}, ...}
+            values are dictionaries of neighboring stations with their distances.
+            Example: {"Bhv": {"Utm": 6.2, "Uto": 5.6, "Dld": 2.9}, ...}
         """
         self.graph = adjacency_list
 
@@ -58,7 +58,7 @@ class BFS:
         
         Args:
         - parent (dict): A dictionary mapping each node to its parent in 
-          the BFS tree
+            the BFS tree
         - goal (str): The goal node to reconstruct the path to
         """
         path = []
@@ -71,7 +71,7 @@ class BFS:
 
         return path[::-1], total_distance  # Return reversed path & distance
 
-    def search(self, start: str, goal: str):
+    def search(self, start: str, goal: str) -> tuple[list, float]:
         """Perform BFS to find the shortest path from start to goal.
         
         Args:
@@ -80,7 +80,7 @@ class BFS:
         
         Returns:
         - tuple: A tuple containing the path as a list of station names and
-          the total distance as a float. If no path is found, returns (None, 0.0)
+            the total distance as a float. If no path is found, returns ([], 0.0)
         """
         queue = [start]
         visited = {start}
@@ -100,5 +100,5 @@ class BFS:
                     parent[neighbor] = current
                     queue.append(neighbor)
 
-        return None, 0.0  # No path found
+        return [], 0.0  # No path found
 
