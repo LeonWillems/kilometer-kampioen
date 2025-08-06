@@ -1,10 +1,14 @@
 import pandas as pd
 from route_finding.state import State
+from project.settings import Settings
 from data_processing.timetable_utils import (
-    read_timetable, 
+    read_timetable,
+    save_timetable,
     add_duration_in_minutes, 
     filter_and_sort_timetable,
 )
+import signal
+from datetime import datetime
 
 
 class GreedyDFS:
@@ -17,8 +21,11 @@ class GreedyDFS:
     - max_transfer_time (int): Maximum transfer time in minutes
 
     Attributes:
+    - timetable_df (pd.DataFrame): DataFrame containing the timetable data
     - best_state (State): The best state found during the search
     - best_distance (float): The best distance found during the search
+    - results_header (list[str]): Header for the results DataFrame
+    - routes_path (Path): Path to save the best routes found
     """
     def __init__(
             self,
@@ -35,7 +42,40 @@ class GreedyDFS:
         self.timetable_df = read_timetable(version=version, processed=True)
         self.best_state = State()
         self.best_distance = 0
+        self.results_header = None
 
+        # Path to save best routes found
+        self.routes_path = \
+            Settings.VERSIONED_ROUTES_PATH[self.version]
+
+        # Setup interrupt handling
+        signal.signal(signal.SIGINT, self._handle_interrupt)
+
+    def _handle_interrupt(self, signum, frame):
+        """Handle interrupt signal (Ctrl+C) by saving current best state."""
+        print("Interrupt received. Saving best state found so far...")
+        self._save_best_route()
+        print("Route saved. Exiting...")
+        exit(0)
+
+    def _save_best_route(self):
+        """Save the current best route as a .csv to the routes folder."""
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        hms_driven = int(self.best_distance * 10)  # Convert to hectometers
+        file_path = self.routes_path / f"{timestamp}_{hms_driven}.csv"
+        
+        # Construct custom df with extra columns
+        best_route_df = pd.DataFrame(
+            data=self.best_state.route, 
+            columns=self.results_header
+        )
+
+        # Save to designated folder (/routes/version/...)
+        save_timetable(
+            timetable_df=best_route_df,
+            timetable_path=file_path
+        )
+        
     def _apply_score_function(
             self,
             transfer_options: pd.DataFrame,
@@ -69,8 +109,8 @@ class GreedyDFS:
 
         # 2. Calculate score distance/(waiting_time + travel_time)
         transfer_options['Score'] = (
-            transfer_options['Distance'] /
-            (transfer_options['Waiting_Time'] + transfer_options['Duration'])
+            transfer_options['Distance']
+            / (transfer_options['Waiting_Time'] + transfer_options['Duration'])
         )
 
         # 3. Sort by score (descending)
@@ -135,8 +175,11 @@ class GreedyDFS:
             if row['Section_Driven'] == 0:
                 new_state.total_distance += row['Distance']
 
-            columns_to_keep = ['ID', 'Station', 'To', 'Departure', 'Arrival', 'Distance', 'Type']
-            new_state.route.append(row[columns_to_keep].tolist())
+            # TODO Vsome_day: Find a cleaner way to get all columns headers, including added ones
+            if self.results_header is None:
+                self.results_header = row.index
+
+            new_state.route.append(row)
 
             # c. Update best state if better
             if new_state.total_distance > self.best_distance:
@@ -169,16 +212,12 @@ def main():
     )
 
     greedy_dfs.dfs(initial_state)
+    greedy_dfs._save_best_route()
 
     print()
     print("Best State Found:")
     print(f"Total Distance: {greedy_dfs.best_state.total_distance}")
-    print()
-    print(f"Indicator Table:\n{greedy_dfs.best_state.route_indicator.indicator_table}")
-    print()
-    print("Route:")
-    for row in greedy_dfs.best_state.route:
-        print(row)
+    print("Best route saved to .csv")
 
 
 if __name__ == "__main__":

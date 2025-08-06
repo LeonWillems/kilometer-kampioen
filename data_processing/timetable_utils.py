@@ -1,6 +1,7 @@
 import pandas as pd
 from copy import deepcopy
 from project.settings import Settings
+from pathlib import Path
 
 
 def read_timetable(version: str, processed: bool) -> pd.DataFrame:
@@ -39,15 +40,20 @@ def read_timetable(version: str, processed: bool) -> pd.DataFrame:
     return timetable_df
 
 
-def save_timetable(timetable_df: pd.DataFrame, version: str) -> None:
+def save_timetable(
+        timetable_df: pd.DataFrame,
+        version: str | None = None,
+        timetable_path: Path | None = None,
+    ) -> None:
     """Save the processed timetable to a CSV file.
     
     Args:
     - timetable_df (pd.DataFrame): DataFrame containing the processed timetable data
     - version (str): Version of the timetable data (example: 'v0')
     """
-    data_path = Settings.VERSIONED_DATA_PATHS[version]
-    timetable_path = data_path / Settings.TIMETABLE_FILE_PROCESSED
+    if version:
+        data_path = Settings.VERSIONED_DATA_PATHS[version]
+        timetable_path = data_path / Settings.TIMETABLE_FILE_PROCESSED
 
     timetable_df.to_csv(
         timetable_path,
