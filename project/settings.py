@@ -27,3 +27,8 @@ class Settings:
     # Other train settings
     TYPE_CONVERSION = {'Spr': 'S', 'Int': 'I'}
 
+    # Algorithm settings
+    ROUTES_PATH = ROOT_PATH / 'route_finding' / 'routes'
+    VERSIONED_ROUTES_PATH = {
+        'v0': ROUTES_PATH / 'v0',
+    }

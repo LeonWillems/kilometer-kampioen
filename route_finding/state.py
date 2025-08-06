@@ -7,10 +7,9 @@ class State:
     """Represents the state of the route finding process.
     
     Attributes:
-    - visited_stations (set): A set of stations that have been visited
     - total_distance (float): The total distance of the route
         (according to the Kilometer Kampioen rules)
-    - route (list): A list of tuples representing the route
+    - route (list[pd.Series]): A list of pd.Series objects representing the route
     - route_indicator (RouteIndicator): An instance of RouteIndicator
     - current_time (datetime): The current time in the route finding process,
         usually the time of the last train arrival
@@ -24,9 +23,8 @@ class State:
     - copy(): Returns a deep copy of the current state
     """
     def __init__(self):
-        self.visited_stations = set()
         self.total_distance = 0
-        self.route = []  # List of tuples
+        self.route = []
         self.route_indicator = RouteIndicator()
         self.current_time = None
         self.current_station = None
@@ -59,7 +57,6 @@ class State:
         - State: A new instance of State with the same attributes
         """
         new_state = State()
-        new_state.visited_stations = self.visited_stations.copy()
         new_state.total_distance = self.total_distance
         new_state.route = self.route.copy()
         new_state.route_indicator = self.route_indicator.copy()
