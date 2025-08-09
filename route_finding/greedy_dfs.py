@@ -1,5 +1,6 @@
 import pandas as pd
 from route_finding.state import State
+from route_finding.logger import setup_logger
 from project.settings import Settings
 from data_processing.timetable_utils import (
     read_timetable,
@@ -43,6 +44,7 @@ class GreedyDFS:
         self.best_state = State()
         self.best_distance = 0
         self.results_header = None
+        self.iterations = 0
 
         # Path to save best routes found
         self.routes_path = \
@@ -51,11 +53,19 @@ class GreedyDFS:
         # Setup interrupt handling
         signal.signal(signal.SIGINT, self._handle_interrupt)
 
+        # Setup logger
+        self.logger = setup_logger(version=self.version)
+        self.logger.info(
+            "Starting new route finding run with parameters:\n"
+            f"Version: {version} ({Settings.VERSION_NAMES['v0']})\n"
+            f"End time: {end_time}\n"
+            f"Transfer time range: {min_transfer_time}-{max_transfer_time} minutes"
+        )
+
     def _handle_interrupt(self, signum, frame):
         """Handle interrupt signal (Ctrl+C) by saving current best state."""
-        print("Interrupt received. Saving best state found so far...")
+        self.logger.info("Interrupt received")
         self._save_best_route()
-        print("Route saved. Exiting...")
         exit(0)
 
     def _save_best_route(self):
@@ -63,7 +73,7 @@ class GreedyDFS:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         hms_driven = int(self.best_distance * 10)  # Convert to hectometers
         file_path = self.routes_path / f"{timestamp}_{hms_driven}.csv"
-        
+
         # Construct custom df with extra columns
         best_route_df = pd.DataFrame(
             data=self.best_state.route, 
@@ -74,6 +84,15 @@ class GreedyDFS:
         save_timetable(
             timetable_df=best_route_df,
             timetable_path=file_path
+        )
+
+        # Log statistics
+        self.logger.info(
+            f"Saved best route to: {file_path}\n"
+            f"Number of transfers: {len(best_route_df)}\n"
+            f"Final distance: {self.best_distance:.1f}km\n"
+            f"Total iterations: {self.iterations}\n"
+            f"End station: {self.best_state.current_station}"
         )
         
     def _apply_score_function(
@@ -141,6 +160,16 @@ class GreedyDFS:
         Args:
         - current_state (State): The current state of the route finding process
         """
+        self.iterations += 1
+
+        # Log current state
+        self.logger.debug(
+            f"Iteration {self.iterations}\n"
+            f"Current station: {current_state.current_station}\n"
+            f"Time: {current_state.current_time}\n"
+            f"Distance: {current_state.total_distance:.1f}km"
+        )
+
         # 1. Get options from current position (station & time filtered)
         transfer_options = filter_and_sort_timetable(
             timetable_df=self.timetable_df,
@@ -149,15 +178,22 @@ class GreedyDFS:
             end_time=self.end_time,
             min_transfer_time=self.min_transfer_time,
             max_transfer_time=self.max_transfer_time,
-            id_last_train=current_state.id_last_train,
+            id_previous_train=current_state.id_previous_train,
         )
 
         # 2. If no options are available, return
         if transfer_options.empty:
+            self.logger.debug(f"No valid transfers found from {current_state.current_station}.")
             return
+        
+        self.logger.debug(f"Found {len(transfer_options)} transfer options.")
 
         # 3. Call score function to sort based on some priority
         transfer_options = self._apply_score_function(transfer_options, current_state)
+        self.logger.debug(
+            f"Top transfer option: {transfer_options.iloc[0]['Station']} -> "
+            f"{transfer_options.iloc[0]['To']} ({transfer_options.iloc[0]['Type']})"
+        )
 
         # 4. Go over options
         for _, row in transfer_options.iterrows():
@@ -167,7 +203,7 @@ class GreedyDFS:
             # b. Update new state with this ride
             new_state.current_time = row['Arrival']
             new_state.current_station = row['To']
-            new_state.id_last_train = row['ID']
+            new_state.id_previous_train = row['ID']
             new_state.route_indicator.update_indicator_table(row)
 
             # Only add distance if the section has not been driven yet by train type
@@ -183,6 +219,10 @@ class GreedyDFS:
 
             # c. Update best state if better
             if new_state.total_distance > self.best_distance:
+                self.logger.info(
+                    f"New best route found! Distance: {new_state.total_distance:.1f}km"
+                    f" (+{new_state.total_distance - self.best_distance:.1f}km)"
+                )
                 self.best_distance = new_state.total_distance
                 self.best_state = new_state.copy()
             
@@ -211,13 +251,10 @@ def main():
         current_station = 'Ht'
     )
 
+    greedy_dfs.logger.info(f"Starting route finding from station: {initial_state.current_station}")
+    greedy_dfs.logger.info(f"Current time: {initial_state.current_time}")
     greedy_dfs.dfs(initial_state)
     greedy_dfs._save_best_route()
-
-    print()
-    print("Best State Found:")
-    print(f"Total Distance: {greedy_dfs.best_state.total_distance}")
-    print("Best route saved to .csv")
 
 
 if __name__ == "__main__":

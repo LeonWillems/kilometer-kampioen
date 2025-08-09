@@ -95,7 +95,7 @@ def filter_and_sort_timetable(
         end_time: pd.Timestamp,
         min_transfer_time: int,
         max_transfer_time: int,
-        id_last_train: int,
+        id_previous_train: int,
     ) -> pd.DataFrame:
     """Filter and sort the timetable based on station, time, and transfer conditions.
 
@@ -106,7 +106,7 @@ def filter_and_sort_timetable(
     - end_time (pd.Timestamp): The end time to filter arrivals
     - min_transfer_time (int): Minimum transfer time in minutes
     - max_transfer_time (int): Maximum transfer time in minutes
-    - id_last_train (int): ID of the last train to consider for transfers
+    - id_previous_train (int): ID of the last train to consider for transfers
 
     Returns:
     - pd.DataFrame: filtered and sorted timetable
@@ -127,7 +127,7 @@ def filter_and_sort_timetable(
     df_time = df_station[
         ((df_station['Departure'] >= min_time) \
             | ((df_station['Departure'] >= current_time) \
-                & (df_station['ID'] == id_last_train))) \
+                & (df_station['ID'] == id_previous_train))) \
         & (df_station['Departure'] <= max_time) \
         & (df_station['Arrival'] <= end_time)
     ]
