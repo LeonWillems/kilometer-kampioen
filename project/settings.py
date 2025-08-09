@@ -32,3 +32,14 @@ class Settings:
     VERSIONED_ROUTES_PATH = {
         'v0': ROUTES_PATH / 'v0',
     }
+
+    # Logging settings
+    LOGS_PATH = ROOT_PATH / 'route_finding' / 'logs'
+    VERSIONED_LOGS_PATH = {
+        'v0': LOGS_PATH / 'v0',
+    }
+
+    # Version names
+    VERSION_NAMES = {
+        'v0': 'greedy_dfs',
+    }

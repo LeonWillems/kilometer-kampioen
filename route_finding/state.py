@@ -15,7 +15,7 @@ class State:
         usually the time of the last train arrival
     - current_station (str): The station where the route finding is currently,
         usually the arrival station of the last train
-    - id_last_train (str): The ID of the last train used in the route finding
+    - id_previous_train (str): The ID of the last train used in the route finding
 
     Methods:
     - set_initial_state(current_time, current_station): Sets the initial state
@@ -28,7 +28,7 @@ class State:
         self.route_indicator = RouteIndicator()
         self.current_time = None
         self.current_station = None
-        self.id_last_train = None
+        self.id_previous_train = None
 
     def set_initial_state(
             self,
@@ -62,7 +62,7 @@ class State:
         new_state.route_indicator = self.route_indicator.copy()
         new_state.current_time = self.current_time
         new_state.current_station = self.current_station
-        new_state.id_last_train = self.id_last_train 
+        new_state.id_previous_train = self.id_previous_train 
         return new_state
     
     
