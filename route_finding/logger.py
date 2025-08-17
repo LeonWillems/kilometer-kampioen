@@ -1,9 +1,9 @@
 import logging
-from datetime import datetime
+import pandas as pd
 from project.settings import Settings
 
 
-def setup_logger(version: str) -> logging.Logger:
+def setup_logger(version: str, timestamp: pd.Timestamp) -> logging.Logger:
     """Setup logger for the route finding algorithm.
     
     Args:
@@ -17,7 +17,6 @@ def setup_logger(version: str) -> logging.Logger:
     log_dir.mkdir(exist_ok=True)
     
     # Create log file with timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     log_file = log_dir / \
         f"{timestamp}_{Settings.VERSION_NAMES[version]}.log"
     
