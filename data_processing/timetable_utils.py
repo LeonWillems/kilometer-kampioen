@@ -1,10 +1,15 @@
-import pandas as pd
 from copy import deepcopy
-from project.settings import Settings
 from pathlib import Path
+import pandas as pd
+from ..project.settings import Settings
 
 
-def read_timetable(version: str, processed: bool) -> pd.DataFrame:
+def read_timetable(
+        version: str,
+        processed: bool = False,
+        timetable_path: Path = None,
+        extra_timestamp_cols: list[str] = [],
+    ) -> pd.DataFrame:
     """Read the timetable CSV file into a pandas DataFrame. Interpret the 
     'Departure' and 'Arrival' columns as datetime objects. (Format: '14:20')
     
@@ -12,15 +17,18 @@ def read_timetable(version: str, processed: bool) -> pd.DataFrame:
     - version (str): Version of the timetable data (example: 'v0')
     - processed (bool): True if processed timetable required,
         False if unprocessed
+    - timetable_path (Path, optional): Path to timetable file location
+    - extra_timestamp_cols (list[str]): Extra columns that contain datetimes
 
     Returns:
     - pd.DataFrame: DataFrame containing the timetable data
     """
-    data_path = Settings.VERSIONED_DATA_PATHS[version]
-    if processed:
-        timetable_path = data_path / Settings.TIMETABLE_FILE_PROCESSED
-    else:
-        timetable_path = data_path / Settings.TIMETABLE_FILE
+    if timetable_path is None:
+        data_path = Settings.VERSIONED_DATA_PATHS[version]
+        if processed:
+            timetable_path = data_path / Settings.TIMETABLE_FILE_PROCESSED
+        else:
+            timetable_path = data_path / Settings.TIMETABLE_FILE
 
     timetable_df = pd.read_csv(
         timetable_path,
@@ -29,7 +37,8 @@ def read_timetable(version: str, processed: bool) -> pd.DataFrame:
         index_col=False,
     )
 
-    for col in ['Departure', 'Arrival']:
+    timestamp_cols = ['Departure', 'Arrival'] + extra_timestamp_cols
+    for col in timestamp_cols:
         # Formatting is not needed, as Pandas will accurately
         # infer the format for our use case (tested)
         # TODO Vnext: sanity check on format for data from NS

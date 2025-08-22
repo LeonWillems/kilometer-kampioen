@@ -1,6 +1,7 @@
-from route_finding.route_indicator import RouteIndicator
-from data_processing.timetable_utils import read_timetable
+from logging import Logger
 import pandas as pd
+from .route_indicator import RouteIndicator
+from ..data_processing.timetable_utils import read_timetable
 
 
 class State:
@@ -16,6 +17,7 @@ class State:
     - current_station (str): The station where the route finding is currently,
         usually the arrival station of the last train
     - id_previous_train (str): The ID of the last train used in the route finding
+    - logger (Logger): Logger instance for logging information
 
     Methods:
     - set_initial_state(current_time, current_station): Sets the initial state
@@ -29,12 +31,14 @@ class State:
         self.current_time = None
         self.current_station = None
         self.id_previous_train = None
+        self.logger = None
 
     def set_initial_state(
             self,
             version: str,
             current_time: pd.Timestamp,
             current_station: pd.Timestamp,
+            logger: Logger,
         ):
         """Sets the initial state with the current time and starting station.
 
@@ -42,6 +46,7 @@ class State:
         - version (str): Version of the timetable data (example: 'v0')
         - current_time (datetime): The current time in the route finding process
         - current_station (str): The station where the route finding starts
+        - logger (Logger): Logger instance for logging information
         """
         timetable_df = read_timetable(version=version, processed=True)
         stations = timetable_df['Station'].unique()
@@ -49,6 +54,13 @@ class State:
         self.current_time = current_time
         self.current_station = current_station
         self.route_indicator.init_indicator_table(stations)
+        self.logger = logger
+
+        self.logger.info(
+            "Starting new route finding run with parameters:\n"
+            f"Current station: {self.current_station}\n"
+            f"Current time: {self.current_time}\n"
+        )
 
     def copy(self):
         """Returns a deep copy of the current state.

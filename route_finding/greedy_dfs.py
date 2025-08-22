@@ -1,16 +1,16 @@
+import signal
 import pandas as pd
-from route_finding.state import State
-from route_finding.logger import setup_logger
-from project.settings import Settings
-from data_processing.timetable_utils import (
+from datetime import datetime
+
+from .state import State
+from .logger import setup_logger
+from ..project.settings import Settings
+from ..data_processing.timetable_utils import (
     read_timetable,
     save_timetable,
     add_duration_in_minutes, 
     filter_and_sort_timetable,
 )
-import signal
-from datetime import datetime
-
 
 class GreedyDFS:
     """Greedy Depth-First Search for route finding.
@@ -46,6 +46,8 @@ class GreedyDFS:
         self.results_header = None
         self.iterations = 0
 
+        self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
         # Path to save best routes found
         self.routes_path = \
             Settings.VERSIONED_ROUTES_PATH[self.version]
@@ -54,7 +56,7 @@ class GreedyDFS:
         signal.signal(signal.SIGINT, self._handle_interrupt)
 
         # Setup logger
-        self.logger = setup_logger(version=self.version)
+        self.logger = setup_logger(version=self.version, timestamp=self.timestamp)
         self.logger.info(
             "Starting new route finding run with parameters:\n"
             f"Version: {version} ({Settings.VERSION_NAMES['v0']})\n"
@@ -70,9 +72,8 @@ class GreedyDFS:
 
     def _save_best_route(self):
         """Save the current best route as a .csv to the routes folder."""
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         hms_driven = int(self.best_distance * 10)  # Convert to hectometers
-        file_path = self.routes_path / f"{timestamp}_{hms_driven}.csv"
+        file_path = self.routes_path / f"{self.timestamp}_{hms_driven}.csv"
 
         # Construct custom df with extra columns
         best_route_df = pd.DataFrame(
@@ -247,12 +248,11 @@ def main():
     initial_state = State()
     initial_state.set_initial_state(
         version=version,
-        current_time = pd.Timestamp('12:00'),
-        current_station = 'Ht'
+        current_time=pd.Timestamp('12:00'),
+        current_station='Ht',
+        logger=greedy_dfs.logger
     )
 
-    greedy_dfs.logger.info(f"Starting route finding from station: {initial_state.current_station}")
-    greedy_dfs.logger.info(f"Current time: {initial_state.current_time}")
     greedy_dfs.dfs(initial_state)
     greedy_dfs._save_best_route()
 
