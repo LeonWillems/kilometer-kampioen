@@ -1,10 +1,10 @@
-import unittest
+import re
 import os
+import unittest
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
-from project.settings import Settings
-import re
+from ..project.settings import Settings
 
 
 class TestRouteCompliance(unittest.TestCase):

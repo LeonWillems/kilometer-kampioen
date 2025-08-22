@@ -1,16 +1,16 @@
+import signal
 import pandas as pd
-from route_finding.state import State
-from route_finding.logger import setup_logger
-from project.settings import Settings
-from data_processing.timetable_utils import (
+from datetime import datetime
+
+from .state import State
+from .logger import setup_logger
+from ..project.settings import Settings
+from ..data_processing.timetable_utils import (
     read_timetable,
     save_timetable,
     add_duration_in_minutes, 
     filter_and_sort_timetable,
 )
-import signal
-from datetime import datetime
-
 
 class GreedyDFS:
     """Greedy Depth-First Search for route finding.

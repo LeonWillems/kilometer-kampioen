@@ -1,8 +1,8 @@
 import json
 from copy import deepcopy
-from data_processing.timetable_utils import read_timetable, save_timetable, add_duration_in_minutes
-from data_processing.find_intercity_distance import BFS
-from project.settings import Settings
+from .find_intercity_distance import BFS
+from .timetable_utils import read_timetable, save_timetable, add_duration_in_minutes
+from ..project.settings import Settings
 
 
 class TimetableProcessor:

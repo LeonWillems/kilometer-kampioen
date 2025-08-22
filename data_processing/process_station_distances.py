@@ -1,3 +1,6 @@
+import json
+from ..project.settings import Settings
+
 """
 Got the distances from https://github.com/nanderv/trainkms. They are in the following format:
 [
@@ -22,8 +25,6 @@ The current data structure is more compact, and allows for quick lookups.
 Also, the big matrix (regarding tariffs) does not match one-to-one with the
 distances used by Kilometer Kampioen, so we cannot use it directly.
 """
-from project.settings import Settings
-import json
 
 
 class StationDistanceProcessor:

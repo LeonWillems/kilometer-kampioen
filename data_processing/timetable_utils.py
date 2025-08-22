@@ -1,7 +1,7 @@
-import pandas as pd
 from copy import deepcopy
-from project.settings import Settings
 from pathlib import Path
+import pandas as pd
+from ..project.settings import Settings
 
 
 def read_timetable(version: str, processed: bool) -> pd.DataFrame:

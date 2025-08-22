@@ -1,7 +1,7 @@
-from route_finding.route_indicator import RouteIndicator
-from data_processing.timetable_utils import read_timetable
-import pandas as pd
 from logging import Logger
+import pandas as pd
+from .route_indicator import RouteIndicator
+from ..data_processing.timetable_utils import read_timetable
 
 
 class State:

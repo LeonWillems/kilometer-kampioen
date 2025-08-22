@@ -1,5 +1,5 @@
 import pandas as pd
-from project.settings import Settings
+from ..project.settings import Settings
 
 
 class RouteIndicator:
