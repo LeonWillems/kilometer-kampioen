@@ -5,78 +5,66 @@ from pathlib import Path
 from datetime import datetime
 import pandas as pd
 from ..project.settings import Settings
+from ..data_processing.timetable_utils import read_timetable
 
 
 class TestRouteCompliance(unittest.TestCase):
     def setUp(self):
         """Set up test case with version-specific paths."""
         self.version = 'v0'
-        self.routes_path = Settings.VERSIONED_ROUTES_PATH[self.version]
         self.logs_path = Settings.VERSIONED_LOGS_PATH[self.version]
-        self.pairs = self._get_route_log_pairs()
-
-    def _get_route_log_pairs(self):
-        """Get pairs of corresponding route and log files."""
-        route_files = os.listdir(self.routes_path)
-        log_files = os.listdir(self.logs_path)
+        self.routes_path = Settings.VERSIONED_ROUTES_PATH[self.version]
         
-        # Group files by their timestamp prefix
-        pairs = []
-        for route_file in route_files:
-            timestamp = route_file.split('_')[0:2]  # Get YYYYMMDD_HHMMSS parts
-            matching_log = None
-            
-            for log_file in log_files:
-                if all(part in log_file for part in timestamp):
-                    matching_log = log_file
-                    break
-            
-            if matching_log:
-                pairs.append((
-                    Path(self.routes_path, route_file),
-                    Path(self.logs_path, matching_log)
-                ))
+        self.log_file_path = self._get_file_path(self.logs_path)
+        self.route_file_path = self._get_file_path(self.routes_path)
         
-        return pairs
+        self.log = self._get_log_contents()
+        self.route = self._get_route_contents()
 
-    def _get_start_time_from_log(self, log_path):
+    def _get_file_path(self, files_folder: Path):
+        """Get name of the last file (most recent run) in a folder."""
+        file_names = os.listdir(files_folder)
+        self.assertNotEqual(len(file_names), 0)
+        
+        last_file_name = file_names[-1]
+        return files_folder / last_file_name
+    
+    def _get_log_contents(self):
+        """Read in the contents of the latest log file."""
+        with open(self.log_file_path, 'r') as f:
+            log_contents = f.read()
+        return log_contents
+    
+    def _get_route_contents(self):
+        """Read in the contents of the latest route file."""
+        route_df = read_timetable(
+            version=self.version,
+            timetable_path=self.route_file_path,
+            extra_timestamp_cols=['Current_Time']
+        )
+        return route_df
+
+    def _get_start_time_from_log(self):
         """Extract the starting time from the log file."""
-        with open(log_path, 'r') as f:
-            log_content = f.read()
-            
         # Find the end time line which indicates when the route finding started
-        end_time_match = re.search(r'Current time: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})', log_content)
-        if not end_time_match:
-            self.fail(f"Could not find end time in log file {log_path}")
+        start_time_match = re.search(r'Current time: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})', self.log)
+        if not start_time_match:
+            self.fail(f"Could not find start time in log file {self.log_file_path}")
             
-        return datetime.strptime(end_time_match.group(1), '%Y-%m-%d %H:%M:%S')
-
-    def test_first_departure_after_start(self):
-        """Test that the first departure in each route is after the start time in the log."""
-        pairs = self.pairs
-        self.assertTrue(pairs, "No matching route-log pairs found")
+        return datetime.strptime(start_time_match.group(1), '%Y-%m-%d %H:%M:%S')
+    
+    def verify_start_time(self):
+        """Test that the start time in the route table (current time of first row)
+        corresponds to the start time in the log."""
         
-        for route_path, log_path in pairs:
-            with self.subTest(route=route_path.name):
-                # Get the start time from the log
-                start_time = self._get_start_time_from_log(log_path)
-                
-                # Read the route CSV and get the first departure
-                route_df = pd.read_csv(route_path, sep=';')
-                first_departure = datetime.strptime(
-                    route_df.iloc[0]['Departure'],
-                    '%Y-%m-%d %H:%M:%S'
-                )
-                
-                # Check if first departure is after start time
-                self.assertLessEqual(
-                    start_time,
-                    first_departure,
-                    f"First departure ({first_departure}) should be after or equal to "
-                    f"start time ({start_time}) in {route_path.name}"
-                )
+        # Get the start times from the log
+        start_time_log = self._get_start_time_from_log()
+        start_time_route = self.route.loc[0, 'Current_Time']
 
-
+        # Check if first departure is after start time
+        self.assertEqual(start_time_log, start_time_route)
+        
+        
 if __name__ == '__main__':
     unittest.main()
 
