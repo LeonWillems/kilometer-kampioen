@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
-from ..project.settings import Settings
+from ..settings import Settings
 from ..data_processing.timetable_utils import read_timetable
 
 

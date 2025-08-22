@@ -1,6 +1,6 @@
 import logging
 import pandas as pd
-from ..project.settings import Settings
+from ..settings import Settings
 
 
 def setup_logger(version: str, timestamp: pd.Timestamp) -> logging.Logger:

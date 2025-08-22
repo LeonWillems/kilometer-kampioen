@@ -1,6 +1,7 @@
 from logging import Logger
 import pandas as pd
 from .route_indicator import RouteIndicator
+from ..settings import Settings
 from ..data_processing.timetable_utils import read_timetable
 
 
@@ -36,7 +37,7 @@ class State:
     def set_initial_state(
             self,
             version: str,
-            current_time: pd.Timestamp,
+            current_time: str,
             current_station: pd.Timestamp,
             logger: Logger,
         ):
@@ -44,14 +45,14 @@ class State:
 
         Args:
         - version (str): Version of the timetable data (example: 'v0')
-        - current_time (datetime): The current time in the route finding process
+        - current_time (str): The current time in the route finding process
         - current_station (str): The station where the route finding starts
         - logger (Logger): Logger instance for logging information
         """
         timetable_df = read_timetable(version=version, processed=True)
         stations = timetable_df['Station'].unique()
         
-        self.current_time = current_time
+        self.current_time = pd.Timestamp(f"{Settings.DAY_OF_RUN} {current_time}")
         self.current_station = current_station
         self.route_indicator.init_indicator_table(stations)
         self.logger = logger

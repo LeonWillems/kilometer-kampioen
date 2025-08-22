@@ -2,7 +2,7 @@ import json
 from copy import deepcopy
 from .find_intercity_distance import BFS
 from .timetable_utils import read_timetable, save_timetable, add_duration_in_minutes
-from ..project.settings import Settings
+from ..settings import Settings
 
 
 class TimetableProcessor:

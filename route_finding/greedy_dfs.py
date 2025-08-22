@@ -4,7 +4,7 @@ from datetime import datetime
 
 from .state import State
 from .logger import setup_logger
-from ..project.settings import Settings
+from ..settings import Settings
 from ..data_processing.timetable_utils import (
     read_timetable,
     save_timetable,
@@ -17,7 +17,8 @@ class GreedyDFS:
 
     Args:
     - version (str): Version of the timetable data (example: 'v0')
-    - end_time (pd.Timestamp): The time by which the route must be completed
+    - end_time (str): The time by which the route must be completed
+      - attr end_time (pd.Timestmap): Complete datatime
     - min_transfer_time (int): Minimum transfer time in minutes
     - max_transfer_time (int): Maximum transfer time in minutes
 
@@ -31,12 +32,12 @@ class GreedyDFS:
     def __init__(
             self,
             version: str,
-            end_time: pd.Timestamp,
+            end_time: str,
             min_transfer_time: int,
             max_transfer_time: int,
         ):
         self.version = version
-        self.end_time = end_time
+        self.end_time = pd.Timestamp(f"{Settings.DAY_OF_RUN} {end_time}")
         self.min_transfer_time = min_transfer_time
         self.max_transfer_time = max_transfer_time
 
@@ -240,7 +241,7 @@ def main():
 
     greedy_dfs = GreedyDFS(
         version=version,
-        end_time=pd.Timestamp('15:00'),
+        end_time="15:00",
         min_transfer_time=3,
         max_transfer_time=15,
     )
@@ -248,7 +249,7 @@ def main():
     initial_state = State()
     initial_state.set_initial_state(
         version=version,
-        current_time=pd.Timestamp('12:00'),
+        current_time="12:00",
         current_station='Ht',
         logger=greedy_dfs.logger
     )
