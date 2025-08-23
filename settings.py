@@ -4,7 +4,7 @@ from pathlib import Path
 class Settings:
     # Datetime settings
     DAY_OF_RUN = "2025-08-02"  # Day where the train times come from
-    DATETIME_FORMAT = "ISO8601"
+    DATETIME_FORMAT = "ISO8601"  # YYYY-MM-DDThh:mm:ss (or similar!)
     
     # Base path
     ROOT_PATH = Path(__file__).resolve().parent
@@ -32,19 +32,28 @@ class Settings:
     # Other train settings
     TYPE_CONVERSION = {'Spr': 'S', 'Int': 'I'}
 
-    # Algorithm settings
-    ROUTES_PATH = ROOT_PATH / 'route_finding' / 'routes'
+    # Version names
+    VERSION_NAMES = {
+        'v0': 'greedy_dfs',
+    }
+    
+    # Runs path
+    RUNS_PATH = ROOT_PATH / 'runs'
+    
+    # Route tables
+    ROUTES_PATH = RUNS_PATH / 'routes'
     VERSIONED_ROUTES_PATH = {
         'v0': ROUTES_PATH / 'v0',
     }
 
-    # Logging settings
-    LOGS_PATH = ROOT_PATH / 'route_finding' / 'logs'
+    # Logging files
+    LOGS_PATH = RUNS_PATH / 'logs'
     VERSIONED_LOGS_PATH = {
         'v0': LOGS_PATH / 'v0',
     }
-
-    # Version names
-    VERSION_NAMES = {
-        'v0': 'greedy_dfs',
+    
+    # Parameter settings
+    PARAMETERS_PATH = RUNS_PATH / 'parameters'
+    VERSIONED_PARAMETERS_PATH = {
+        'v0': PARAMETERS_PATH / 'v0',
     }

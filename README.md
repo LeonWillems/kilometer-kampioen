@@ -3,31 +3,37 @@ Drive as many kilometers by train as possible within 24 hours - with the help of
 
 ## Setup and Usage
 1. Install requirements.txt
-2. First, process the raw timetable data by running:
+2. Navigate one level above kilometer-kampioen (`cd ..`)
+3. First, process the raw timetable data by running:
    ```bash
    python -m kilometer-kampioen.data_processing.process_timetable
    ```
    This will create the necessary processed timetable files in the `data` directory.
 
-3. Run the route finding algorithm:
+4. Fill in some parameters in the file below and run the route finding algorithm:
    ```bash
-   python -m kilometer-kampioen.route_finding.greedy_dfs
+   python -m kilometer-kampioen.run
    ```
 
-   The main parameters in `greedy_dfs.py` that you can modify are:
+5. After running, can do some unit tests on the final route, to check if it's compliant with all the rules (work in progress). Will automatically grab the last route for given version.
+   ```bash
+   python -m kilometer-kampioen.tests.route_compliance
+   ```
+
+   The main parameters in `run.py` that you can modify are:
    - `version`: Version of the timetable data (default: 'v0')
+   - `start_station`: Starting station (default: 'Ht' - 's-Hertogenbosch)
+   - `start_time`: Starting time (default: 12:00)
    - `end_time`: Time by which the route must be completed (default: 15:00)
    - `min_transfer_time`: Minimum transfer time in minutes (default: 3)
    - `max_transfer_time`: Maximum transfer time in minutes (default: 15)
-   - `current_time`: Starting time (default: 12:00)
-   - `current_station`: Starting station (default: 'Ht' - 's-Hertogenbosch)
 
-   These parameters can be modified in the `main()` function of `greedy_dfs.py`.
 
 ### Output
 The algorithm will create:
-- Log files in `route_finding/logs/v0/` with detailed information about the search process
-- Route files in `route_finding/routes/v0/` containing the best routes found, named with timestamp and distance in hectometers
+- Log files in `runs/logs/v0/` with detailed information about the search process
+- Parameters files in `runs/parameters/v0/` containing parameters filled in by user
+- Route files in `runs/routes/v0/` containing the best routes found, named with timestamp and distance in hectometers
 
 # Sources
 - Find all rules here: https://www.kilometerkampioen.nl/
