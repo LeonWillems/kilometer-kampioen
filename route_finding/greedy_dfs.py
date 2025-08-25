@@ -157,7 +157,6 @@ class GreedyDFS:
 
     def dfs(self, current_state: State):
         """Perform a greedy depth-first search to find the best route.
-        TODO V0.2: Add pseudocode and an explanation of the algorithm.
 
         Args:
         - current_state (State): The current state of the route finding process
@@ -191,14 +190,14 @@ class GreedyDFS:
         self.logger.debug(f"Found {len(transfer_options)} transfer options.")
 
         # 3. Call score function to sort based on some priority
-        transfer_options = self._apply_score_function(transfer_options, current_state)
+        top_transfers = self._apply_score_function(transfer_options, current_state)
         self.logger.debug(
-            f"Top transfer option: {transfer_options.iloc[0]['Station']} -> "
-            f"{transfer_options.iloc[0]['To']} ({transfer_options.iloc[0]['Type']})"
+            f"Top transfer option: {top_transfers.iloc[0]['Station']} -> "
+            f"{top_transfers.iloc[0]['To']} ({top_transfers.iloc[0]['Type']})"
         )
 
         # 4. Go over options
-        for _, row in transfer_options.iterrows():
+        for _, row in top_transfers.iterrows():
             # a. Create new state for this branch
             new_state = current_state.copy()
             
