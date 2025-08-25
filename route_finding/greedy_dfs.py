@@ -4,7 +4,7 @@ from datetime import datetime
 
 from .state import State
 from .logger import setup_logger
-from ..project.settings import Settings
+from ..settings import Settings
 from ..data_processing.timetable_utils import (
     read_timetable,
     save_timetable,
@@ -17,7 +17,8 @@ class GreedyDFS:
 
     Args:
     - version (str): Version of the timetable data (example: 'v0')
-    - end_time (pd.Timestamp): The time by which the route must be completed
+    - end_time (str): The time by which the route must be completed
+      - attr end_time (pd.Timestmap): Complete datatime
     - min_transfer_time (int): Minimum transfer time in minutes
     - max_transfer_time (int): Maximum transfer time in minutes
 
@@ -31,22 +32,22 @@ class GreedyDFS:
     def __init__(
             self,
             version: str,
-            end_time: pd.Timestamp,
+            end_time: str,
             min_transfer_time: int,
             max_transfer_time: int,
+            timestamp: datetime,
         ):
         self.version = version
-        self.end_time = end_time
+        self.end_time = pd.Timestamp(f"{Settings.DAY_OF_RUN} {end_time}")
         self.min_transfer_time = min_transfer_time
         self.max_transfer_time = max_transfer_time
+        self.timestamp = timestamp
 
         self.timetable_df = read_timetable(version=version, processed=True)
         self.best_state = State()
         self.best_distance = 0
         self.results_header = None
         self.iterations = 0
-
-        self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         # Path to save best routes found
         self.routes_path = \
@@ -156,7 +157,6 @@ class GreedyDFS:
 
     def dfs(self, current_state: State):
         """Perform a greedy depth-first search to find the best route.
-        TODO V0.2: Add pseudocode and an explanation of the algorithm.
 
         Args:
         - current_state (State): The current state of the route finding process
@@ -190,14 +190,14 @@ class GreedyDFS:
         self.logger.debug(f"Found {len(transfer_options)} transfer options.")
 
         # 3. Call score function to sort based on some priority
-        transfer_options = self._apply_score_function(transfer_options, current_state)
+        top_transfers = self._apply_score_function(transfer_options, current_state)
         self.logger.debug(
-            f"Top transfer option: {transfer_options.iloc[0]['Station']} -> "
-            f"{transfer_options.iloc[0]['To']} ({transfer_options.iloc[0]['Type']})"
+            f"Top transfer option: {top_transfers.iloc[0]['Station']} -> "
+            f"{top_transfers.iloc[0]['To']} ({top_transfers.iloc[0]['Type']})"
         )
 
         # 4. Go over options
-        for _, row in transfer_options.iterrows():
+        for _, row in top_transfers.iterrows():
             # a. Create new state for this branch
             new_state = current_state.copy()
             
@@ -231,32 +231,32 @@ class GreedyDFS:
             self.dfs(new_state)
     
 
-def main():
+def run_greedy_dfs(prms: dict):
     """Main function to run the GreedyDFS route finding algorithm.
     
-    TODO V0.1: Save final route to some file
+    Args:
+    - prms (dict): Parameter settings to run algo, example;
+        {'version': 'v0', 'start_station': 'Ht',
+         'start_time': '12:00', 'end_time': '15:00',
+         'min_transfer_time': 3, 'max_transfer_time': 15,
+         'timestamp': datetime)}
     """
-    version = 'v0'
-
     greedy_dfs = GreedyDFS(
-        version=version,
-        end_time=pd.Timestamp('15:00'),
-        min_transfer_time=3,
-        max_transfer_time=15,
+        version=prms['version'],
+        end_time=prms['end_time'],
+        min_transfer_time=prms['min_transfer_time'],
+        max_transfer_time=prms['max_transfer_time'],
+        timestamp=prms['timestamp'],
     )
 
     initial_state = State()
     initial_state.set_initial_state(
-        version=version,
-        current_time=pd.Timestamp('12:00'),
-        current_station='Ht',
-        logger=greedy_dfs.logger
+        version=prms['version'],
+        current_time=prms['start_time'],
+        current_station=prms['start_station'],
+        logger=greedy_dfs.logger,
     )
 
     greedy_dfs.dfs(initial_state)
     greedy_dfs._save_best_route()
-
-
-if __name__ == "__main__":
-    main()
-
+    

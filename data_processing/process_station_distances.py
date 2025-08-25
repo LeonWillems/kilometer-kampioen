@@ -1,5 +1,5 @@
 import json
-from ..project.settings import Settings
+from ..settings import Settings
 
 """
 Got the distances from https://github.com/nanderv/trainkms. They are in the following format:

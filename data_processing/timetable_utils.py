@@ -1,12 +1,12 @@
 from copy import deepcopy
 from pathlib import Path
 import pandas as pd
-from ..project.settings import Settings
+from ..settings import Settings
 
 
 def read_timetable(
         version: str,
-        processed: bool = False,
+        processed: bool = True,
         timetable_path: Path = None,
         extra_timestamp_cols: list[str] = [],
     ) -> pd.DataFrame:
@@ -38,12 +38,17 @@ def read_timetable(
     )
 
     timestamp_cols = ['Departure', 'Arrival'] + extra_timestamp_cols
+    
+    # Use some predefined date and add time from timetable
+    # TODO Vnext: sanity check on format for data from NS
     for col in timestamp_cols:
-        # Formatting is not needed, as Pandas will accurately
-        # infer the format for our use case (tested)
-        # TODO Vnext: sanity check on format for data from NS
+        if not processed:
+            timetable_df[col] = \
+                timetable_df[col].apply(lambda x: f"{Settings.DAY_OF_RUN} {x}")
+
         timetable_df[col] = pd.to_datetime(
-            timetable_df[col]
+            timetable_df[col],
+            format=Settings.DATETIME_FORMAT,
         )
 
     return timetable_df
