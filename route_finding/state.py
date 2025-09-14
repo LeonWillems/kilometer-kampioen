@@ -2,7 +2,7 @@ from logging import Logger
 import pandas as pd
 from .route_indicator import RouteIndicator
 from ..settings import Settings
-from ..data_processing.timetable_utils import read_timetable
+from ..data_processing.data_utils import read_timetable
 
 
 class State:
@@ -54,7 +54,7 @@ class State:
         
         self.current_time = pd.Timestamp(f"{Settings.DAY_OF_RUN} {current_time}")
         self.current_station = current_station
-        self.route_indicator.init_indicator_table(stations)
+        self.route_indicator.init_indicator_table(stations, version)
         self.logger = logger
 
         self.logger.info(

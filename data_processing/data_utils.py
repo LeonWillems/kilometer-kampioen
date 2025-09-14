@@ -1,7 +1,25 @@
+import json
 from copy import deepcopy
 from pathlib import Path
 import pandas as pd
 from ..settings import Settings
+
+
+def load_distances():
+    """Load the distances dictionary from a JSON file. 
+    For the file's structure, see the find_intercity_distance.py file."""
+    with open(Settings.PROCESSED_DISTANCES_PATH, mode='r') as f:
+        return json.load(f)
+    
+def load_intermediate_stations(version):
+    """Reads in a dictionary from the given json file that
+    includes all intermediate stations for any given intercity run."""
+    file_path = Settings.VERSIONED_DATA_PATHS[version]
+    file_name = "intermediate_stations"
+    full_path = (file_path / file_name).with_suffix('.json')
+    
+    with open(full_path, mode='r') as f:
+        return json.load(f)
 
 
 def read_timetable(

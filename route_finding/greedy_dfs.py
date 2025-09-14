@@ -5,7 +5,7 @@ from datetime import datetime
 from .state import State
 from .logger import setup_logger
 from ..settings import Settings
-from ..data_processing.timetable_utils import (
+from ..data_processing.data_utils import (
     read_timetable,
     save_timetable,
     add_duration_in_minutes, 
@@ -127,30 +127,29 @@ class GreedyDFS:
             end_col='Departure',
             duration_col='Waiting_Time'
         )
-
-        # 2. Calculate score distance/(waiting_time + travel_time)
-        transfer_options['Score'] = (
-            transfer_options['Distance']
-            / (transfer_options['Waiting_Time'] + transfer_options['Duration'])
-        )
-
-        # 3. Sort by score (descending)
-        transfer_options = transfer_options.sort_values(by='Score', ascending=False)
-
-        # 4. Add 'Section_Driven' for current train type as column
-        transfer_options['Section_Driven'] = transfer_options.apply(
-            lambda row: state.route_indicator.get_section_driven_by_type(
+        
+        # 2. Add 'Distance_Counted' as a number of how many kilometers may be
+        #    counted for the current sections. See 'information/rules.py'
+        transfer_options['Distance_Counted'] = transfer_options.apply(
+            lambda row: state.route_indicator.get_distance_counted(
                 from_station=row['Station'],
                 to_station=row['To'],
-                train_type=row['Type']
+                train_type=row['Type'],
+                distance=row['Distance'],
             ),
             axis=1
         )
 
-        # 5. Sort on 'Section_Driven' (ascending, 0 is good)
-        transfer_options = transfer_options.sort_values(by='Section_Driven', ascending=True)
+        # 3. Calculate score distance_counted/(waiting_time + travel_time)
+        transfer_options['Score'] = (
+            transfer_options['Distance_Counted']
+            / (transfer_options['Waiting_Time'] + transfer_options['Duration'])
+        )
 
-        # 6. Return the top 2 options. For now, we find that the code
+        # 4. Sort by score (descending), higher is better
+        transfer_options = transfer_options.sort_values(by='Score', ascending=False)
+
+        # 5. Return the top 2 options. For now, we find that the code
         # runs for way too long if we don't limit the number of options.
         # This is because we exhaustively search all options.
         return transfer_options.head(2)
@@ -206,11 +205,7 @@ class GreedyDFS:
             new_state.current_station = row['To']
             new_state.id_previous_train = row['ID']
             new_state.route_indicator.update_indicator_table(row)
-
-            # Only add distance if the section has not been driven yet by train type
-            # TODO Vsome_day: Enforce the actual Kilometer Kampioen rule, current one is shit
-            if row['Section_Driven'] == 0:
-                new_state.total_distance += row['Distance']
+            new_state.total_distance += row['Distance_Counted']
 
             # TODO Vsome_day: Find a cleaner way to get all columns headers, including added ones
             if self.results_header is None:
