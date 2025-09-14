@@ -1,0 +1,14 @@
+{
+    "Ht": {
+        "Tb": ["Ht", "Tb"],
+        "Ehv": ["Ht", "Vg", "Btl", "Bet", "Ehs", "Ehv"]
+    },
+    "Ehv": {
+        "Ht": ["Ehv", "Ehs", "Bet", "Btl", "Vg", "Ht"],
+        "Tb": ["Ehv", "Ehs", "Bet", "Btl", "Ot", "Tb"]
+    },
+    "Tb": {
+        "Ht": ["Tb", "Ht"],
+        "Ehv": ["Tb", "Ot", "Btl", "Bet", "Ehs", "Ehv"]
+    }
+}

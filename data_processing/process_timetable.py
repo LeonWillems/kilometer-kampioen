@@ -1,8 +1,10 @@
 import json
 from copy import deepcopy
 from .find_intercity_distance import BFS
-from .timetable_utils import read_timetable, save_timetable, add_duration_in_minutes
-from ..settings import Settings
+from .data_utils import (
+    load_distances, read_timetable,
+    save_timetable, add_duration_in_minutes
+)
 
 
 class TimetableProcessor:
@@ -18,7 +20,6 @@ class TimetableProcessor:
         - timetable_df: DataFrame containing the timetable data
         
         Methods:
-        - _load_distances: Load distances from a JSON file
         - add_duration: Calculate duration between departure and arrival
         - enhance_distances_dict: Add distances for station pairs not in the distances dictionary
         - add_distances: Add distances to the timetable DataFrame
@@ -29,17 +30,11 @@ class TimetableProcessor:
         """
         self.version = version
 
-        self.distances = self._load_distances()
+        self.distances = load_distances()
         self.timetable_df = read_timetable(
             version=self.version,
             processed=False,
         )
-
-    def _load_distances(self):
-        """Load the distances dictionary from a JSON file. 
-        For the file's structure, see the find_intercity_distance.py file."""
-        with open(Settings.PROCESSED_DISTANCES_PATH, mode='r') as f:
-            return json.load(f)
 
     def add_duration(self):
         """Calculate time taken between departure and arrival, in minutes."""
