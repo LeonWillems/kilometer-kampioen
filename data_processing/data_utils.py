@@ -11,6 +11,7 @@ def load_distances():
     with open(Settings.PROCESSED_DISTANCES_PATH, mode='r') as f:
         return json.load(f)
     
+    
 def load_intermediate_stations(version):
     """Reads in a dictionary from the given json file that
     includes all intermediate stations for any given intercity run."""
