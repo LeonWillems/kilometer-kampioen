@@ -50,7 +50,7 @@ class State:
         - logger (Logger): Logger instance for logging information
         """
         timetable_df = read_timetable(version=version, processed=True)
-        stations = timetable_df['Station'].unique()
+        stations = timetable_df.index.unique()
         
         self.current_time = pd.Timestamp(f"{Settings.DAY_OF_RUN} {current_time}")
         self.current_station = current_station

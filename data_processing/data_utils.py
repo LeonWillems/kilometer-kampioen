@@ -69,7 +69,9 @@ def read_timetable(
             timetable_df[col],
             format=Settings.DATETIME_FORMAT,
         )
-
+        
+    timetable_df.sort_values(by='Departure', inplace=True)
+    timetable_df.set_index('Station', inplace=True)
     return timetable_df
 
 
@@ -92,6 +94,7 @@ def save_timetable(
         timetable_path,
         sep=';',
         index=False,
+        index_label='Station',
         float_format='%.1f'  # Format distances and speeds to one decimal place
     )
 
@@ -121,7 +124,7 @@ def add_duration_in_minutes(
     return timetable_df
 
 
-def filter_and_sort_timetable(
+def filter_timetable(
         timetable_df: pd.DataFrame,
         station: str, 
         current_time: pd.Timestamp,
@@ -144,28 +147,24 @@ def filter_and_sort_timetable(
     Returns:
     - pd.DataFrame: filtered and sorted timetable
     """
-    df_copy = deepcopy(timetable_df)
-
-    # Filter on departures from our current station
-    df_station = df_copy[df_copy['Station'] == station]
-
     # Calculate time window
     min_time = current_time + pd.Timedelta(minutes=min_transfer_time)
     max_time = current_time + pd.Timedelta(minutes=max_transfer_time)
 
-    # Either we are driving the same train with 0 minutes transer (or
+    # First, filter on departures from our current station.
+    # Then, either we are driving the same train with 0 minutes transer (or
     # slightly more, if trains stops for a while), or we are looking for
     # a new train between min_time and max_time, indicating margins in 
     # which we look. Arrival time must be before we reach the end time.
-    df_time = df_station[
-        ((df_station['Departure'] >= min_time) \
-            | ((df_station['Departure'] >= current_time) \
-                & (df_station['ID'] == id_previous_train))) \
-        & (df_station['Departure'] <= max_time) \
-        & (df_station['Arrival'] <= end_time)
+    df_filtered = timetable_df[
+        (timetable_df.index == station) \
+        & ((timetable_df['Departure'] >= min_time) \
+            | ((timetable_df['Departure'] >= current_time) \
+                & (timetable_df['ID'] == id_previous_train))) \
+        & (timetable_df['Departure'] <= max_time) \
+        & (timetable_df['Arrival'] <= end_time)
     ]
-
-    # Sort by 'Departure'
-    df_time_sorted = df_time.sort_values(by='Departure')
-    return df_time_sorted
+    
+    df_copy = deepcopy(df_filtered)
+    return df_copy
 
