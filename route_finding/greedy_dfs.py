@@ -9,7 +9,7 @@ from ..data_processing.data_utils import (
     read_timetable,
     save_timetable,
     add_duration_in_minutes, 
-    filter_and_sort_timetable,
+    filter_timetable,
 )
 
 class GreedyDFS:
@@ -26,7 +26,6 @@ class GreedyDFS:
     - timetable_df (pd.DataFrame): DataFrame containing the timetable data
     - best_state (State): The best state found during the search
     - best_distance (float): The best distance found during the search
-    - results_header (list[str]): Header for the results DataFrame
     - routes_path (Path): Path to save the best routes found
     """
     def __init__(
@@ -46,7 +45,6 @@ class GreedyDFS:
         self.timetable_df = read_timetable(version=version, processed=True)
         self.best_state = State()
         self.best_distance = 0
-        self.results_header = None
         self.iterations = 0
 
         # Path to save best routes found
@@ -76,11 +74,12 @@ class GreedyDFS:
         hms_driven = int(self.best_distance * 10)  # Convert to hectometers
         file_path = self.routes_path / f"{self.timestamp}_{hms_driven}.csv"
 
-        # Construct custom df with extra columns
-        best_route_df = pd.DataFrame(
-            data=self.best_state.route, 
-            columns=self.results_header
-        )
+        # Construct custom df for the best found route
+        best_route_df = pd.DataFrame(data=self.best_state.route)
+        
+        # Add the 'from station' index label as an extra column (leftmost)
+        from_stations = [section.name for section in self.best_state.route]
+        best_route_df.insert(0, 'Station', from_stations)
 
         # Save to designated folder (/routes/version/...)
         save_timetable(
@@ -132,7 +131,7 @@ class GreedyDFS:
         #    counted for the current sections. See 'information/rules.py'
         transfer_options['Distance_Counted'] = transfer_options.apply(
             lambda row: state.route_indicator.get_distance_counted(
-                from_station=row['Station'],
+                from_station=row.name,
                 to_station=row['To'],
                 train_type=row['Type'],
                 distance=row['Distance'],
@@ -171,7 +170,7 @@ class GreedyDFS:
         )
 
         # 1. Get options from current position (station & time filtered)
-        transfer_options = filter_and_sort_timetable(
+        transfer_options = filter_timetable(
             timetable_df=self.timetable_df,
             station=current_state.current_station,
             current_time=current_state.current_time,
@@ -191,7 +190,7 @@ class GreedyDFS:
         # 3. Call score function to sort based on some priority
         top_transfers = self._apply_score_function(transfer_options, current_state)
         self.logger.debug(
-            f"Top transfer option: {top_transfers.iloc[0]['Station']} -> "
+            f"Top transfer option: {top_transfers.iloc[0].name} -> "
             f"{top_transfers.iloc[0]['To']} ({top_transfers.iloc[0]['Type']})"
         )
 
@@ -206,11 +205,6 @@ class GreedyDFS:
             new_state.id_previous_train = row['ID']
             new_state.route_indicator.update_indicator_table(row)
             new_state.total_distance += row['Distance_Counted']
-
-            # TODO Vsome_day: Find a cleaner way to get all columns headers, including added ones
-            if self.results_header is None:
-                self.results_header = row.index
-
             new_state.route.append(row)
 
             # c. Update best state if better

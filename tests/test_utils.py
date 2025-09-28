@@ -2,7 +2,7 @@ import os
 import json
 from pathlib import Path
 from ..settings import Settings
-from ..data_processing.timetable_utils import read_timetable
+from ..data_processing.data_utils import read_timetable
 
 
 def _get_file_path(files_folder: Path):

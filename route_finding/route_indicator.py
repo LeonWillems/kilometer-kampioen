@@ -55,7 +55,7 @@ class RouteIndicator:
         - timetable_row (pd.Series): A row from the timetable DataFrame containing
             at least the 'Station', 'To', and 'Type' columns
         """
-        from_station = timetable_row['Station']
+        from_station = timetable_row.name
         to_station = timetable_row['To']
         train_type = timetable_row['Type']
 
