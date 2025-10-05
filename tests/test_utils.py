@@ -41,6 +41,7 @@ def get_route_contents(version: str):
         version=version,
         timetable_path=route_file_path,
         extra_timestamp_cols=['Current_Time']
-    )
+    ).reset_index()
+    
     return route_df
 
