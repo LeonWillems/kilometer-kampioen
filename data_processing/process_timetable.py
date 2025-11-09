@@ -1,9 +1,8 @@
-import json
 from copy import deepcopy
 from .find_intercity_distance import BFS
 from .data_utils import (
     load_distances, read_timetable,
-    save_timetable, add_duration_in_minutes
+    save_timetable, add_minutes_from_epoch
 )
 
 
@@ -20,6 +19,7 @@ class TimetableProcessor:
         - timetable_df: DataFrame containing the timetable data
         
         Methods:
+        - add_minute_stamps: Add integer timestamps since epochS
         - add_duration: Calculate duration between departure and arrival
         - enhance_distances_dict: Add distances for station pairs not in the distances dictionary
         - add_distances: Add distances to the timetable DataFrame
@@ -34,15 +34,26 @@ class TimetableProcessor:
         self.timetable_df = read_timetable(
             version=self.version,
             processed=False,
+            set_index=False,
         )
-
-    def add_duration(self):
-        """Calculate time taken between departure and arrival, in minutes."""
-        self.timetable_df = add_duration_in_minutes(
+        print(self.timetable_df)
+        
+    def add_minute_stamps(self):
+        """Add integer timestamps as well. Minutes from epoch""" 
+        self.timetable_df = add_minutes_from_epoch(
             self.timetable_df,
-            start_col='Departure',
-            end_col='Arrival',
-            duration_col='Duration',
+            'Departure',
+            'Departure_Int'
+        )
+        self.timetable_df = add_minutes_from_epoch(
+            self.timetable_df,
+            'Arrival',
+            'Arrival_Int'
+        )
+        # Add durations in minutes for epoch columns
+        self.timetable_df['Duration'] = (
+            self.timetable_df['Arrival_Int'] \
+            - self.timetable_df['Departure_Int']
         )
 
     def enhance_distances_dict(self):
@@ -83,19 +94,20 @@ class TimetableProcessor:
             self.timetable_df['Distance'] / (self.timetable_df['Duration'] / 60)
         ).round(1)
 
-    def process_timetable(self):
-        """Run all processing steps in order."""
-        self.add_duration()
-        self.enhance_distances_dict()
-        self.add_distances()
-        self.add_average_speed()
-
     def save_timetable(self):
         """Save the processed timetable to a CSV file."""
         save_timetable(
             timetable_df=self.timetable_df,
             version=self.version,
         )
+
+    def process_timetable(self):
+        """Run all processing steps in order."""
+        self.add_minute_stamps()
+        self.enhance_distances_dict()
+        self.add_distances()
+        self.add_average_speed()
+        self.save_timetable()
 
 
 def perform_timetable_preprocessing(version: str):
@@ -106,10 +118,7 @@ def perform_timetable_preprocessing(version: str):
     """
 
     timetable_processor = TimetableProcessor(version=version)
-
     timetable_processor.process_timetable()
-    timetable_processor.save_timetable()
-    
     print("Timetable processed and saved successfully.")
 
 

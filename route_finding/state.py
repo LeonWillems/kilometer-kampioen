@@ -1,8 +1,12 @@
 from logging import Logger
 import pandas as pd
-from .route_indicator import RouteIndicator
+
 from ..settings import Settings
-from ..data_processing.data_utils import read_timetable
+from .route_indicator import RouteIndicator
+from ..data_processing.data_utils import (
+    read_timetable, int_to_timestamp,
+    timestamp_to_int,
+)
 
 
 class State:
@@ -13,8 +17,8 @@ class State:
         (according to the Kilometer Kampioen rules)
     - route (list[pd.Series]): A list of pd.Series objects representing the route
     - route_indicator (RouteIndicator): An instance of RouteIndicator
-    - current_time (datetime): The current time in the route finding process,
-        usually the time of the last train arrival
+    - current_time (int): The current time in the route finding process,
+        usually the time of the last train arrival, in minutes after epoch
     - current_station (str): The station where the route finding is currently,
         usually the arrival station of the last train
     - id_previous_train (str): The ID of the last train used in the route finding
@@ -52,7 +56,7 @@ class State:
         timetable_df = read_timetable(version=version, processed=True)
         stations = timetable_df.index.unique()
         
-        self.current_time = pd.Timestamp(f"{Settings.DAY_OF_RUN} {current_time}")
+        self.current_time = timestamp_to_int(current_timestamp=current_time)
         self.current_station = current_station
         self.route_indicator.init_indicator_table(stations, version)
         self.logger = logger
@@ -60,7 +64,7 @@ class State:
         self.logger.info(
             "Starting new route finding run with parameters:\n"
             f"Current station: {self.current_station}\n"
-            f"Current time: {self.current_time}\n"
+            f"Current time: {int_to_timestamp(self.current_time)}\n"
         )
 
     def copy(self):

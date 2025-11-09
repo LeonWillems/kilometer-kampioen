@@ -1,12 +1,9 @@
 import unittest
-import pandas as pd
 from .test_utils import (
-    get_log_contents,
-    get_parms_contents,
-    get_route_contents,
+    get_log_contents, get_parms_contents, get_route_contents,
 )
 from ..settings import Settings
-
+from ..data_processing.data_utils import timestamp_to_int
 
 class TestRouteCompliance(unittest.TestCase):
     def setUp(self):
@@ -22,7 +19,7 @@ class TestRouteCompliance(unittest.TestCase):
         corresponds to the start time in the log."""
         
         # Get the start times from the log
-        start_time_param = pd.Timestamp(f"{Settings.DAY_OF_RUN} {self.parms['start_time']}")
+        start_time_param = timestamp_to_int(current_timestamp=self.parms['start_time'],)
         start_time_route = self.route.loc[0, 'Current_Time']
 
         # Check if first departure is after start time
@@ -31,8 +28,8 @@ class TestRouteCompliance(unittest.TestCase):
 
     def test_row_statistics(self):
         """Test statistics for each individual row in the route table."""
-        start_time = pd.Timestamp(f"{Settings.DAY_OF_RUN} {self.parms['start_time']}")
-        end_time = pd.Timestamp(f"{Settings.DAY_OF_RUN} {self.parms['end_time']}")
+        start_time = timestamp_to_int(current_timestamp=self.parms['start_time'])
+        end_time = timestamp_to_int(current_timestamp=self.parms['end_time'])
 
         for idx, row in self.route.iterrows():
             # Test non-negative values
@@ -44,8 +41,8 @@ class TestRouteCompliance(unittest.TestCase):
                 f"Score is negative at row {idx}")
             
             # Convert string timestamps to datetime
-            departure = pd.Timestamp(row['Departure'])
-            arrival = pd.Timestamp(row['Arrival'])
+            departure = row['Departure_Int']
+            arrival = row['Arrival_Int']
             
             # Test time constraints
             self.assertLess(departure, arrival, 
@@ -57,8 +54,8 @@ class TestRouteCompliance(unittest.TestCase):
 
     def test_consecutive_trains(self):
         """Test statistics comparing current train with the next train in the sequence."""
-        min_transfer = pd.Timedelta(minutes=self.parms['min_transfer_time'])
-        max_transfer = pd.Timedelta(minutes=self.parms['max_transfer_time'])
+        min_transfer = self.parms['min_transfer_time']
+        max_transfer = self.parms['max_transfer_time']
 
         # Iterate through all rows except the last one
         for idx in range(len(self.route) - 1):
@@ -70,8 +67,8 @@ class TestRouteCompliance(unittest.TestCase):
                 f"Next Station doesn't match current To at row {idx}")
 
             # Convert timestamps
-            current_arrival = pd.Timestamp(current['Arrival'])
-            next_departure = pd.Timestamp(next_train['Departure'])
+            current_arrival = current['Arrival_Int']
+            next_departure = next_train['Departure_Int']
             
             # Test transfer time constraints
             self.assertLessEqual(next_departure, current_arrival + max_transfer, 

@@ -1,7 +1,7 @@
 import pandas as pd
 from ..settings import Settings
 from ..data_processing.data_utils import load_intermediate_stations, load_distances
-from pprint import pprint
+
 
 class RouteIndicator:
     def __init__(self):
