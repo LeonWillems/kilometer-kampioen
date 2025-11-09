@@ -6,10 +6,8 @@ from .state import State
 from .logger import setup_logger
 from ..settings import Settings
 from ..data_processing.data_utils import (
-    read_timetable,
-    save_timetable,
-    add_duration_in_minutes, 
-    filter_timetable,
+    read_timetable, save_timetable, add_duration_in_minutes, 
+    filter_timetable, timestamp_to_int, int_to_timestamp
 )
 
 class GreedyDFS:
@@ -37,7 +35,7 @@ class GreedyDFS:
             timestamp: datetime,
         ):
         self.version = version
-        self.end_time = pd.Timestamp(f"{Settings.DAY_OF_RUN} {end_time}")
+        self.end_time = timestamp_to_int(current_timestamp=end_time)
         self.min_transfer_time = min_transfer_time
         self.max_transfer_time = max_transfer_time
         self.timestamp = timestamp
@@ -93,7 +91,8 @@ class GreedyDFS:
             f"Number of transfers: {len(best_route_df)}\n"
             f"Final distance: {self.best_distance:.1f}km\n"
             f"Total iterations: {self.iterations}\n"
-            f"End station: {self.best_state.current_station}"
+            f"End station: {self.best_state.current_station}\n"
+            f"End time: {int_to_timestamp(self.best_state.current_time)}"
         )
         
     def _apply_score_function(
@@ -120,11 +119,12 @@ class GreedyDFS:
         """
         # 1. Calculate waiting time
         transfer_options['Current_Time'] = state.current_time
+        
         transfer_options = add_duration_in_minutes(
             transfer_options,
             start_col='Current_Time',
-            end_col='Departure',
-            duration_col='Waiting_Time'
+            end_col='Departure_Int',
+            duration_col='Waiting_Time',
         )
         
         # 2. Add 'Distance_Counted' as a number of how many kilometers may be
@@ -165,7 +165,7 @@ class GreedyDFS:
         self.logger.debug(
             f"Iteration {self.iterations}\n"
             f"Current station: {current_state.current_station}\n"
-            f"Time: {current_state.current_time}\n"
+            f"Time: {int_to_timestamp(current_state.current_time)}\n"
             f"Distance: {current_state.total_distance:.1f}km"
         )
 
@@ -200,7 +200,7 @@ class GreedyDFS:
             new_state = current_state.copy()
             
             # b. Update new state with this ride
-            new_state.current_time = row['Arrival']
+            new_state.current_time = row['Arrival_Int']
             new_state.current_station = row['To']
             new_state.id_previous_train = row['ID']
             new_state.route_indicator.update_indicator_table(row)
@@ -228,7 +228,7 @@ def run_greedy_dfs(prms: dict):
         {'version': 'v0', 'start_station': 'Ht',
          'start_time': '12:00', 'end_time': '15:00',
          'min_transfer_time': 3, 'max_transfer_time': 15,
-         'timestamp': datetime)}
+         'timestamp': datetime}
     """
     greedy_dfs = GreedyDFS(
         version=prms['version'],
@@ -248,4 +248,4 @@ def run_greedy_dfs(prms: dict):
 
     greedy_dfs.dfs(initial_state)
     greedy_dfs._save_best_route()
-    
+

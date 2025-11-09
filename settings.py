@@ -1,8 +1,10 @@
+from pandas import Timestamp
 from pathlib import Path
 
 
 class Settings:
     # Datetime settings
+    EPOCH_TIMESTAMP = Timestamp("1970-01-01 00:00")  # Moment from which we count minutes
     DAY_OF_RUN = "2025-08-02"  # Day where the train times come from
     DATETIME_FORMAT = "ISO8601"  # YYYY-MM-DDThh:mm:ss (or similar!)
     

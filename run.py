@@ -1,10 +1,12 @@
 import json
+from time import time
 from datetime import datetime
 from .settings import Settings
 from .route_finding.greedy_dfs import run_greedy_dfs
 
 
 if __name__ == "__main__":
+    time_start = time()
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     parameters = {
@@ -24,5 +26,8 @@ if __name__ == "__main__":
         json.dump(parameters, f)
     
     run_greedy_dfs(parameters)
+    
+    time_end = time()
+    print(f"That shit took {time_end - time_start:.2f} seconds.")
     
     
