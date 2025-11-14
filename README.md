@@ -34,6 +34,7 @@ The algorithm will create:
 - Log files in `runs/logs/v0/` with detailed information about the search process
 - Parameters files in `runs/parameters/v0/` containing parameters filled in by user
 - Route files in `runs/routes/v0/` containing the best routes found, named with timestamp and distance in hectometers
+An example for each version can be found in `runs/example/v./`
 
 # Sources
 - Find all rules here: https://www.kilometerkampioen.nl/
@@ -47,7 +48,7 @@ The algorithm will create:
     - The station codes as well, found in "information/station_codes.json". All of the distance pairs' codes are found in this file.
 
 # V0
-## Data (see "data/v0/" files)
+## Data (see `data/v0/` files)
 - Intercity stations: 's-Hertogenbosch, Tilburg, Eindhoven Centraal
 - Other stations: Vught, Boxtel, Best, Oisterwijk, Eindhoven Strijp-S
 - Timeframe: Saturday, 12:00 - 15:00
@@ -58,9 +59,11 @@ The algorithm will create:
 - Scoring function: counted_distance/(waiting_time + travel_time)
   - counted_distance is determined by how many kilometers of the full sections may be counted according to the rules set 
 - Limited to top 2 options per station to reduce computational complexity
-- Simple section-driven tracking (only counting unique section-traintype combinations)
+- Official section-driven calculation: see `information/rules.py`
+For pseudocode, see `route_finding/pseudocode.py`.
 
 ## Known Limitations
 - Limited to a 3-hour timeframe
 - Only considers a small subset of stations
 - Greedy approach may miss better solutions
+- Due to DFS, it might take a while to find a better route
