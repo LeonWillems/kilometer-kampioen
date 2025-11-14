@@ -38,11 +38,13 @@ The algorithm will create:
 # Sources
 - Find all rules here: https://www.kilometerkampioen.nl/
 - Find all station-related content here: https://en.wikipedia.org/wiki/Railway_stations_in_the_Netherlands
-    - Each station has a code. For example, "Eindhoven Centraal" has "Ehv". Please find all codes in "information/station_codes.csv"
+    - Each station has a code. For example, "Eindhoven Centraal" has "Ehv". Please find all codes in "information/station_codes_ns.csv".
+    However, we will use the other file, stated below.
 - Find kilometer count courtesy here: https://github.com/nanderv/trainkms
     - A written guide how to count kilometers
     - A tool for counting kilometers
     - Number of kilometers between pairs of stations ("data/distance_between_stations.json")
+    - The station codes as well, found in "information/station_codes.json". All of the distance pairs' codes are found in this file.
 
 # V0
 ## Data (see "data/v0/" files)
