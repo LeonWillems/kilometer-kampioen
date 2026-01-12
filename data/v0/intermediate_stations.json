@@ -1,14 +1,114 @@
 {
-    "Ht": {
-        "Tb": ["Ht", "Tb"],
-        "Ehv": ["Ht", "Vg", "Btl", "Bet", "Ehs", "Ehv"]
+    "Bet": {
+        "Btl": [
+            "Bet",
+            "Btl"
+        ],
+        "Ehs": [
+            "Bet",
+            "Ehs"
+        ]
+    },
+    "Btl": {
+        "Bet": [
+            "Btl",
+            "Bet"
+        ],
+        "Vg": [
+            "Btl",
+            "Vg"
+        ],
+        "Ot": [
+            "Btl",
+            "Ot"
+        ]
+    },
+    "Vg": {
+        "Btl": [
+            "Vg",
+            "Btl"
+        ],
+        "Ht": [
+            "Vg",
+            "Ht"
+        ]
     },
     "Ehv": {
-        "Ht": ["Ehv", "Ehs", "Bet", "Btl", "Vg", "Ht"],
-        "Tb": ["Ehv", "Ehs", "Bet", "Btl", "Ot", "Tb"]
+        "Ht": [
+            "Ehv",
+            "Ehs",
+            "Bet",
+            "Btl",
+            "Vg",
+            "Ht"
+        ],
+        "Ehs": [
+            "Ehv",
+            "Ehs"
+        ],
+        "Tb": [
+            "Ehv",
+            "Ehs",
+            "Bet",
+            "Btl",
+            "Ot",
+            "Tb"
+        ]
+    },
+    "Ht": {
+        "Ehv": [
+            "Ht",
+            "Vg",
+            "Btl",
+            "Bet",
+            "Ehs",
+            "Ehv"
+        ],
+        "Tb": [
+            "Ht",
+            "Tb"
+        ],
+        "Vg": [
+            "Ht",
+            "Vg"
+        ]
     },
     "Tb": {
-        "Ht": ["Tb", "Ht"],
-        "Ehv": ["Tb", "Ot", "Btl", "Bet", "Ehs", "Ehv"]
+        "Ht": [
+            "Tb",
+            "Ht"
+        ],
+        "Ot": [
+            "Tb",
+            "Ot"
+        ],
+        "Ehv": [
+            "Tb",
+            "Ot",
+            "Btl",
+            "Bet",
+            "Ehs",
+            "Ehv"
+        ]
+    },
+    "Ehs": {
+        "Ehv": [
+            "Ehs",
+            "Ehv"
+        ],
+        "Bet": [
+            "Ehs",
+            "Bet"
+        ]
+    },
+    "Ot": {
+        "Btl": [
+            "Ot",
+            "Btl"
+        ],
+        "Tb": [
+            "Ot",
+            "Tb"
+        ]
     }
 }

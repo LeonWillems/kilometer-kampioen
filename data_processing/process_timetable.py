@@ -1,13 +1,19 @@
 from copy import deepcopy
+
 from .find_intercity_distance import BFS
+from .preprocess_data import perform_preprocesing
 from .data_utils import (
+    save_intermediate_stations,
     load_distances, read_timetable,
     save_timetable, add_minutes_from_epoch
 )
 
+from ..settings import VersionSettings
+SETTINGS = VersionSettings.get_version_settings()
+
 
 class TimetableProcessor:
-    def __init__(self, version: str) -> None:
+    def __init__(self):
         """Class to process/enhance the timetable with distances and average speeds.
         Also, extend the distances dictionary with intercity connections.
         
@@ -17,6 +23,8 @@ class TimetableProcessor:
         Attributes:
         - distances: Dictionary containing distances between stations
         - timetable_df: DataFrame containing the timetable data
+        - intermediate_stations: Dictionary to hold any intermediate stations
+            found between bigger (intercity) connections
         
         Methods:
         - add_minute_stamps: Add integer timestamps since epochS
@@ -28,15 +36,9 @@ class TimetableProcessor:
         - save_timetable: Save the processed timetable to a CSV file
         - filter_and_sort: Filter and sort the timetable based on station, time, and transfer conditions
         """
-        self.version = version
-
         self.distances = load_distances()
-        self.timetable_df = read_timetable(
-            version=self.version,
-            processed=False,
-            set_index=False,
-        )
-        print(self.timetable_df)
+        self.timetable_df = read_timetable(processed=False, set_index=False)
+        self.intermediate_stations = {}
         
     def add_minute_stamps(self):
         """Add integer timestamps as well. Minutes from epoch""" 
@@ -55,6 +57,35 @@ class TimetableProcessor:
             self.timetable_df['Arrival_Int'] \
             - self.timetable_df['Departure_Int']
         )
+        
+    def _update_intermediate_stations(
+        self,
+        from_station: str,
+        to_station: str,
+        path: list[str],
+    ):
+        """ Update the intermediate stations dictionary
+        with any stations found between from_station and to_station.
+        
+        Args:
+        - from_station (str): Starting station of the path
+        - to_station (str): Ending station of the path
+        - path (list): List of stations representing the path (including
+            from_station and to_station)
+        """
+        if from_station not in self.intermediate_stations:
+            self.intermediate_stations[from_station] \
+                = {to_station: path}
+                
+        elif to_station not in self.intermediate_stations[from_station]:
+            self.intermediate_stations[from_station][to_station] = path
+            
+        else:
+            # A direct path might already exist between neighboring stations,
+            # but have skipped alle the intermediate stations
+            existing_path = self.intermediate_stations[from_station][to_station]
+            if len(path) > len(existing_path):
+                self.intermediate_stations[from_station][to_station] = path
 
     def enhance_distances_dict(self):
         """Add a distance for each pair of stations from the timetable,
@@ -80,6 +111,14 @@ class TimetableProcessor:
                     # Add the distance to the distances dictionary, both directions
                     self.distances[from_station][to_station] = distance
                     self.distances[to_station][from_station] = distance
+            
+            elif to_station in self.distances[from_station]:
+                # Neighboring stations, direct distance known
+                path = [from_station, to_station]
+                
+            # Update intermediate stations with path, both directions
+            self._update_intermediate_stations(from_station, to_station, path)
+            self._update_intermediate_stations(to_station, from_station, path[::-1])
 
     def add_distances(self):
         """Add distances between stations to the timetable, in kilometers."""
@@ -94,35 +133,24 @@ class TimetableProcessor:
             self.timetable_df['Distance'] / (self.timetable_df['Duration'] / 60)
         ).round(1)
 
-    def save_timetable(self):
-        """Save the processed timetable to a CSV file."""
-        save_timetable(
-            timetable_df=self.timetable_df,
-            version=self.version,
-        )
-
     def process_timetable(self):
         """Run all processing steps in order."""
         self.add_minute_stamps()
         self.enhance_distances_dict()
+        save_intermediate_stations(self.intermediate_stations)
+        
         self.add_distances()
         self.add_average_speed()
-        self.save_timetable()
-
-
-def perform_timetable_preprocessing(version: str):
-    """Preprocessing function for version 0 of the timetable data.
-    
-    Args:
-    - version (str): Version of data model, example 'v0'
-    """
-
-    timetable_processor = TimetableProcessor(version=version)
-    timetable_processor.process_timetable()
-    print("Timetable processed and saved successfully.")
+        save_timetable(timetable_df=self.timetable_df, from_settings=True)
 
 
 if __name__ == "__main__":
-    current_version = 'v0'
-    perform_timetable_preprocessing(current_version)
+    """Processing functionality of the raw & timetable data."""
+    perform_preprocesing()
+    print("Preprocessing done successfully.")
+    
+    timetable_processor = TimetableProcessor()
+    timetable_processor.process_timetable()
+    
+    print("Timetable processed and saved successfully.")
 

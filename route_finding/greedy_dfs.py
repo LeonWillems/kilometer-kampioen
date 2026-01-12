@@ -4,17 +4,19 @@ from datetime import datetime
 
 from .state import State
 from .logger import setup_logger
-from ..settings import Settings
 from ..data_processing.data_utils import (
     read_timetable, save_timetable, add_duration_in_minutes, 
     filter_timetable, timestamp_to_int, int_to_timestamp
 )
 
+from ..settings import Parameters, VersionSettings
+SETTINGS = VersionSettings.get_version_settings()
+
+
 class GreedyDFS:
     """Greedy Depth-First Search for route finding.
 
     Args:
-    - version (str): Version of the timetable data (example: 'v0')
     - end_time (str): The time by which the route must be completed
       - attr end_time (pd.Timestmap): Complete datatime
     - min_transfer_time (int): Minimum transfer time in minutes
@@ -26,39 +28,25 @@ class GreedyDFS:
     - best_distance (float): The best distance found during the search
     - routes_path (Path): Path to save the best routes found
     """
-    def __init__(
-            self,
-            version: str,
-            end_time: str,
-            min_transfer_time: int,
-            max_transfer_time: int,
-            timestamp: datetime,
-        ):
-        self.version = version
-        self.end_time = timestamp_to_int(current_timestamp=end_time)
-        self.min_transfer_time = min_transfer_time
-        self.max_transfer_time = max_transfer_time
+    def __init__(self, timestamp: datetime):
         self.timestamp = timestamp
 
-        self.timetable_df = read_timetable(version=version, processed=True)
+        self.timetable_df = read_timetable(processed=True)
         self.best_state = State()
         self.best_distance = 0
         self.iterations = 0
-
-        # Path to save best routes found
-        self.routes_path = \
-            Settings.VERSIONED_ROUTES_PATH[self.version]
 
         # Setup interrupt handling
         signal.signal(signal.SIGINT, self._handle_interrupt)
 
         # Setup logger
-        self.logger = setup_logger(version=self.version, timestamp=self.timestamp)
+        self.logger = setup_logger(timestamp=self.timestamp)
         self.logger.info(
             "Starting new route finding run with parameters:\n"
-            f"Version: {version} ({Settings.VERSION_NAMES['v0']})\n"
-            f"End time: {end_time}\n"
-            f"Transfer time range: {min_transfer_time}-{max_transfer_time} minutes"
+            f"Version: {SETTINGS.VERSION} ({SETTINGS.VERSION_NAME})\n"
+            f"End time: {Parameters.END_TIME}\n"
+            f"Transfer time range: {Parameters.MIN_TRANSFER_TIME}"
+            f"-{Parameters.MAX_TRANSFER_TIME} minutes"
         )
 
     def _handle_interrupt(self, signum, frame):
@@ -70,7 +58,7 @@ class GreedyDFS:
     def _save_best_route(self):
         """Save the current best route as a .csv to the routes folder."""
         hms_driven = int(self.best_distance * 10)  # Convert to hectometers
-        file_path = self.routes_path / f"{self.timestamp}_{hms_driven}.csv"
+        file_path = SETTINGS.ROUTES_PATH / f"{self.timestamp}_{hms_driven}.csv"
 
         # Construct custom df for the best found route
         best_route_df = pd.DataFrame(data=self.best_state.route)
@@ -174,9 +162,6 @@ class GreedyDFS:
             timetable_df=self.timetable_df,
             station=current_state.current_station,
             current_time=current_state.current_time,
-            end_time=self.end_time,
-            min_transfer_time=self.min_transfer_time,
-            max_transfer_time=self.max_transfer_time,
             id_previous_train=current_state.id_previous_train,
         )
 
@@ -220,7 +205,7 @@ class GreedyDFS:
             self.dfs(new_state)
     
 
-def run_greedy_dfs(prms: dict):
+def run_greedy_dfs(timestamp: datetime):
     """Main function to run the GreedyDFS route finding algorithm.
     
     Args:
@@ -230,21 +215,10 @@ def run_greedy_dfs(prms: dict):
          'min_transfer_time': 3, 'max_transfer_time': 15,
          'timestamp': datetime}
     """
-    greedy_dfs = GreedyDFS(
-        version=prms['version'],
-        end_time=prms['end_time'],
-        min_transfer_time=prms['min_transfer_time'],
-        max_transfer_time=prms['max_transfer_time'],
-        timestamp=prms['timestamp'],
-    )
+    greedy_dfs = GreedyDFS(timestamp=timestamp)
 
     initial_state = State()
-    initial_state.set_initial_state(
-        version=prms['version'],
-        current_time=prms['start_time'],
-        current_station=prms['start_station'],
-        logger=greedy_dfs.logger,
-    )
+    initial_state.set_initial_state(logger=greedy_dfs.logger)
 
     greedy_dfs.dfs(initial_state)
     greedy_dfs._save_best_route()
