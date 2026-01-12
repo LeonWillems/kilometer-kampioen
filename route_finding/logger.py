@@ -1,9 +1,11 @@
 import logging
 import pandas as pd
-from ..settings import Settings
+
+from ..settings import VersionSettings
+SETTINGS = VersionSettings.get_version_settings()
 
 
-def setup_logger(version: str, timestamp: pd.Timestamp) -> logging.Logger:
+def setup_logger(timestamp: pd.Timestamp) -> logging.Logger:
     """Setup logger for the route finding algorithm.
     
     Args:
@@ -13,15 +15,15 @@ def setup_logger(version: str, timestamp: pd.Timestamp) -> logging.Logger:
     - logging.Logger: Configured logger instance
     """
     # Create logs directory if it doesn't exist
-    log_dir = Settings.VERSIONED_LOGS_PATH[version]
+    log_dir = SETTINGS.LOGS_PATH
     log_dir.mkdir(exist_ok=True)
     
     # Create log file with timestamp
     log_file = log_dir / \
-        f"{timestamp}_{Settings.VERSION_NAMES[version]}.log"
+        f"{timestamp}_{SETTINGS.VERSION_NAME}.log"
     
     # Configure logger
-    logger = logging.getLogger(Settings.VERSION_NAMES[version])
+    logger = logging.getLogger(SETTINGS.VERSION_NAME)
     logger.setLevel(logging.INFO)
     
     # File handler

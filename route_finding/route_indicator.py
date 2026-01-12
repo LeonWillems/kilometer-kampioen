@@ -1,6 +1,8 @@
 import pandas as pd
-from ..settings import Settings
+
 from ..data_processing.data_utils import load_intermediate_stations, load_distances
+from ..settings import Parameters, VersionSettings
+SETTINGS = VersionSettings.get_version_settings()
 
 
 class RouteIndicator:
@@ -8,7 +10,6 @@ class RouteIndicator:
         """Initialize the RouteIndicator with a timetable.
 
         Attributes:
-        - stations: Unique stations from the timetable
         - indicator_table: DataFrame to hold the route indicators between stations
         - intermediate_stations: Dictionary that includes all intermediate stations
             for any intercity run in the dataset
@@ -22,25 +23,27 @@ class RouteIndicator:
           specific train type
         - copy: Create a copy of the RouteIndicator instance
         """
-        self.stations = list()
-        self.indicator_table = pd.DataFrame()
         self.intermediate_stations = dict()
         self.station_distances = dict()
+        self.indicator_table = pd.DataFrame()
 
-    def init_indicator_table(self, stations: list[str], version: str):
+    def init_indicator_table(self):
         """Initialize the indicator table, based on a set of stations.
         
         Args:
         - stations (list): List of unique stations in de timetable.
         - version (str): Version of the timetable data (example: 'v0')
         """
+        self.intermediate_stations = load_intermediate_stations()
+        self.station_distances = load_distances()
+        
+        # Get all unique station names, ground truth = distances table
+        all_stations = sorted(list(set(self.station_distances.keys())))
         self.indicator_table = pd.DataFrame(
-            index=stations, 
-            columns=stations,
+            index=all_stations,
+            columns=all_stations,
             data=''
         )
-        self.intermediate_stations = load_intermediate_stations(version)
-        self.station_distances = load_distances()
         
     def update_indicator_table(self, timetable_row: pd.Series) -> None:
         """Update the indicator table based on a timetable row.
@@ -60,10 +63,10 @@ class RouteIndicator:
         train_type = timetable_row['Type']
 
         # Convert to 'S' for Sprinter or 'I' for Intercity
-        if train_type not in Settings.TYPE_CONVERSION:
+        if train_type not in SETTINGS.TYPE_CONVERSION:
             raise ValueError(f"Unknown train type: {train_type}")
         
-        short_train_type = Settings.TYPE_CONVERSION[train_type]
+        short_train_type = SETTINGS.TYPE_CONVERSION[train_type]
         self.indicator_table.at[from_station, to_station] += short_train_type
         self.indicator_table.at[to_station, from_station] += short_train_type
         
@@ -96,11 +99,11 @@ class RouteIndicator:
         Returns:
         - float: Number of kilometers that may be counted for this section
         """
-        if train_type not in Settings.TYPE_CONVERSION:
+        if train_type not in SETTINGS.TYPE_CONVERSION:
             raise ValueError(f"Unknown train type: {train_type}")
         
         # Convert to 'S' for Sprinter or 'I' for Intercity
-        short_train_type = Settings.TYPE_CONVERSION[train_type]
+        short_train_type = SETTINGS.TYPE_CONVERSION[train_type]
         
         # Keep track of how many kilometers may be counted for this section
         distance_counted = 0
@@ -136,10 +139,9 @@ class RouteIndicator:
         - RouteIndicator: A new instance of RouteIndicator with a copied indicator table
         """
         new_indicator = RouteIndicator()
-        new_indicator.stations = self.stations.copy()
-        new_indicator.indicator_table = self.indicator_table.copy()
         new_indicator.intermediate_stations = self.intermediate_stations
         new_indicator.station_distances = self.station_distances
+        new_indicator.indicator_table = self.indicator_table.copy()
         return new_indicator
 
 

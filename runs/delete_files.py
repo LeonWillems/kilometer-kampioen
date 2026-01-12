@@ -1,8 +1,8 @@
 from pathlib import Path
-from ..settings import Settings
+from ..settings import VersionSettings
 
 
-def get_paths(version: str) -> tuple[Path, Path, Path]:
+def get_paths(settings: VersionSettings) -> tuple[Path, Path, Path]:
     """Gets the right paths to the three kinds of files.
     
     Args:
@@ -11,9 +11,9 @@ def get_paths(version: str) -> tuple[Path, Path, Path]:
     Returns:
     - tuple: Three paths
     """
-    logs_path = Settings.VERSIONED_LOGS_PATH[version]
-    parameters_path = Settings.VERSIONED_PARAMETERS_PATH[version]
-    routes_path = Settings.VERSIONED_ROUTES_PATH[version]
+    logs_path = settings.LOGS_PATH
+    parameters_path = settings.PARAMETERS_PATH
+    routes_path = settings.ROUTES_PATH
     return (logs_path, parameters_path, routes_path)
 
 
@@ -38,8 +38,8 @@ def remove_all_but_last_file(path: Path):
 if __name__ == "__main__":
     # Define for which version to delete files
     version = 'v0'
-    
-    paths = get_paths(version)
+    settings = VersionSettings.get_version_settings(version=version)
+    paths = get_paths(settings)
     
     for path in paths:
         remove_all_but_last_file(path)

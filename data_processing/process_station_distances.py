@@ -1,5 +1,7 @@
 import json
-from ..settings import Settings
+
+from ..settings import VersionSettings
+SETTINGS = VersionSettings.get_version_settings()
 
 """
 Got the distances from https://github.com/nanderv/trainkms. They are in the following format:
@@ -40,7 +42,7 @@ class StationDistanceProcessor:
 
     def _load_distances(self) -> list[dict]:
         """Loads station distances. See explanation above for structure."""
-        with open(Settings.DISTANCES_PATH, mode='r') as f:
+        with open(SETTINGS.DISTANCES_PATH, mode='r') as f:
             return json.load(f)
 
     def _process_distances(self) -> dict[str, dict[str, float]]:
@@ -65,19 +67,15 @@ class StationDistanceProcessor:
 
     def save_processed_distances(self):
         """Save to JSON file again, but now in the processed format."""
-        with open(Settings.PROCESSED_DISTANCES_PATH, mode='w') as f:
+        with open(SETTINGS.PROCESSED_DISTANCES_PATH, mode='w') as f:
             json.dump(self.processed_distances, f)
 
 
-def perform_distances_preprocessing():
-    """Main function to process and save the station distances.
+if __name__ == "__main__":
+    """Main functionality to process and save the station distances.
     Run this script to generate the processed distances file."""
 
     distances_processor = StationDistanceProcessor()
     distances_processor.save_processed_distances()
     print("Station distances processed and saved successfully.")
-
-
-if __name__ == "__main__":
-    perform_distances_preprocessing()
 

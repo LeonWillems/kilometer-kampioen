@@ -1,0 +1,22 @@
+11:47:24 - INFO - Starting new route finding run with parameters:
+Current station: Ht
+Current time: 2025-08-02 12:00:00
+
+11:47:24 - INFO - New best route found! Distance: 22.3km (+22.3km)
+11:47:24 - INFO - New best route found! Distance: 59.2km (+36.9km)
+11:47:24 - INFO - New best route found! Distance: 61.8km (+2.6km)
+11:47:24 - INFO - New best route found! Distance: 69.2km (+7.4km)
+11:47:24 - INFO - New best route found! Distance: 79.1km (+9.9km)
+11:47:24 - INFO - New best route found! Distance: 88.0km (+8.9km)
+11:47:24 - INFO - New best route found! Distance: 96.1km (+8.1km)
+11:47:24 - INFO - New best route found! Distance: 118.4km (+22.3km)
+11:47:24 - INFO - New best route found! Distance: 130.6km (+12.2km)
+11:47:24 - INFO - New best route found! Distance: 130.6km (+0.0km)
+11:47:24 - INFO - New best route found! Distance: 138.6km (+8.0km)
+11:47:24 - INFO - New best route found! Distance: 142.8km (+4.2km)
+11:47:34 - INFO - Saved best route to: C:\VS-Code\Kilometer-Kampioen\kilometer-kampioen\runs\routes\v0\20260103_114724_1428.csv
+Number of transfers: 12
+Final distance: 142.8km
+Total iterations: 2840
+End station: Ht
+End time: 2025-08-02 14:32:00

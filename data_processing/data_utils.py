@@ -1,8 +1,10 @@
 import json
-from copy import deepcopy
-from pathlib import Path
 import pandas as pd
-from ..settings import Settings
+from pathlib import Path
+from copy import deepcopy
+
+from ..settings import Parameters, VersionSettings
+SETTINGS = VersionSettings.get_version_settings()
 
 
 def load_distances() -> dict[str, dict[str, float]]:
@@ -22,13 +24,30 @@ def load_distances() -> dict[str, dict[str, float]]:
         }, ...
     }
     """
-    with open(Settings.PROCESSED_DISTANCES_PATH, mode='r') as f:
+    with open(SETTINGS.PROCESSED_DISTANCES_PATH, mode='r') as f:
         return json.load(f)
     
     
-def load_intermediate_stations(
-        version: str
-    ) -> dict[str, dict[str, list[str]]]:
+def save_intermediate_stations(intermediate_stations: dict) -> None:
+    """Save the intermediate stations dictionary to a JSON file.
+    
+    Args:
+    - intermediate_stations (dict): Dictionary of intermediate stations
+    {
+        "Ht": {
+            "Tb": ["Ht", "Tb"],
+            "Ehv": ["Ht", "Vg", "Btl", "Bet", "Ehs", "Ehv"]
+        }, ...
+    }
+    """
+    file_path = SETTINGS.DATA_PATH
+    file_name = SETTINGS.INTERMEDIATE_STATIONS_FILE
+    
+    with open(file_path / file_name, mode='w') as f:
+        json.dump(intermediate_stations, f, indent=4)
+
+    
+def load_intermediate_stations() -> dict[str, dict[str, list[str]]]:
     """Reads in a dictionary from the given json file that
     includes all intermediate stations for any given intercity run.
     
@@ -44,16 +63,48 @@ def load_intermediate_stations(
         }, ...
     }
     """
-    file_path = Settings.VERSIONED_DATA_PATHS[version]
-    file_name = "intermediate_stations"
-    full_path = (file_path / file_name).with_suffix('.json')
-    
-    with open(full_path, mode='r') as f:
+    file_path = SETTINGS.DATA_PATH
+    file_name = SETTINGS.INTERMEDIATE_STATIONS_FILE
+
+    with open(file_path / file_name, mode='r') as f:
         return json.load(f)
+    
+    
+def read_csv_to_df(path_to_file: Path):
+    """Reads a .csv file that assumes a standard structure to a df.
+    
+    Args:
+    - path_to_file (Path): Complete path to a .csv file
+    
+    Returns:
+    - pd.DataFrame: Containing (un/pre/_)processed timetable data.
+    """
+    return pd.read_csv(
+        path_to_file,
+        sep=',',
+        header=0,
+        index_col=False,
+        keep_default_na=False,  # We do not want 'NA' to be Nan
+    )
+
+
+def save_df_to_csv(df: pd.DataFrame, path_to_file: Path):
+    """Saved a df to a .csv file that asssumes a standard structure.
+    
+    Args:
+    - df (pd.DataFrame): A Pandas DataFrame
+    - path_to_file (Path): Complete path to the file location
+    """
+    df.to_csv(
+        path_to_file,
+        sep=',',
+        index=False,
+        index_label='Station',
+        float_format='%.1f'  # Format distances and speeds to one decimal place
+    )
 
 
 def read_timetable(
-        version: str,
         processed: bool = True,
         timetable_path: Path = None,
         set_index: bool = True,
@@ -62,7 +113,7 @@ def read_timetable(
     'Departure' and 'Arrival' columns as datetime objects. (Format: '14:20')
     
     Args:
-    - version (str): Version of the timetable data (example: 'v0')
+    - settings (VersionSettings): Contains settings based on the version
     - processed (bool): True if processed timetable required,
         False if unprocessed
     - timetable_path (Path, optional): Path to timetable file location
@@ -72,35 +123,26 @@ def read_timetable(
     - pd.DataFrame: DataFrame containing the timetable data
     """
     if timetable_path is None:
-        data_path = Settings.VERSIONED_DATA_PATHS[version]
+        data_path = SETTINGS.DATA_PATH
         if processed:
-            timetable_path = data_path / Settings.TIMETABLE_FILE_PROCESSED
+            timetable_path = data_path / SETTINGS.TIMETABLE_FILE_PROCESSED
         else:
-            timetable_path = data_path / Settings.TIMETABLE_FILE
+            timetable_path = data_path / SETTINGS.TIMETABLE_FILE
 
-    timetable_df = pd.read_csv(
-        timetable_path,
-        sep=';',
-        header=0,
-        index_col=False,
-    )
+    timetable_df = read_csv_to_df(path_to_file=timetable_path)
 
     for col in ['Departure', 'Arrival']:
-        if not processed:
-            timetable_df[col] = \
-                timetable_df[col].apply(lambda x: f"{Settings.DAY_OF_RUN} {x}")
-
-        # Turn time ('15:03') into pd.Timestamp (including date)
+        # Turn time columns to datetime
         timetable_df[col] = pd.to_datetime(
             timetable_df[col],
-            format=Settings.DATETIME_FORMAT,
+            format=SETTINGS.DATETIME_FORMAT,
         )
         
     # Sort on 'Departure' because we will filter on it often
     timetable_df.sort_values(by='Departure', inplace=True)
     
     if set_index:
-        # If index, easier to filter on departure statoion
+        # If index, easier to filter on departure station
         timetable_df.set_index('Station', inplace=True)
         
     return timetable_df
@@ -108,27 +150,21 @@ def read_timetable(
 
 def save_timetable(
         timetable_df: pd.DataFrame,
-        version: str | None = None,
         timetable_path: Path | None = None,
+        from_settings: bool = False
     ) -> None:
-    """Save the processed timetable to a CSV file.
+    """Save an (un)processed timetable to a CSV file.
     
     Args:
     - timetable_df (pd.DataFrame): DataFrame containing the processed timetable data
     - version (str): Version of the timetable data (example: 'v0')
     - timetable_path (Path): Path where to save the timetable
     """
-    if version:
-        data_path = Settings.VERSIONED_DATA_PATHS[version]
-        timetable_path = data_path / Settings.TIMETABLE_FILE_PROCESSED
+    if from_settings:
+        data_path = SETTINGS.DATA_PATH
+        timetable_path = data_path / SETTINGS.TIMETABLE_FILE_PROCESSED
 
-    timetable_df.to_csv(
-        timetable_path,
-        sep=';',
-        index=False,
-        index_label='Station',
-        float_format='%.1f'  # Format distances and speeds to one decimal place
-    )
+    save_df_to_csv(df=timetable_df, path_to_file=timetable_path)
 
 
 def timestamp_to_int(
@@ -149,15 +185,15 @@ def timestamp_to_int(
         same as for end_time. Not necessary when from_epoch is True
 
     Returns:
-    int: Time difference in minutes
+    - int: Time difference in minutes
     """
     if isinstance(current_timestamp, str):
-        current_timestamp = pd.Timestamp(f"{Settings.DAY_OF_RUN} {current_timestamp}")
+        current_timestamp = pd.Timestamp(f"{SETTINGS.DAY_OF_RUN} {current_timestamp}")
         
     if from_epoch:
-        start_timestamp = Settings.EPOCH_TIMESTAMP
+        start_timestamp = SETTINGS.EPOCH_TIMESTAMP
     elif isinstance(start_timestamp, str):
-        start_timestamp = pd.Timestamp(f"{Settings.DAY_OF_RUN} {start_timestamp}")
+        start_timestamp = pd.Timestamp(f"{SETTINGS.DAY_OF_RUN} {start_timestamp}")
         
     total_seconds = (current_timestamp - start_timestamp).total_seconds()
     total_minutes = int(total_seconds // 60)
@@ -218,16 +254,13 @@ def int_to_timestamp(current_time: int) -> pd.Timestamp:
     Returns:
     - pd.Timestamp: Full timestamp, example pd.Timestamp('2025-08-02 14:32:00')
     """
-    return Settings.EPOCH_TIMESTAMP + pd.Timedelta(minutes=current_time)
+    return SETTINGS.EPOCH_TIMESTAMP + pd.Timedelta(minutes=current_time)
 
 
 def filter_timetable(
         timetable_df: pd.DataFrame,
         station: str, 
         current_time: int,
-        end_time: int,
-        min_transfer_time: int,
-        max_transfer_time: int,
         id_previous_train: int,
     ) -> pd.DataFrame:
     """Filter and sort the timetable based on station, time, and transfer conditions.
@@ -245,8 +278,9 @@ def filter_timetable(
     - pd.DataFrame: filtered and sorted timetable
     """
     # Calculate time window
-    min_time = current_time + min_transfer_time
-    max_time = current_time + max_transfer_time
+    min_time = current_time + Parameters.MIN_TRANSFER_TIME
+    max_time = current_time + Parameters.MAX_TRANSFER_TIME
+    end_time_int = timestamp_to_int(Parameters.END_TIME, from_epoch=True)
 
     # First, filter on departures from our current station.
     # Then, either we are driving the same train with 0 minutes transer (or
@@ -259,7 +293,7 @@ def filter_timetable(
             | ((timetable_df['Departure_Int'] >= current_time) \
                 & (timetable_df['ID'] == id_previous_train))) \
         & (timetable_df['Departure_Int'] <= max_time) \
-        & (timetable_df['Arrival_Int'] <= end_time)
+        & (timetable_df['Arrival_Int'] <= end_time_int)
     ]
     
     df_copy = deepcopy(df_filtered)
