@@ -1,63 +1,104 @@
-from pandas import Timestamp
 from pathlib import Path
+from pandas import Timestamp
+from dataclasses import dataclass, asdict, field
 
 
-class Settings:
+@dataclass
+class Parameters:
+    VERSION: str = 'v1'  # 'v0'
+    START_STATION: str = 'Ehv'
+    START_TIME: str = '08:00'
+    END_TIME: str = '20:00'
+    MIN_TRANSFER_TIME: int = 3
+    MAX_TRANSFER_TIME: int = 15
+
+
+VERSION_SETTINGS = {
+    'versions': ['v0', 'v1'],
+    'name': {
+        'v0': 'greedy_dfs',
+        'v1': 'whole_day_data',
+    },
+    'day_of_run': {
+        'v0': '2025-08-02',  # Day where the train times come from
+        'v1': '2025-10-04',
+    },
+    'datetime_format': {
+        'v0': 'ISO8601',  # YYYY-MM-DDThh:mm:ss (or similar!)
+        'v1': 'ISO8601',  # 'RFC3339'
+    },
+}
+
+
+@dataclass
+class BaseSettings:
     # Datetime settings
-    EPOCH_TIMESTAMP = Timestamp("1970-01-01 00:00")  # Moment from which we count minutes
-    DAY_OF_RUN = "2025-08-02"  # Day where the train times come from
-    DATETIME_FORMAT = "ISO8601"  # YYYY-MM-DDThh:mm:ss (or similar!)
+    EPOCH_TIMESTAMP: Timestamp = Timestamp("1970-01-01 00:00")  # Moment from which we count minutes
     
-    # Base path
-    ROOT_PATH = Path(__file__).resolve().parent
+    # Train type setting
+    TYPE_CONVERSION: dict = field(
+        default_factory = lambda: {'Spr': 'S', 'Int': 'I'}
+    )
     
-    INFORMATION_PATH = ROOT_PATH / 'information'
-    DATA_PATH = ROOT_PATH / 'data'
-    VERSIONED_DATA_PATHS = {
-        'v0': DATA_PATH / 'v0',
-    }
+    # Base dirs
+    ROOT_DIR: Path = Path(__file__).resolve().parent
+    DATA_DIR: Path = ROOT_DIR / 'data'
+    RUNS_DIR: Path = ROOT_DIR / 'runs'
+    INFORMATION_DIR: Path = ROOT_DIR / 'information'
+    
+    LOGS_DIR: Path = RUNS_DIR / 'logs'
+    ROUTES_DIR: Path = RUNS_DIR / 'routes'
+    PARAMETERS_DIR: Path = RUNS_DIR / 'parameters'
+    
+    # Intermediate stations file
+    INTERMEDIATE_STATIONS_FILE: str = 'intermediate_stations.json'
 
     # Timetable file names, location dependent on version
-    TIMETABLE_FILE = 'timetable.csv'
-    TIMETABLE_FILE_PROCESSED = TIMETABLE_FILE \
+    TIMETABLE_FILE: str = 'timetable.csv'
+    TIMETABLE_FILE_PROCESSED: str = TIMETABLE_FILE \
         .replace('.csv', '_processed.csv')
     
     # Distances file names, one location
-    DISTANCES_FILE = 'station_distances.json'
-    DISTANCES_FILE_PROCESSED = DISTANCES_FILE \
+    DISTANCES_FILE: str = 'station_distances.json'
+    DISTANCES_FILE_PROCESSED: str = DISTANCES_FILE \
         .replace('.json', '_processed.json')
 
     # Distance paths are constant
-    DISTANCES_PATH = INFORMATION_PATH / DISTANCES_FILE
-    PROCESSED_DISTANCES_PATH = DATA_PATH / DISTANCES_FILE_PROCESSED
+    DISTANCES_PATH: Path = INFORMATION_DIR / DISTANCES_FILE
+    PROCESSED_DISTANCES_PATH: Path = DATA_DIR / DISTANCES_FILE_PROCESSED
 
-    # Other train settings
-    TYPE_CONVERSION = {'Spr': 'S', 'Int': 'I'}
 
-    # Version names
-    VERSION_NAMES = {
-        'v0': 'greedy_dfs',
-    }
+@dataclass
+class VersionSettings(BaseSettings):
+    VERSION: str = field(default='')
+    VERSION_NAME: str = field(default='')
+    DAY_OF_RUN: str = field(default='')
+    DATETIME_FORMAT: str = field(default='')
     
-    # Runs path
-    RUNS_PATH = ROOT_PATH / 'runs'
+    DATA_PATH: Path = field(default=Path())
+    LOGS_PATH: Path = field(default=Path())
+    ROUTES_PATH: Path = field(default=Path())
+    PARAMETERS_PATH: Path = field(default=Path())
     
-    # Route tables
-    ROUTES_PATH = RUNS_PATH / 'routes'
-    VERSIONED_ROUTES_PATH = {
-        'v0': ROUTES_PATH / 'v0',
-    }
+    @classmethod
+    def get_version_settings(cls):
+        version = Parameters.VERSION
+        assert version in VERSION_SETTINGS['versions'], "Invalid version"
+        
+        base_settings = BaseSettings()
+        settings_dict = asdict(base_settings)
+        
+        return cls(
+            VERSION=version,
+            VERSION_NAME=VERSION_SETTINGS['name'][version],
+            DAY_OF_RUN=VERSION_SETTINGS['day_of_run'][version],
+            DATETIME_FORMAT=VERSION_SETTINGS['datetime_format'][version],
+            
+            DATA_PATH=settings_dict['DATA_DIR'] / version,
+            LOGS_PATH=settings_dict['LOGS_DIR'] / version,
+            ROUTES_PATH=settings_dict['ROUTES_DIR'] / version,
+            PARAMETERS_PATH=settings_dict['PARAMETERS_DIR'] / version,
 
-    # Logging files
-    LOGS_PATH = RUNS_PATH / 'logs'
-    VERSIONED_LOGS_PATH = {
-        'v0': LOGS_PATH / 'v0',
-    }
-    
-    # Parameter settings
-    PARAMETERS_PATH = RUNS_PATH / 'parameters'
-    VERSIONED_PARAMETERS_PATH = {
-        'v0': PARAMETERS_PATH / 'v0',
-    }
-    
-    
+            **settings_dict
+        )
+
