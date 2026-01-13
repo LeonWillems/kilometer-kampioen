@@ -20,7 +20,7 @@ Counting a connection:
     - You can take the intercity Til - Ht and then the intercity Ht - Til,
         as there are no inbetween stations, so count twice. Can ofcourse also
         take the sprinter once or twice
-        
+
 - To make communication a bit easier, the Kilometer Kampioen organisation
     regards a 'traject' as a route from one intersection to the next
     - So, Vlissingen - Roosendaal is one 'traject' but consists of many

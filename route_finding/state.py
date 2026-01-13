@@ -2,8 +2,7 @@ from logging import Logger
 
 from .route_indicator import RouteIndicator
 from ..data_processing.data_utils import (
-    read_timetable, int_to_timestamp,
-    timestamp_to_int,
+    int_to_timestamp, timestamp_to_int,
 )
 
 from ..settings import Parameters, VersionSettings
@@ -12,17 +11,19 @@ SETTINGS = VersionSettings.get_version_settings()
 
 class State:
     """Represents the state of the route finding process.
-    
+
     Attributes:
     - total_distance (float): The total distance of the route
         (according to the Kilometer Kampioen rules)
-    - route (list[pd.Series]): A list of pd.Series objects representing the route
+    - route (list[pd.Series]): A list of pd.Series objects
+        representing the route
     - route_indicator (RouteIndicator): An instance of RouteIndicator
     - current_time (int): The current time in the route finding process,
         usually the time of the last train arrival, in minutes after epoch
     - current_station (str): The station where the route finding is currently,
         usually the arrival station of the last train
-    - id_previous_train (str): The ID of the last train used in the route finding
+    - id_previous_train (str): The ID of the last train used in the
+        route finding
     - logger (Logger): Logger instance for logging information
 
     Methods:
@@ -48,7 +49,9 @@ class State:
         - current_station (str): The station where the route finding starts
         - logger (Logger): Logger instance for logging information
         """
-        self.current_time = timestamp_to_int(current_timestamp=Parameters.START_TIME)
+        self.current_time = timestamp_to_int(
+            current_timestamp=Parameters.START_TIME
+        )
         self.current_station = Parameters.START_STATION
         self.route_indicator.init_indicator_table()
         self.logger = logger
@@ -71,7 +74,5 @@ class State:
         new_state.route_indicator = self.route_indicator.copy()
         new_state.current_time = self.current_time
         new_state.current_station = self.current_station
-        new_state.id_previous_train = self.id_previous_train 
+        new_state.id_previous_train = self.id_previous_train
         return new_state
-    
-    

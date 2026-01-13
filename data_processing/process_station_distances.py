@@ -4,7 +4,8 @@ from ..settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 """
-Got the distances from https://github.com/nanderv/trainkms. They are in the following format:
+Got the distances from https://github.com/nanderv/trainkms.
+They are in the following format:
 [
     {
         "fromStation": "ehv",
@@ -32,7 +33,7 @@ distances used by Kilometer Kampioen, so we cannot use it directly.
 class StationDistanceProcessor:
     def __init__(self):
         """Class to process station distances.
-        
+
         Attributes:
         - distances: Unprocessed distances
         - processed_distances: Processed distances
@@ -47,21 +48,26 @@ class StationDistanceProcessor:
 
     def _process_distances(self) -> dict[str, dict[str, float]]:
         """Convert the list of distances to a dictionary for quick lookups.
-        
+
         Returns:
         - dict: See explanation above for exact structure.
         """
         station_distances_processed = {}
 
         for station_distance in self.distances:
-            from_station = station_distance['fromStation'].title()  # Capitalize first letter
-            to_station = station_distance['toStation'].title()  # Capitalize first letter
-            distance = station_distance['distance'] / 10  # Convert from hectometers to kilometers
+            # Capitalize first letter for from & to stations
+            from_station = station_distance['fromStation'].title()
+            to_station = station_distance['toStation'].title()
 
-            # Check if key (from_station) already exists, if not, initialize empty dictionary
-            # Then, for from_station dict, set key (to_station) with value distance
-            # We use dictionaries for quick, easy and intuitive lookups (dict[from][to] yields dist)
-            station_distances_processed.setdefault(from_station, {})[to_station] = distance
+            # Convert from hectometers to kilometers
+            distance = station_distance['distance'] / 10
+
+            # Check if key (from_station) already exists, if not, initialize
+            # empty dictionary. Then, for from_station dict, set key
+            # (to_station) with value distance. We use dictionaries for quick,
+            # easy and intuitive lookups (dict[from][to] yields dist)
+            station_distances_processed \
+                .setdefault(from_station, {})[to_station] = distance
 
         return station_distances_processed
 
@@ -78,4 +84,3 @@ if __name__ == "__main__":
     distances_processor = StationDistanceProcessor()
     distances_processor.save_processed_distances()
     print("Station distances processed and saved successfully.")
-

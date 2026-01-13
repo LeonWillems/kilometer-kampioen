@@ -4,10 +4,10 @@ from ..settings import VersionSettings
 
 def get_paths(settings: VersionSettings) -> tuple[Path, Path, Path]:
     """Gets the right paths to the three kinds of files.
-    
+
     Args:
     - version (str): Version of the route finding algo, example 'v0'
-    
+
     Returns:
     - tuple: Three paths
     """
@@ -19,13 +19,13 @@ def get_paths(settings: VersionSettings) -> tuple[Path, Path, Path]:
 
 def remove_all_but_last_file(path: Path):
     """Will remove all but the last file for a given path.
-    
+
     Args:
     - path (Path): To the right folder
     """
     # List all files in the directory
     files = [f for f in path.iterdir() if f.is_file()]
-    
+
     # If there's nothing or only one file, do nothing
     if len(files) <= 1:
         return
@@ -33,14 +33,13 @@ def remove_all_but_last_file(path: Path):
     # Keep the newest file, remove all others
     for file_to_remove in files[:-1]:
         file_to_remove.unlink()
-        
+
 
 if __name__ == "__main__":
     # Define for which version to delete files
     version = 'v0'
     settings = VersionSettings.get_version_settings(version=version)
     paths = get_paths(settings)
-    
+
     for path in paths:
         remove_all_but_last_file(path)
-    
