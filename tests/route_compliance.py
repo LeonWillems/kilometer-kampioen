@@ -3,16 +3,16 @@ from .test_utils import (
     get_log_contents, get_parms_contents, get_route_contents,
 )
 from ..data_processing.data_utils import timestamp_to_int
+from ..settings import VersionSettings
+SETTINGS = VersionSettings.get_version_settings()
 
 
 class TestRouteCompliance(unittest.TestCase):
     def setUp(self):
         """Set up test case with version-specific paths."""
-        self.version = 'v0'
-
-        self.log = get_log_contents(self.version)
-        self.parms = get_parms_contents(self.version)
-        self.route = get_route_contents(self.version)
+        self.log = get_log_contents()
+        self.parms = get_parms_contents()
+        self.route = get_route_contents()
 
     def test_start_time(self):
         """Test that the start time in the route table (current time of
@@ -20,7 +20,7 @@ class TestRouteCompliance(unittest.TestCase):
 
         # Get the start times from the log
         start_time_param = timestamp_to_int(
-            current_timestamp=self.parms['start_time'],
+            current_timestamp=self.parms['START_TIME'],
         )
         start_time_route = self.route.loc[0, 'Current_Time']
 
@@ -33,9 +33,9 @@ class TestRouteCompliance(unittest.TestCase):
     def test_row_statistics(self):
         """Test statistics for each individual row in the route table."""
         start_time = timestamp_to_int(
-            current_timestamp=self.parms['start_time']
+            current_timestamp=self.parms['START_TIME']
         )
-        end_time = timestamp_to_int(current_timestamp=self.parms['end_time'])
+        end_time = timestamp_to_int(current_timestamp=self.parms['END_TIME'])
 
         for idx, row in self.route.iterrows():
             # Test non-negative values
@@ -79,8 +79,8 @@ class TestRouteCompliance(unittest.TestCase):
     def test_consecutive_trains(self):
         """Test statistics comparing current train with the next train
         in the sequence."""
-        min_transfer = self.parms['min_transfer_time']
-        max_transfer = self.parms['max_transfer_time']
+        min_transfer = self.parms['MIN_TRANSFER_TIME']
+        max_transfer = self.parms['MAX_TRANSFER_TIME']
 
         # Iterate through all rows except the last one
         for idx in range(len(self.route) - 1):
