@@ -20,38 +20,47 @@ Drive as many kilometers by train as possible within 24 hours - with the help of
    python -m kilometer-kampioen.tests.route_compliance
    ```
 
-   The main parameters in `run.py` that you can modify are:
-   - `version`: Version of the timetable data (default: 'v0')
-   - `start_station`: Starting station (default: 'Ht' - 's-Hertogenbosch)
-   - `start_time`: Starting time (default: 12:00)
-   - `end_time`: Time by which the route must be completed (default: 15:00)
+   The main parameters in `settings.py` that you can modify are:
+   - `version`: Version of the timetable data (default: 'v1')
+   - `start_station`: Starting station (default: 'Ehv' - Eindhoven Centraal)
+   - `start_time`: Starting time (default: 08:00)
+   - `end_time`: Time by which the route must be completed (default: 20:00)
    - `min_transfer_time`: Minimum transfer time in minutes (default: 3)
    - `max_transfer_time`: Maximum transfer time in minutes (default: 15)
 
 
 ### Output
 The algorithm will create:
-- Log files in `runs/logs/v0/` with detailed information about the search process
-- Parameters files in `runs/parameters/v0/` containing parameters filled in by user
-- Route files in `runs/routes/v0/` containing the best routes found, named with timestamp and distance in hectometers
-An example for each version can be found in `runs/example/v./`
+- Log files in `runs/logs/v_/` with detailed information about the search process
+- Parameters files in `runs/parameters/v_/` containing parameters filled in by user
+- Route files in `runs/routes/v_/` containing the best routes found, named with timestamp and distance in hectometers
+An example for each version can be found in `runs/example/v_/`
 
 # Sources
+## General
 - Find all rules here: https://www.kilometerkampioen.nl/
-- Find all station-related content here: https://en.wikipedia.org/wiki/Railway_stations_in_the_Netherlands
-    - Each station has a code. For example, "Eindhoven Centraal" has "Ehv". Please find all codes in "information/station_codes_ns.csv".
-    However, we will use the other file, stated below.
 - Find kilometer count courtesy here: https://github.com/nanderv/trainkms
-    - A written guide how to count kilometers
-    - A tool for counting kilometers
-    - Number of kilometers between pairs of stations ("data/distance_between_stations.json")
-    - The station codes as well, found in "information/station_codes.json". All of the distance pairs' codes are found in this file.
+   - Contains the 'ground-truth' kilometer distances used by kilometerkampioen
+
+## Data sources
+- `data/`
+   - `v0/mock_stations.png`: https://en.wikipedia.org/wiki/Railway_stations_in_the_Netherlands, edited with Paint
+   - `v0/timetable_raw.csv`: Manually constructed with NS data from 2025-08-02
+   - `v1/services-2025-10.csv`: Not included, need to download from https://www.rijdendetreinen.nl/en/open-data/train-archive
+   - `station_distances_processed.json`: The processed version of `information/station_distances.json`
+- `information/`
+   - `kilometer_count_rules.png`: https://github.com/nanderv/trainkms/blob/main/rulesSuggestion.png
+   - `rules.py`: https://www.kilometerkampioen.nl/handleiding
+   - `scorecard.csv`: `scorekaart2023.xlsx`, but with the following changes: deleted both of the 'via HSL' lines, and adjusted some name to match `stations-2023-09.csv`. Cleaned up and kept the relevant information
+   - `scorekaart2023.xlsx`: https://www.kilometerkampioen.nl/ -> 'Download Scorekaart'. Contains the kilometers between hub stations
+   - `station_distances.json`: https://github.com/nanderv/trainkms/blob/main/routes.json -> With one minor change 'dtz' -> 'dtcp' (Delft Zuid -> Delft Campus)
+   - `stations-2023-09.csv`: https://www.rijdendetreinen.nl/en/open-data/stations
 
 # V0
 ## Data (see `data/v0/` files)
 - Intercity stations: 's-Hertogenbosch, Tilburg, Eindhoven Centraal
 - Other stations: Vught, Boxtel, Best, Oisterwijk, Eindhoven Strijp-S
-- Timeframe: Saturday, 12:00 - 15:00
+- Timeframe: Saturday, 12:00 - 15:00 (3 hours)
 - Actual train times for Saturday August 2nd, 2025
 
 ## Algorithm
@@ -67,3 +76,16 @@ For pseudocode, see `route_finding/pseudocode.py`.
 - Only considers a small subset of stations
 - Greedy approach may miss better solutions
 - Due to DFS, it might take a while to find a better route
+
+# V1
+## Data (see `data/v1/` files)
+- All Dutch rail stations
+- Timeframe: Saturday: 08:00 - 20:00 (12 hours)
+- Actual train times for Saturday October 4th, 2025
+
+## Algorithm
+- Same as for `V0`
+
+## Known Limitations
+- Train times dependent on one particular day, which contains disruptions
+- Same DFS limitations as `V0`

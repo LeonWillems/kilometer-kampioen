@@ -20,10 +20,8 @@ if __name__ == "__main__":
 
     with open(json_file_path, 'w') as f:
         json.dump(params_dict, f)
-    
+
     run_greedy_dfs(timestamp)
-    
+
     time_end = time()
     print(f"That shit took {time_end - time_start:.2f} seconds.")
-    
-    

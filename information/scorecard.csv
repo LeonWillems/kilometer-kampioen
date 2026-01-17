@@ -1,0 +1,132 @@
+﻿From;To;Kilometers
+Leeuwarden;Harlingen Haven;26.4
+Leeuwarden;Stavoren;50.2
+Groningen;Leeuwarden;54.5
+Eemshaven;Sauwerd;26.5
+Delfzijl;Sauwerd;34.1
+Sauwerd;Groningen;11
+Groningen;Groningen Europapark;2.6
+Groningen Europapark;Zuidbroek;19
+Zuidbroek;Veendam;7.5
+Zuidbroek;Bad Nieuweschans;24.6
+Groningen Europapark;Meppel;74.6
+Leeuwarden;Meppel;66.5
+Meppel;Zwolle;27.7
+Zwolle;Kampen;13.3
+Zwolle;Mariënberg;34.3
+Mariënberg;Emmen;41.2
+Mariënberg;Almelo;19
+Zwolle;Wierden;39.8
+Wierden;Almelo;4.6
+Zwolle;Deventer;29.7
+Deventer;Wierden;34.3
+Almelo;Hengelo;14.6
+Hengelo;Oldenzaal;11
+Hengelo;Enschede;7.6
+Enschede;Glanerbrug;6.2
+Amersfoort Centraal;Zwolle;66.5
+Amersfoort Centraal;Hoevelaken;6
+Hoevelaken;Ede-Wageningen;27.7
+Hoevelaken;Apeldoorn;37.7
+Apeldoorn;Deventer;14.6
+Deventer;Zutphen;16.4
+Apeldoorn;Zutphen;17.5
+Zutphen;Hengelo;45.7
+Zutphen;Winterswijk;43.7
+Ede-Wageningen;Arnhem Centraal;16.7
+Arnhem Centraal;Arnhem Velperpoort;1.9
+Arnhem Velperpoort;Zutphen;27.3
+Arnhem Velperpoort;Zevenaar;12.5
+Zevenaar;Winterswijk;50.4
+Tiel;Elst;32.6
+Elst;Arnhem Centraal;10.3
+Nijmegen;Elst;8.3
+Weesp;Almere Poort;11.7
+Naarden-Bussum;Almere Poort;17.2
+Almere Poort;Lelystad Centrum;28.3
+Lelystad Centrum;Zwolle;50
+Den Helder;Heerhugowaard;34.5
+Heerhugowaard;Hoorn;16.9
+Hoorn;Enkhuizen;17.5
+Hoorn;Zaandam;32.8
+Heerhugowaard;Uitgeest;22.9
+Uitgeest;Zaandam;13
+Uitgeest;Haarlem;17.3
+Zandvoort aan Zee;Haarlem;7.9
+Haarlem;Leiden Centraal;29.1
+Haarlem;Amsterdam Sloterdijk;14.6
+Zaandam;Amsterdam Sloterdijk;8.2
+Leiden Centraal;Hoofddorp;22.2
+Hoofddorp;Schiphol Airport;4.6
+Schiphol Airport;Amsterdam Sloterdijk;12.4
+Amsterdam Sloterdijk;Amsterdam Centraal;5
+Amsterdam Centraal;Amsterdam Muiderpoort;3.6
+Amsterdam Muiderpoort;Duivendrecht;4.7
+Duivendrecht;Amsterdam Bijlmer ArenA;1
+Schiphol Airport;Amsterdam RAI;10
+Amsterdam RAI;Duivendrecht;4.3
+Amsterdam RAI;Amsterdam Bijlmer ArenA;5
+Amsterdam Bijlmer ArenA;Breukelen;17.4
+Duivendrecht;Weesp;7.8
+Amsterdam Muiderpoort;Weesp;9.8
+Weesp;Naarden-Bussum;9.1
+Naarden-Bussum;Hilversum;6.4
+Hilversum;Baarn;7.1
+Baarn;Amersfoort Centraal;8.9
+Den Dolder;Baarn;10.9
+Den Dolder;Amersfoort Centraal;9.5
+Utrecht Overvecht;Hilversum;14.1
+Utrecht Overvecht;Den Dolder;8.5
+Utrecht Centraal;Utrecht Overvecht;3.4
+Breukelen;Utrecht Centraal;13.3
+Woerden;Breukelen;12.6
+Woerden;Utrecht Centraal;15.9
+Bilthoven;Utrecht Maliebaan;6.2
+Utrecht Centraal;Utrecht Vaartsche Rijn;1.5
+Utrecht Vaartsche Rijn;Maarn;17.7
+Maarn;Rhenen;21.9
+Maarn;Ede-Wageningen;21.6
+Utrecht Vaartsche Rijn;Geldermalsen;24.5
+Geldermalsen;Tiel;11.9
+Dordrecht;Geldermalsen;48.1
+Geldermalsen;'s-Hertogenbosch;22.1
+'s-Hertogenbosch;Nijmegen;43.5
+Nijmegen;Blerick;59
+Blerick;Venlo;1.7
+Dordrecht;Lage Zwaluwe;14.3
+Roosendaal;Lage Zwaluwe;22.8
+Roosendaal;Breda;24
+Lage Zwaluwe;Breda-Prinsenbeek;10.1
+Breda-Prinsenbeek;Breda;4.8
+Breda;Tilburg;21.6
+Tilburg;'s-Hertogenbosch;22.3
+'s-Hertogenbosch;Boxtel;12.2
+Boxtel;Tilburg;17
+Boxtel;Eindhoven Centraal;19.9
+Eindhoven Centraal;Blerick;50.2
+Eindhoven Centraal;Roermond;53.6
+Venlo;Roermond;23.7
+Roermond;Sittard;24.4
+Sittard;Maastricht Noord;18.9
+Maastricht Noord;Maastricht;3
+Maastricht;Eijsden;9.1
+Sittard;Heerlen;18.5
+Maastricht Noord;Heerlen;21.3
+Heerlen;Landgraaf;3.2
+Landgraaf;Eygelshoven Markt;3
+Landgraaf;Kerkrade Centrum;5.6
+Vlissingen;Roosendaal;75.3
+Leiden Centraal;Alphen a/d Rijn;15.3
+Alphen a/d Rijn;Woerden;19.1
+Alphen a/d Rijn;Gouda;16.9
+Gouda;Woerden;16.8
+Den Haag Centraal;Den Haag Laan v NOI;1.5
+Den Haag Laan v NOI;Leiden Centraal;13.9
+Den Haag Centraal;Gouda;28.2
+Den Haag Centraal;Den Haag HS;1.8
+Den Haag HS;Den Haag Laan v NOI;1.9
+Den Haag HS;Schiedam Centrum;18.2
+Schiedam Centrum;Rotterdam Centraal;4.1
+Rotterdam Centraal;Gouda;23.8
+Rotterdam Centraal;Rotterdam Lombardijen;7.2
+Rotterdam Lombardijen;Dordrecht;13.1

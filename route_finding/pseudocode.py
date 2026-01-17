@@ -18,12 +18,12 @@ idea what happens under the hood. Enjoy!
 - start_time (12:00)
 - start_station (Ht)
 
--> Kick-off algorithm by running 
+-> Kick-off algorithm by running
     GreedyDFS(
         current_time = start_time,
         current_station = start_station
     )
-    
+
 == Important stuff t
 
 
@@ -34,13 +34,14 @@ idea what happens under the hood. Enjoy!
 
 == Procedure:
 1. transfer_options <- run FilterTimetable(
-    current_time, current_station, global constants 
+    current_time, current_station, global constants
 )
 2. top_transfers <- run ScoreFunction(transfer_options)
 3. For transfer in top_transfers:
    a. new_state <- copy of current_state
    b. If transfer.section_driven == 0:
-      i. new_state.total_distance <- current_state.total_distance + transfer.distance
+      i. new_state.total_distance <- current_state.total_distance
+         + transfer.distance
    c. new_state.current_time <- transfer.arrival (at new station)
    d. new_state.current_station <- transfer.to_station
    f. If new_state.total_distance > best_state.total_distance:
@@ -76,8 +77,12 @@ idea what happens under the hood. Enjoy!
 
 == Procedure:
 1. For transfer in transfer_options:
-   a. transfer.score <- transfer.distance / (transfer.waiting_time + transfer.duration)  # average speed including waiting time
-   b. transfer.section_driven <- Indicator whether section has already been driven by same train type (both ways)
+   a. transfer.score
+        <- transfer.distance / (transfer.waiting_time + transfer.duration)
+        # average speed including waiting time
+   b. transfer.section_driven
+        <- Indicator whether section has already been
+           driven by same train type (both ways)
 2. Sort transfer_options on transfer.score (decreasingly)
 3. Sort transfer_options on transfer.section_driven (increasingly, 0 is good)
 4. Return top 2 transfer_options

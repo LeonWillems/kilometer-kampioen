@@ -12,10 +12,11 @@ Some context:
     this distance to the station_distances.
 
 How?
-- We will use breadth-first search (BFS) to find a direct path between two stations.
+- We will use breadth-first search (BFS) to find a direct path between
+    two stations.
 
 Pseudocode for BFS:
-- Input: 
+- Input:
     - A graph G (an adjacency list with distances)
     - The starting vertex root of G (a station)
 - Output: Goal state. The parent links trace the shortest path back to root
@@ -34,20 +35,23 @@ Pseudocode for BFS:
 12                  w.parent := v
 13                  Q.enqueue(w)
 
-Important to note! BFS will not actually find the shortest distance for any graph,
-but it will find a direct path with least nodes. For now, that is fine. For later,
-check whether this is still the way to go for our train network, as a counter-example
-might exist. If latter, implement Dijkstra's algorithm instead.
+Important to note! BFS will not actually find the shortest distance for any
+graph, but it will find a direct path with least nodes. For now, that is fine.
+For later, check whether this is still the way to go for our train network, as
+a counter-example might exist. If latter, implement Dijkstra's
+algorithm instead.
 """
 
 
 class BFS:
     def __init__(self, adjacency_list: dict[str, dict[str, float]]):
-        """Only need the grap G, represented as an adjacency list with distances.
-        
+        """Only need the grap G, represented as an adjacency list
+        with distances.
+
         Args:
-        - adjacency_list (dict): A dictionary where keys are station names and 
-            values are dictionaries of neighboring stations with their distances.
+        - adjacency_list (dict): A dictionary where keys are station names and
+            values are dictionaries of neighboring stations with
+            their distances.
             Example: {"Bhv": {"Utm": 6.2, "Uto": 5.6, "Dld": 2.9}, ...}
         """
         self.graph = adjacency_list
@@ -55,15 +59,15 @@ class BFS:
     def _reconstruct_path(self, parent: dict[str, str], goal: str):
         """Reconstruct the path from start to goal using parent links.
         In other words, backwards tracing from goal to start.
-        
+
         Args:
-        - parent (dict): A dictionary mapping each node to its parent in 
+        - parent (dict): A dictionary mapping each node to its parent in
             the BFS tree
         - goal (str): The goal node to reconstruct the path to
         """
         path = []
         total_distance = 0.0  # Keep track of distance travelled
-        
+
         while goal is not None:
             path.append(goal)
             goal = parent[goal]
@@ -73,14 +77,15 @@ class BFS:
 
     def search(self, start: str, goal: str) -> tuple[list, float]:
         """Perform BFS to find the shortest path from start to goal.
-        
+
         Args:
         - start (str): The starting station
         - goal (str): The destination station
-        
+
         Returns:
         - tuple: A tuple containing the path as a list of station names and
-            the total distance as a float. If no path is found, returns ([], 0.0)
+            the total distance as a float. If no path is found,
+            returns ([], 0.0)
         """
         queue = [start]
         visited = {start}
@@ -101,4 +106,3 @@ class BFS:
                     queue.append(neighbor)
 
         return [], 0.0  # No path found
-

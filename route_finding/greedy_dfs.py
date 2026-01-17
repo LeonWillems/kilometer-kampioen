@@ -5,8 +5,9 @@ from datetime import datetime
 from .state import State
 from .logger import setup_logger
 from ..data_processing.data_utils import (
-    read_timetable, save_timetable, add_duration_in_minutes, 
-    filter_timetable, timestamp_to_int, int_to_timestamp
+    read_timetable, save_timetable,
+    add_duration_in_minutes,
+    filter_timetable, int_to_timestamp
 )
 
 from ..settings import Parameters, VersionSettings
@@ -62,7 +63,7 @@ class GreedyDFS:
 
         # Construct custom df for the best found route
         best_route_df = pd.DataFrame(data=self.best_state.route)
-        
+
         # Add the 'from station' index label as an extra column (leftmost)
         from_stations = [section.name for section in self.best_state.route]
         best_route_df.insert(0, 'Station', from_stations)
@@ -82,13 +83,14 @@ class GreedyDFS:
             f"End station: {self.best_state.current_station}\n"
             f"End time: {int_to_timestamp(self.best_state.current_time)}"
         )
-        
+
     def _apply_score_function(
-            self,
-            transfer_options: pd.DataFrame,
-            state: State,
-        ) -> pd.DataFrame:
-        """Applies a scoring function to the transfer options to prioritize them.
+        self,
+        transfer_options: pd.DataFrame,
+        state: State,
+    ) -> pd.DataFrame:
+        """Applies a scoring function to the transfer options to
+        prioritize them.
 
         Steps:
         1. Calculate waiting time (in minutes) for each transfer option
@@ -99,7 +101,8 @@ class GreedyDFS:
         6. Return the top 2 options
 
         Args:
-        - transfer_options (pd.DataFrame): DataFrame containing transfer options
+        - transfer_options (pd.DataFrame): DataFrame containing
+            transfer options
         - state (State): Current state of the route finding process
 
         Returns:
@@ -107,14 +110,14 @@ class GreedyDFS:
         """
         # 1. Calculate waiting time
         transfer_options['Current_Time'] = state.current_time
-        
+
         transfer_options = add_duration_in_minutes(
             transfer_options,
             start_col='Current_Time',
             end_col='Departure_Int',
             duration_col='Waiting_Time',
         )
-        
+
         # 2. Add 'Distance_Counted' as a number of how many kilometers may be
         #    counted for the current sections. See 'information/rules.py'
         transfer_options['Distance_Counted'] = transfer_options.apply(
@@ -134,7 +137,9 @@ class GreedyDFS:
         )
 
         # 4. Sort by score (descending), higher is better
-        transfer_options = transfer_options.sort_values(by='Score', ascending=False)
+        transfer_options = transfer_options.sort_values(
+            by='Score', ascending=False
+        )
 
         # 5. Return the top 2 options. For now, we find that the code
         # runs for way too long if we don't limit the number of options.
@@ -167,13 +172,18 @@ class GreedyDFS:
 
         # 2. If no options are available, return
         if transfer_options.empty:
-            self.logger.debug(f"No valid transfers found from {current_state.current_station}.")
+            self.logger.debug(
+                "No valid transfers found from "
+                f"{current_state.current_station}."
+            )
             return
-        
+
         self.logger.debug(f"Found {len(transfer_options)} transfer options.")
 
         # 3. Call score function to sort based on some priority
-        top_transfers = self._apply_score_function(transfer_options, current_state)
+        top_transfers = self._apply_score_function(
+            transfer_options, current_state
+        )
         self.logger.debug(
             f"Top transfer option: {top_transfers.iloc[0].name} -> "
             f"{top_transfers.iloc[0]['To']} ({top_transfers.iloc[0]['Type']})"
@@ -183,7 +193,7 @@ class GreedyDFS:
         for _, row in top_transfers.iterrows():
             # a. Create new state for this branch
             new_state = current_state.copy()
-            
+
             # b. Update new state with this ride
             new_state.current_time = row['Arrival_Int']
             new_state.current_station = row['To']
@@ -195,19 +205,21 @@ class GreedyDFS:
             # c. Update best state if better
             if new_state.total_distance > self.best_distance:
                 self.logger.info(
-                    f"New best route found! Distance: {new_state.total_distance:.1f}km"
-                    f" (+{new_state.total_distance - self.best_distance:.1f}km)"
+                    "New best route found! Distance: "
+                    f"{new_state.total_distance:.1f}km  (+"
+                    f"{new_state.total_distance - self.best_distance:.1f}"
+                    "km)"
                 )
                 self.best_distance = new_state.total_distance
                 self.best_state = new_state.copy()
-            
+
             # d. Iterate recursively on newly found transfer
             self.dfs(new_state)
-    
+
 
 def run_greedy_dfs(timestamp: datetime):
     """Main function to run the GreedyDFS route finding algorithm.
-    
+
     Args:
     - prms (dict): Parameter settings to run algo, example;
         {'version': 'v0', 'start_station': 'Ht',
@@ -222,4 +234,3 @@ def run_greedy_dfs(timestamp: datetime):
 
     greedy_dfs.dfs(initial_state)
     greedy_dfs._save_best_route()
-

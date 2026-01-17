@@ -3381,22 +3381,22 @@
   },
   {
     "fromStation": "dt",
-    "toStation": "dtz",
+    "toStation": "dtcp",
     "distance": 21
   },
   {
-    "fromStation": "dtz",
+    "fromStation": "dtcp",
     "toStation": "dt",
     "distance": 21
   },
   {
-    "fromStation": "dtz",
+    "fromStation": "dtcp",
     "toStation": "sdm",
     "distance": 87
   },
   {
     "fromStation": "sdm",
-    "toStation": "dtz",
+    "toStation": "dtcp",
     "distance": 87
   },
   {

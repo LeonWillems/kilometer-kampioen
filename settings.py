@@ -5,7 +5,7 @@ from dataclasses import dataclass, asdict, field
 
 @dataclass
 class Parameters:
-    VERSION: str = 'v1'  # 'v0'
+    VERSION: str = 'v1'  # 'v0' / 'v1'
     START_STATION: str = 'Ehv'
     START_TIME: str = '08:00'
     END_TIME: str = '20:00'
@@ -32,24 +32,24 @@ VERSION_SETTINGS = {
 
 @dataclass
 class BaseSettings:
-    # Datetime settings
-    EPOCH_TIMESTAMP: Timestamp = Timestamp("1970-01-01 00:00")  # Moment from which we count minutes
-    
+    # Moment from which we count minutes
+    EPOCH_TIMESTAMP: Timestamp = Timestamp("1970-01-01 00:00")
+
     # Train type setting
     TYPE_CONVERSION: dict = field(
-        default_factory = lambda: {'Spr': 'S', 'Int': 'I'}
+        default_factory=lambda: {'Spr': 'S', 'Int': 'I'}
     )
-    
+
     # Base dirs
     ROOT_DIR: Path = Path(__file__).resolve().parent
     DATA_DIR: Path = ROOT_DIR / 'data'
     RUNS_DIR: Path = ROOT_DIR / 'runs'
     INFORMATION_DIR: Path = ROOT_DIR / 'information'
-    
+
     LOGS_DIR: Path = RUNS_DIR / 'logs'
     ROUTES_DIR: Path = RUNS_DIR / 'routes'
     PARAMETERS_DIR: Path = RUNS_DIR / 'parameters'
-    
+
     # Intermediate stations file
     INTERMEDIATE_STATIONS_FILE: str = 'intermediate_stations.json'
 
@@ -57,7 +57,7 @@ class BaseSettings:
     TIMETABLE_FILE: str = 'timetable.csv'
     TIMETABLE_FILE_PROCESSED: str = TIMETABLE_FILE \
         .replace('.csv', '_processed.csv')
-    
+
     # Distances file names, one location
     DISTANCES_FILE: str = 'station_distances.json'
     DISTANCES_FILE_PROCESSED: str = DISTANCES_FILE \
@@ -74,26 +74,26 @@ class VersionSettings(BaseSettings):
     VERSION_NAME: str = field(default='')
     DAY_OF_RUN: str = field(default='')
     DATETIME_FORMAT: str = field(default='')
-    
+
     DATA_PATH: Path = field(default=Path())
     LOGS_PATH: Path = field(default=Path())
     ROUTES_PATH: Path = field(default=Path())
     PARAMETERS_PATH: Path = field(default=Path())
-    
+
     @classmethod
     def get_version_settings(cls):
         version = Parameters.VERSION
         assert version in VERSION_SETTINGS['versions'], "Invalid version"
-        
+
         base_settings = BaseSettings()
         settings_dict = asdict(base_settings)
-        
+
         return cls(
             VERSION=version,
             VERSION_NAME=VERSION_SETTINGS['name'][version],
             DAY_OF_RUN=VERSION_SETTINGS['day_of_run'][version],
             DATETIME_FORMAT=VERSION_SETTINGS['datetime_format'][version],
-            
+
             DATA_PATH=settings_dict['DATA_DIR'] / version,
             LOGS_PATH=settings_dict['LOGS_DIR'] / version,
             ROUTES_PATH=settings_dict['ROUTES_DIR'] / version,
@@ -101,4 +101,3 @@ class VersionSettings(BaseSettings):
 
             **settings_dict
         )
-

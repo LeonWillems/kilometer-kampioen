@@ -3,7 +3,7 @@
 RULES FOR THE KILOMETER-KAMPIOEN COMPETITION
 
 - 24-hour version: Start between 00:00 and 04:00
-- 12:hour version: Start between 00:00 and 12:00
+- 12-hour version: Start between 00:00 and 12:00
 - In both cases: visit station Zwolle between 11:00 and 15:00 for a stamp
 
 Counting a connection:
@@ -20,7 +20,7 @@ Counting a connection:
     - You can take the intercity Til - Ht and then the intercity Ht - Til,
         as there are no inbetween stations, so count twice. Can ofcourse also
         take the sprinter once or twice
-        
+
 - To make communication a bit easier, the Kilometer Kampioen organisation
     regards a 'traject' as a route from one intersection to the next
     - So, Vlissingen - Roosendaal is one 'traject' but consists of many
