@@ -1,9 +1,9 @@
 import pandas as pd
 
-from ..data_processing.data_utils import (
+from data_processing.data_utils import (
     load_intermediate_stations, load_distances
 )
-from ..settings import VersionSettings
+from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 

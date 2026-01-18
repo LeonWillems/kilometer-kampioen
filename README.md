@@ -3,21 +3,20 @@ Drive as many kilometers by train as possible within 24 hours - with the help of
 
 ## Setup and Usage
 1. Install requirements.txt
-2. Navigate one level above kilometer-kampioen (`cd ..`)
-3. First, process the raw timetable data by running:
+2. First, process the raw timetable data by running:
    ```bash
-   python -m kilometer-kampioen.data_processing.process_timetable
+   python -m data_processing.process_timetable
    ```
    This will create the necessary processed timetable files in the `data` directory.
 
 4. Fill in some parameters in the file below and run the route finding algorithm:
    ```bash
-   python -m kilometer-kampioen.run
+   python -m run
    ```
 
 5. After running, can do some unit tests on the final route, to check if it's compliant with all the rules (work in progress). Will automatically grab the last route for given version.
    ```bash
-   python -m kilometer-kampioen.tests.route_compliance
+   python -m tests.route_compliance
    ```
 
    The main parameters in `settings.py` that you can modify are:
@@ -47,6 +46,9 @@ An example for each version can be found in `runs/example/v_/`
    - `v0/mock_stations.png`: https://en.wikipedia.org/wiki/Railway_stations_in_the_Netherlands, edited with Paint
    - `v0/timetable_raw.csv`: Manually constructed with NS data from 2025-08-02
    - `v1/services-2025-10.csv`: Not included, need to download from https://www.rijdendetreinen.nl/en/open-data/train-archive
+   - `v_/timetable.csv`: Obtained from preprocessing the raw dataset for some version
+   - `v_/timetable_processed.csv`: Obtained from further processing of `timetable.csv`
+   - `v_/intermediate_stations.json`: Contains all stations between any neighboring pair of hubs for some version
    - `station_distances_processed.json`: The processed version of `information/station_distances.json`
 - `information/`
    - `kilometer_count_rules.png`: https://github.com/nanderv/trainkms/blob/main/rulesSuggestion.png

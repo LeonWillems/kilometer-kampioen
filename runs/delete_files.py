@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from ..settings import VersionSettings
+from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 

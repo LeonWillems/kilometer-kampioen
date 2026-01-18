@@ -1,9 +1,9 @@
 import pandas as pd
 
-from ...data_processing.data_utils import (
+from data_processing.data_utils import (
     read_csv_to_df, save_timetable, load_stations
 )
-from ...settings import VersionSettings
+from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 COLUMNS_OF_INTEREST = [

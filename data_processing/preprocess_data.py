@@ -1,7 +1,7 @@
-from ..data.v0 import preprocessing_v0
-from ..data.v1 import preprocessing_v1
+from data.v0 import preprocessing_v0
+from data.v1 import preprocessing_v1
 
-from ..settings import VersionSettings
+from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 

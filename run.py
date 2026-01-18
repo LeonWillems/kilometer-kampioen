@@ -3,8 +3,8 @@ from time import time
 from datetime import datetime
 from dataclasses import asdict
 
-from .route_finding.greedy_dfs import run_greedy_dfs
-from .settings import Parameters, VersionSettings
+from route_finding.greedy_dfs import run_greedy_dfs
+from settings import Parameters, VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 

@@ -1,7 +1,7 @@
 import pandas as pd
 
-from ...data_processing.data_utils import read_csv_to_df, save_timetable
-from ...settings import VersionSettings
+from data_processing.data_utils import read_csv_to_df, save_timetable
+from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 

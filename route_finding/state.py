@@ -1,11 +1,11 @@
 from logging import Logger
 
 from .route_indicator import RouteIndicator
-from ..data_processing.data_utils import (
+from data_processing.data_utils import (
     int_to_timestamp, timestamp_to_int,
 )
 
-from ..settings import Parameters, VersionSettings
+from settings import Parameters, VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 

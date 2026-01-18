@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 from copy import deepcopy
 
-from ..settings import Parameters, VersionSettings
+from settings import Parameters, VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 
