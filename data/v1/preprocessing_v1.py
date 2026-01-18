@@ -97,7 +97,7 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
     Returns:
     - pd.DataFrame: Same table, but one connection per row
     """
-    section_ids = timetable_df['Service:RDT-ID'].unique()
+    section_ids: pd.DataFrame = timetable_df['Service:RDT-ID'].unique()
 
     new_df_lines = []
     new_columns = ['Station', 'To', 'Departure', 'Arrival', 'Type', 'ID']

@@ -2,7 +2,7 @@ import pstats
 import cProfile
 from datetime import datetime
 
-from ..route_finding.greedy_dfs import run_greedy_dfs
+from route_finding.greedy_dfs import run_greedy_dfs
 
 """Speed profiling.
 Caveat: runs the script in a non-interruptible way, so Ctrl+C won't work!

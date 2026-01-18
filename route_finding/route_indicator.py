@@ -154,18 +154,20 @@ class RouteIndicator:
         return new_indicator
 
 
-def main():
+if __name__ == "__main__":
     """Main function to demonstrate the RouteIndicator functionality.
 
     Will get some random rows from the timetable and update the
     indicator table.
     """
-    from ..data_processing.data_utils import read_timetable
+    from data_processing.data_utils import read_timetable
     indicator = RouteIndicator()
 
     # Init version and corresponding timetable
     version = 'v0'
-    timetable_df = read_timetable(version=version, processed=True)
+    timetable_df: pd.DataFrame = read_timetable(
+        version=version, processed=True
+    )
 
     # Get unique stations and some random rides
     stations_list = timetable_df['Station'].unique()
@@ -179,7 +181,3 @@ def main():
         indicator.update_indicator_table(row)
 
     print(indicator.indicator_table)
-
-
-if __name__ == "__main__":
-    main()
