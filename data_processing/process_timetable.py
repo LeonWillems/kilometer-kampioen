@@ -8,7 +8,7 @@ from .data_utils import (
     save_timetable, add_minutes_from_epoch
 )
 
-from ..settings import VersionSettings
+from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 

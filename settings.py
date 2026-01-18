@@ -5,7 +5,7 @@ from dataclasses import dataclass, asdict, field
 
 @dataclass
 class Parameters:
-    VERSION: str = 'v1'  # 'v0' / 'v1'
+    VERSION: str = 'v0'  # 'v0' / 'v1'
     START_STATION: str = 'Ehv'
     START_TIME: str = '08:00'
     END_TIME: str = '20:00'
@@ -66,6 +66,10 @@ class BaseSettings:
     # Distance paths are constant
     DISTANCES_PATH: Path = INFORMATION_DIR / DISTANCES_FILE
     PROCESSED_DISTANCES_PATH: Path = DATA_DIR / DISTANCES_FILE_PROCESSED
+
+    # The station file is given and constant
+    STATIONS_FILE: str = 'stations-2023-09.csv'
+    STATIONS_PATH: Path = INFORMATION_DIR / STATIONS_FILE
 
 
 @dataclass

@@ -1,7 +1,9 @@
 import pandas as pd
 
-from ...data_processing.data_utils import read_csv_to_df, save_timetable
-from ...settings import VersionSettings
+from data_processing.data_utils import (
+    read_csv_to_df, save_timetable, load_stations
+)
+from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 COLUMNS_OF_INTEREST = [
@@ -25,24 +27,36 @@ TRAIN_TYPE_MAPPING = {
     'Intercity direct': 'Int',
 }
 
-STATION_CODE_MAPPING = {
-    'DTCP': 'DTZ'
-}
 
-INTERNATIONAL_STATION_CODES = [
-    'AHBF', 'ANDD', 'ATW', 'ATWLB', 'AW', 'BERCH', 'BH', 'BIELEF', 'BRESSX',
-    'BUENDE', 'DUISB', 'DUSSEL', 'EAHS', 'EBEO', 'EBOK', 'ECMF', 'EDD', 'EDKD',
-    'EDO', 'EDULH', 'EENP', 'EEPE', 'EHW', 'EHZW', 'EL', 'ELDH', 'ELET',
-    'ELGD', 'ELUE', 'EM', 'EOP', 'EPRA', 'EPRN', 'ESEB', 'ESEM', 'ESN', 'ESRT',
-    'EUN', 'FKTH', 'FNZD', 'FRP', 'FVS', 'G', 'GKT', 'GWD', 'HAGEN', 'HAMM',
-    'HZ', 'KBOI', 'KBRY', 'KDFFH', 'KDUL', 'KN', 'KSWE', 'KWBA', 'KWO', 'LEER',
-    'LKP', 'LKR', 'LUIK', 'MARIA', 'MCGB', 'MID', 'NEUSS', 'OBERH', 'OBERHS',
-    'OSNH', 'RHEINE', 'VIERS', 'WESEL', 'WR', 'WUPPH', 'WUPPV'
-]
+def keep_dutch_stations(timetable_df: pd.DataFrame) -> pd.DataFrame:
+    """Throws away any international stops, only keep Dutch stations.
+
+    Args:
+    - timetable_df (pd.DataFrame): Timetable data
+
+    Returns:
+    - pd.DataFrame: Same table, but with international rows removed
+    """
+    stations = load_stations()
+    dutch_stations = stations[stations['country'] == 'NL']
+    dutch_codes = dutch_stations['code'].to_list()
+
+    return timetable_df[timetable_df['Stop:Station code'].isin(dutch_codes)]
 
 
 def clean_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
-    """"""
+    """Cleans the raw data in four steps:
+    1. Filter on relevant day
+    2. Keep only columns of interest
+    3. Keep only accepted train types
+    4. Keep only Dutch railway stations
+
+    Args:
+    - timetable_df (pd.DataFrame): Timetable data
+
+    Returns:
+    - pd.DataFrame: Same table, but cleaned
+    """
     # 1. Only keep the relevant day
     df_filtered_day = timetable_df[
         timetable_df['Service:Date'] == SETTINGS.DAY_OF_RUN
@@ -57,28 +71,39 @@ def clean_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
         df_filtered_cols['Service:Type'].isin(ACCEPTED_TRAIN_TYPES)
     ]
 
-    # 4. Replace station codes to comply with the NS codes list
-    df_filtered_train_types['Stop:Station code'] \
-        = df_filtered_train_types['Stop:Station code'] \
-        .replace(STATION_CODE_MAPPING)
+    # 4. Delete rows with international station codes, only keep NL
+    df_only_dutch_stations = keep_dutch_stations(df_filtered_train_types)
 
-    # 5. Delete rows with international station codes
-    df_codes_deleted = df_filtered_train_types[
-        ~df_filtered_train_types['Stop:Station code']
-        .isin(INTERNATIONAL_STATION_CODES)
-    ]
-
-    return df_codes_deleted
+    return df_only_dutch_stations
 
 
 def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
-    section_ids = timetable_df['Service:RDT-ID'].unique()
+    """Restructure the data. Before: each line represents a stop at a station,
+    with train data, station, arrival & departue et cetera. After: each line
+    represents a section from one station to another (between two stops).
+
+    An example; columns and data shortened for brevity. Before:
+    RDT-ID  Type    Code    Arrive  Depart
+    8634	Int     RTD		        12:02
+    8634	Int     DT      12:14	12:14
+
+    After:
+    Station To      Depart  Arrive  Type    ID
+    RTD     DT      12:02   14:14   Int     8634
+
+    Args:
+    - timetable_df (pd.DataFrame): Timetable data, one stop per row
+
+    Returns:
+    - pd.DataFrame: Same table, but one connection per row
+    """
+    section_ids: pd.DataFrame = timetable_df['Service:RDT-ID'].unique()
 
     new_df_lines = []
-    new_columns = [
-        'Station', 'To', 'Departure', 'Arrival', 'Type', 'ID'
-    ]
+    new_columns = ['Station', 'To', 'Departure', 'Arrival', 'Type', 'ID']
 
+    # Go over each section ID, representing one whole section from first to
+    # last station for one specific train. The ID is unique for train & section
     for section_id in section_ids:
         section_rows = timetable_df[
             timetable_df['Service:RDT-ID'] == section_id
@@ -88,6 +113,7 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
         service_type = section_rows.loc[0, 'Service:Type']
         mapped_train_type = TRAIN_TYPE_MAPPING[service_type]
 
+        # Turn each consecutive pair into a row for the new dataset
         for i in range(len(section_rows) - 1):
             from_station = \
                 section_rows.loc[i, 'Stop:Station code'].capitalize()
@@ -97,6 +123,7 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
             departure_time = section_rows.loc[i, 'Stop:Departure time']
             arrival_time = section_rows.loc[i+1, 'Stop:Arrival time']
 
+            # Each connection will appear as one line in the new dataset
             new_df_lines.append([
                 from_station, to_station, departure_time,
                 arrival_time, mapped_train_type, section_id,
@@ -107,8 +134,8 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
         columns=new_columns,
     )
 
-    # 4. Turn deperture/arrival columns to pd.Datetime
-    #    and remove timezone indication (keep date as is)
+    # Turn deperture/arrival columns to pd.Datetime
+    # and remove timezone indication (keep date as is)
     for col in ['Departure', 'Arrival']:
         structured_df[col] = pd.to_datetime(
             structured_df[col],
@@ -119,13 +146,14 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def filter_empty_dates(df: pd.DataFrame) -> pd.DataFrame:
-    # Consecutively filter out nans for various columns
+    """Filter out any rows that do not have a departure or arrival value"""
     for col in ['Departure', 'Arrival']:
         df = df[~df[col].isna()]
     return df
 
 
 def preprocess():
+    """Function to preprocess the raw dataset."""
     raw_file_name = 'services-2025-10.csv'
     path_to_raw_file = SETTINGS.DATA_PATH / raw_file_name
     path_to_timetable = SETTINGS.DATA_PATH / SETTINGS.TIMETABLE_FILE

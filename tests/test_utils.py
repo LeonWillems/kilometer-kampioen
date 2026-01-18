@@ -2,8 +2,8 @@ import os
 import json
 from pathlib import Path
 
-from ..data_processing.data_utils import read_timetable
-from ..settings import VersionSettings
+from data_processing.data_utils import read_timetable
+from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 
