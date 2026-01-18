@@ -104,6 +104,19 @@ def save_df_to_csv(df: pd.DataFrame, path_to_file: Path):
     )
 
 
+def load_stations() -> pd.DataFrame:
+    """Loads the official stations dataset, containing information
+    station codes, full name, country and station type.
+
+    Returns:
+    - pd.DataFrame
+    """
+    all_stations = read_csv_to_df(
+        path_to_file=SETTINGS.STATIONS_PATH
+    )    
+    return all_stations
+
+
 def read_timetable(
     processed: bool = True,
     timetable_path: Path = None,

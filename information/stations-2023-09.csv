@@ -1,592 +1,592 @@
-code;name_long;country;type
-HT;'s-Hertogenbosch;NL;knooppuntIntercitystation
-HTO;'s-Hertogenbosch Oost;NL;stoptreinstation
-HDE;'t Harde;NL;stoptreinstation
-AHBF;Aachen Hbf;D;knooppuntIntercitystation
-AW;Aachen West;D;stoptreinstation
-ATN;Aalten;NL;stoptreinstation
-AC;Abcoude;NL;stoptreinstation
-EAHS;Ahaus;D;stoptreinstation
-AIME;Aime-la-Plagne;F;intercitystation
-ACDG;Airport Charles de Gaulle;F;knooppuntIntercitystation
-AIXTGV;Aix-en-Provence TGV;F;intercitystation
-AKM;Akkrum;NL;stoptreinstation
-ALBERT;Albertville;F;intercitystation
-AMR;Alkmaar;NL;knooppuntIntercitystation
-AMRN;Alkmaar Noord;NL;stoptreinstation
-AML;Almelo;NL;knooppuntIntercitystation
-AMRI;Almelo de Riet;NL;stoptreinstation
-ALMB;Almere Buiten;NL;stoptreinstation
-ALM;Almere Centrum;NL;knooppuntIntercitystation
-ALMM;Almere Muziekwijk;NL;stoptreinstation
-ALMO;Almere Oostvaarders;NL;stoptreinstation
-ALMP;Almere Parkwijk;NL;stoptreinstation
-AMPO;Almere Poort;NL;stoptreinstation
-APN;Alphen a/d Rijn;NL;knooppuntIntercitystation
-EABG;Altenberge;D;stoptreinstation
-AMF;Amersfoort Centraal;NL;knooppuntIntercitystation
-AMFS;Amersfoort Schothorst;NL;stoptreinstation
-AVAT;Amersfoort Vathorst;NL;stoptreinstation
-ASA;Amsterdam Amstel;NL;intercitystation
-ASB;Amsterdam Bijlmer ArenA;NL;knooppuntStoptreinstation
-ASD;Amsterdam Centraal;NL;megastation
-ASHD;Amsterdam Holendrecht;NL;stoptreinstation
-ASDL;Amsterdam Lelylaan;NL;stoptreinstation
-ASDM;Amsterdam Muiderpoort;NL;stoptreinstation
-RAI;Amsterdam RAI;NL;stoptreinstation
-ASSP;Amsterdam Science Park;NL;stoptreinstation
-ASS;Amsterdam Sloterdijk;NL;knooppuntIntercitystation
-ASDZ;Amsterdam Zuid;NL;intercitystation
-AMST;Amstetten NÖ;A;intercitystation
-ANA;Anna Paulowna;NL;stoptreinstation
-BERCH;Antwerpen-Berchem;B;knooppuntIntercitystation
-ATW;Antwerpen-Centraal;B;megastation
-ATWLB;Antwerpen-Luchtbal;B;stoptreinstation
-ANDD;Antwerpen-Noorderdokken;B;stoptreinstation
-FNZD;Antwerpen-Zuid;B;stoptreinstation
-APD;Apeldoorn;NL;knooppuntIntercitystation
-APDM;Apeldoorn De Maten;NL;stoptreinstation
-APDO;Apeldoorn Osseveld;NL;stoptreinstation
-APG;Appingedam;NL;stoptreinstation
-AKL;Arkel;NL;stoptreinstation
-ARN;Arnemuiden;NL;stoptreinstation
-AH;Arnhem Centraal;NL;knooppuntIntercitystation
-AHPR;Arnhem Presikhaaf;NL;stoptreinstation
-AHP;Arnhem Velperpoort;NL;stoptreinstation
-AHZ;Arnhem Zuid;NL;stoptreinstation
-ASN;Assen;NL;knooppuntIntercitystation
-MA;Augsburg Hbf;D;sneltreinstation
-AVTGV;Avignon TGV;F;megastation
-BRN;Baarn;NL;knooppuntStoptreinstation
-BH;Bad Bentheim;D;knooppuntIntercitystation
-NSCH;Bad Nieuweschans;NL;knooppuntStoptreinstation
-OEYNH;Bad Oeynhausen;D;intercitystation
-BADENZ;Baden (CH);CH;stoptreinstation
-BF;Baflo;NL;stoptreinstation
-BRD;Barendrecht;NL;stoptreinstation
-BNC;Barneveld Centrum;NL;stoptreinstation
-BNN;Barneveld Noord;NL;stoptreinstation
-BNZ;Barneveld Zuid;NL;stoptreinstation
-BASELB;Basel Bad Bf;D;stoptreinstation
-BASELS;Basel SBB;CH;megastation
-BDM;Bedum;NL;stoptreinstation
-BK;Beek-Elsloo;NL;stoptreinstation
-BSD;Beesd;NL;stoptreinstation
-BL;Beilen;NL;stoptreinstation
-LLB;Belsele;B;stoptreinstation
-BGN;Bergen op Zoom;NL;stoptreinstation
-GSB;Berlin Gesundbrunnen;D;intercitystation
-BERHBL;Berlin Hbf;D;megastation
-BHF;Berlin Ostbahnhof;D;knooppuntIntercitystation
-BSPD;Berlin-Spandau;D;intercitystation
-BET;Best;NL;stoptreinstation
-FBR;Beveren;B;stoptreinstation
-BV;Beverwijk;NL;stoptreinstation
-BIELEF;Bielefeld Hbf;D;stoptreinstation
-BHV;Bilthoven;NL;stoptreinstation
-FIE;Bilzen;B;stoptreinstation
-BR;Blerick;NL;stoptreinstation
-BLL;Bloemendaal;NL;stoptreinstation
-BDG;Bodegraven;NL;stoptreinstation
-KBOI;Boisheim;D;intercitystation
-ALESS;Bologna Centrale;I;intercitystation
-EBEO;Bönen;D;stoptreinstation
-BONN;Bonn Hbf;D;stoptreinstation
-KBB;Bonn-Beuel;D;intercitystation
-FMB;Boom;B;stoptreinstation
-EBOK;Bork (Westf);D;stoptreinstation
-BN;Borne;NL;stoptreinstation
-BSK;Boskoop;NL;stoptreinstation
-BSKS;Boskoop Snijdelwijk;NL;stoptreinstation
-BOURG;Bourg-St-Maurice;F;intercitystation
-BHDV;Boven-Hardinxveld;NL;stoptreinstation
-BKF;Bovenkarspel Flora;NL;stoptreinstation
-BKG;Bovenkarspel-Grootebroek;NL;stoptreinstation
-BMR;Boxmeer;NL;knooppuntStoptreinstation
-BTL;Boxtel;NL;knooppuntStoptreinstation
-BD;Breda;NL;knooppuntIntercitystation
-BDPB;Breda-Prinsenbeek;NL;stoptreinstation
-BRESSX;Bressoux;B;stoptreinstation
-BKL;Breukelen;NL;knooppuntStoptreinstation
-KBRY;Breyell;D;intercitystation
-BMN;Brummen;NL;stoptreinstation
-BRUSC;Brussel-Centraal;B;intercitystation
-BRUSN;Brussel-Noord;B;knooppuntIntercitystation
-BRUSZ;Brussel-Zuid Midi;B;megastation
-FBNL;Brussels Airport-Zaventem;B;megastation
-BP;Buitenpost;NL;knooppuntSneltreinstation
-BDE;Bunde;NL;stoptreinstation
-BUENDE;Bünde (Westf);D;stoptreinstation
-BNK;Bunnik;NL;stoptreinstation
-BSMZ;Bussum Zuid;NL;stoptreinstation
-CPS;Capelle Schollevaar;NL;stoptreinstation
-CAS;Castricum;NL;intercitystation
-CHAMB;Chambéry;F;intercitystation
-CVM;Chevremont;NL;stoptreinstation
-ECMF;Coesfeld (Westf);D;stoptreinstation
-CO;Coevorden;NL;knooppuntSneltreinstation
-COMO;Como S. Giovanni;I;intercitystation
-CK;Cuijk;NL;stoptreinstation
-CL;Culemborg;NL;stoptreinstation
-DA;Daarlerveen;NL;stoptreinstation
-DLN;Dalen;NL;stoptreinstation
-DL;Dalfsen;NL;sneltreinstation
-DVNK;De Vink;NL;stoptreinstation
-DWE;De Westereen;NL;stoptreinstation
-DEI;Deinum;NL;stoptreinstation
-DDN;Delden;NL;stoptreinstation
-DT;Delft;NL;knooppuntIntercitystation
-DTCP;Delft Campus;NL;stoptreinstation
-DZ;Delfzijl;NL;stoptreinstation
-DZW;Delfzijl West;NL;stoptreinstation
-DLD;Den Dolder;NL;knooppuntStoptreinstation
-GVC;Den Haag Centraal;NL;megastation
-GV;Den Haag HS;NL;knooppuntIntercitystation
-LAA;Den Haag Laan v NOI;NL;knooppuntStoptreinstation
-GVM;Den Haag Mariahoeve;NL;stoptreinstation
-GVMW;Den Haag Moerwijk;NL;stoptreinstation
-YPB;Den Haag Ypenburg;NL;stoptreinstation
-HDR;Den Helder;NL;intercitystation
-HDRZ;Den Helder Zuid;NL;stoptreinstation
-DN;Deurne;NL;stoptreinstation
-DV;Deventer;NL;knooppuntIntercitystation
-DVC;Deventer Colmschate;NL;stoptreinstation
-DID;Didam;NL;stoptreinstation
-DMN;Diemen;NL;stoptreinstation
-DMNZ;Diemen Zuid;NL;stoptreinstation
-GDP;Diepenbeek;B;stoptreinstation
-DR;Dieren;NL;intercitystation
-DTC;Doetinchem;NL;knooppuntStoptreinstation
-DTCH;Doetinchem De Huet;NL;stoptreinstation
-DDR;Dordrecht;NL;knooppuntIntercitystation
-DDRS;Dordrecht Stadspolders;NL;stoptreinstation
-DDZD;Dordrecht Zuid;NL;stoptreinstation
-EDD;Dortmund Derne;D;stoptreinstation
-EDO;Dortmund Hbf;D;knooppuntIntercitystation
-EDKD;Dortmund Kirchderne;D;stoptreinstation
-DB;Driebergen-Zeist;NL;knooppuntStoptreinstation
-DRH;Driehuis;NL;stoptreinstation
-DRP;Dronryp;NL;stoptreinstation
-DRON;Dronten;NL;stoptreinstation
-DUISB;Duisburg Hbf;D;knooppuntIntercitystation
-DVN;Duiven;NL;stoptreinstation
-DVD;Duivendrecht;NL;knooppuntStoptreinstation
-KDUL;Dülken;D;intercitystation
-EDULH;Dülmen;D;stoptreinstation
-KDFFH;Düsseldorf Flughafen;D;knooppuntIntercitystation
-DUSSEL;Düsseldorf Hbf;D;megastation
-EC;Echt;NL;stoptreinstation
-EDC;Ede Centrum;NL;stoptreinstation
-ED;Ede-Wageningen;NL;knooppuntIntercitystation
-EEM;Eemshaven;NL;stoptreinstation
-EDN;Eijsden;NL;stoptreinstation
-EHV;Eindhoven Centraal;NL;megastation
-EHS;Eindhoven Strijp-S;NL;stoptreinstation
-LKR;Ekeren;B;stoptreinstation
-EST;Elst;NL;knooppuntStoptreinstation
-EMN;Emmen;NL;sneltreinstation
-EMNZ;Emmen Zuid;NL;sneltreinstation
-EM;Emmerich;D;knooppuntStoptreinstation
-EL;Emmerich-Elten;D;stoptreinstation
-EKZ;Enkhuizen;NL;stoptreinstation
-EENP;Ennepetal;D;stoptreinstation
-ES;Enschede;NL;knooppuntIntercitystation
-ESE;Enschede De Eschmarke;NL;stoptreinstation
-ESK;Enschede Kennispark;NL;stoptreinstation
-EEPE;Epe (Westf);D;stoptreinstation
-EML;Ermelo;NL;stoptreinstation
-ESN;Essen;B;stoptreinstation
-ETN;Etten-Leur;NL;intercitystation
-EGH;Eygelshoven;NL;stoptreinstation
-EGHM;Eygelshoven Markt;NL;stoptreinstation
-FWD;Feanwâlden;NL;stoptreinstation
-LIVOR;Firenze Campo di Marte;I;intercitystation
-FN;Franeker;NL;stoptreinstation
-FFFM;Frankfurt (M) Hbf;D;knooppuntIntercitystation
-FFS;Frankfurt (Main) Süd;D;intercitystation
-FNAF;Frankfurt Flughafen Fernb;D;knooppuntIntercitystation
-RF;Freiburg (Breisgau) Hbf;D;sneltreinstation
-GDR;Gaanderen;NL;stoptreinstation
-GDM;Geldermalsen;NL;knooppuntStoptreinstation
-GP;Geldrop;NL;knooppuntStoptreinstation
-GLN;Geleen Oost;NL;stoptreinstation
-LUT;Geleen-Lutterade;NL;stoptreinstation
-FGSP;Gent Sint Pieters;B;stoptreinstation
-GZ;Gilze-Rijen;NL;stoptreinstation
-GBR;Glanerbrug;NL;stoptreinstation
-LGL;Glons;B;stoptreinstation
-GS;Goes;NL;stoptreinstation
-GO;Goor;NL;stoptreinstation
-TGO;Göppingen;D;sneltreinstation
-GR;Gorinchem;NL;knooppuntStoptreinstation
-HOJE;Göteborg Central;S;intercitystation
-GD;Gouda;NL;knooppuntIntercitystation
-GDG;Gouda Goverwelle;NL;stoptreinstation
-GBG;Gramsbergen;NL;stoptreinstation
-GK;Grijpskerk;NL;stoptreinstation
-G;Gronau (Westf.);D;knooppuntStoptreinstation
-GN;Groningen;NL;knooppuntIntercitystation
-GERP;Groningen Europapark;NL;stoptreinstation
-GNN;Groningen Noord;NL;stoptreinstation
-GW;Grou-Jirnsum;NL;stoptreinstation
-MGZB;Günzburg;D;sneltreinstation
-HLM;Haarlem;NL;knooppuntIntercitystation
-HLMS;Haarlem Spaarnwoude;NL;stoptreinstation
-HAGEN;Hagen Hbf;D;knooppuntSneltreinstation
-HWZB;Halfweg-Zwanenburg;NL;stoptreinstation
-HAMM;Hamm (Westf.);D;knooppuntStoptreinstation
-HANN;Hannover Hbf;D;megastation
-HDB;Hardenberg;NL;sneltreinstation
-HD;Harderwijk;NL;knooppuntStoptreinstation
-HBZM;Hardinxveld Blauwe Zoom;NL;stoptreinstation
-GND;Hardinxveld-Giessendam;NL;stoptreinstation
-HRN;Haren;NL;stoptreinstation
-HLG;Harlingen;NL;stoptreinstation
-HLGH;Harlingen Haven;NL;stoptreinstation
-FHS;Hasselt;B;stoptreinstation
-HK;Heemskerk;NL;stoptreinstation
-HAD;Heemstede-Aerdenhout;NL;intercitystation
-HR;Heerenveen;NL;intercitystation
-HRY;Heerenveen IJsstadion;NL;facultatiefStation
-HWD;Heerhugowaard;NL;knooppuntStoptreinstation
-HRL;Heerlen;NL;knooppuntIntercitystation
-HRLW;Heerlen Woonboulevard;NL;stoptreinstation
-HZE;Heeze;NL;stoptreinstation
-MID;Heide (B);B;stoptreinstation
-HLO;Heiloo;NL;stoptreinstation
-HNO;Heino;NL;stoptreinstation
-HM;Helmond;NL;knooppuntIntercitystation
-HMH;Helmond 't Hout;NL;stoptreinstation
-HMBV;Helmond Brandevoort;NL;stoptreinstation
-HMBH;Helmond Brouwhuis;NL;stoptreinstation
-LKM;Hemiksem;B;stoptreinstation
-HMN;Hemmen-Dodewaard;NL;stoptreinstation
-HGL;Hengelo;NL;knooppuntIntercitystation
-HGLG;Hengelo Gezondheidspark;NL;stoptreinstation
-HGLO;Hengelo Oost;NL;stoptreinstation
-LHS;Herstal;B;stoptreinstation
-HZ;Herzogenrath;D;stoptreinstation
-HIL;Hillegom;NL;stoptreinstation
-HVS;Hilversum;NL;knooppuntIntercitystation
-HVSM;Hilversum Media Park;NL;stoptreinstation
-HVSP;Hilversum Sportpark;NL;stoptreinstation
-HNP;Hindeloopen;NL;stoptreinstation
-FOE;Hoboken-Polder;B;stoptreinstation
-HB;Hoensbroek;NL;stoptreinstation
-HVL;Hoevelaken;NL;stoptreinstation
-HOR;Hollandsche Rading;NL;stoptreinstation
-HON;Holten;NL;stoptreinstation
-EHZW;Holzwickede;D;stoptreinstation
-HFD;Hoofddorp;NL;stoptreinstation
-HGV;Hoogeveen;NL;stoptreinstation
-HGZ;Hoogezand-Sappemeer;NL;knooppuntStoptreinstation
-HKS;Hoogkarspel;NL;stoptreinstation
-HN;Hoorn;NL;knooppuntIntercitystation
-HNK;Hoorn Kersenboogerd;NL;stoptreinstation
-HOPF;Hopfgarten;A;stoptreinstation
-HRT;Horst-Sevenum;NL;stoptreinstation
-HTN;Houten;NL;knooppuntStoptreinstation
-HTNC;Houten Castellum;NL;stoptreinstation
-SGL;Houthem-St. Gerlach;NL;stoptreinstation
-HDG;Hurdegaryp;NL;stoptreinstation
-IJT;IJlst;NL;stoptreinstation
-INNSB;Innsbruck Hbf;A;knooppuntIntercitystation
-JENBAC;Jenbach;A;stoptreinstation
-KN;Kaldenkirchen;D;stoptreinstation
-FKTH;Kalmthout;B;stoptreinstation
-KPN;Kampen;NL;stoptreinstation
-KPNZ;Kampen Zuid;NL;stoptreinstation
-BZL;Kapelle-Biezelinge;NL;stoptreinstation
-LKP;Kapellen;B;stoptreinstation
-KARLSR;Karlsruhe Hbf;D;intercitystation
-KRD;Kerkrade Centrum;NL;knooppuntStoptreinstation
-KTR;Kesteren;NL;stoptreinstation
-GKT;Kijkuit;B;stoptreinstation
-KBK;Klarenbeek;NL;stoptreinstation
-KMR;Klimmen-Ransdaal;NL;stoptreinstation
-KKO;Koblenz Hbf;D;intercitystation
-KOLN;Köln Hbf;D;megastation
-KKD;Köln Messe/Deutz;D;megastation
-KKW;Köln West;D;intercitystation
-KKERP;Köln-Ehrenfeld;D;stoptreinstation
-KKM;Köln-Mülheim;D;intercitystation
-KZ;Koog aan de Zaan;NL;stoptreinstation
-KMW;Koudum-Molkwerum;NL;stoptreinstation
-ODENS;Københavns Lufthavn St;DK;intercitystation
-KBD;Krabbendijke;NL;stoptreinstation
-KMA;Krommenie-Assendelft;NL;stoptreinstation
-KW;Kropswolde;NL;stoptreinstation
-KRG;Kruiningen-Yerseke;NL;stoptreinstation
-KUFST;Kufstein;A;intercitystation
-ZLW;Lage Zwaluwe;NL;knooppuntStoptreinstation
-LG;Landgraaf;NL;knooppuntStoptreinstation
-LANDRY;Landry;F;intercitystation
-LLZM;Lansingerland-Zoetermeer;NL;stoptreinstation
-LEER;Leer (Ostfriesl);D;stoptreinstation
-LDM;Leerdam;NL;stoptreinstation
-LW;Leeuwarden;NL;knooppuntIntercitystation
-LWC;Leeuwarden Camminghaburen;NL;stoptreinstation
-ELGD;Legden;D;stoptreinstation
-LEDN;Leiden Centraal;NL;knooppuntIntercitystation
-LDL;Leiden Lammenschans;NL;stoptreinstation
-LLS;Lelystad Centrum;NL;knooppuntIntercitystation
-ELET;Lette (Kr Coesfeld);D;stoptreinstation
-LEUVEN;Leuven;B;intercitystation
-LTV;Lichtenvoorde-Groenlo;NL;stoptreinstation
-FLJ;Liège-Carré;B;stoptreinstation
-LUIK;Liège-Guillemins;B;knooppuntIntercitystation
-FLGP;Liège-Saint-Lambert;B;stoptreinstation
-LSL;Liers;B;stoptreinstation
-LILLEE;Lille Europe;F;intercitystation
-FLB;Limburg Süd;D;stoptreinstation
-LINZ;Linz Hbf;A;intercitystation
-LC;Lochem;NL;stoptreinstation
-FLK;Lokeren;B;stoptreinstation
-STP;London St. Pancras Int.;GB;megastation
-LP;Loppersum;NL;stoptreinstation
-ELDH;Lüdinghausen;D;stoptreinstation
-ELUE;Lünen Hbf;D;stoptreinstation
-LTN;Lunteren;NL;stoptreinstation
-MZ;Maarheeze;NL;stoptreinstation
-MRN;Maarn;NL;knooppuntStoptreinstation
-MAS;Maarssen;NL;stoptreinstation
-MT;Maastricht;NL;knooppuntIntercitystation
-MTN;Maastricht Noord;NL;stoptreinstation
-MTR;Maastricht Randwyck;NL;knooppuntStoptreinstation
-FMZ;Mainz Hbf;D;intercitystation
-RINGS;Malmö Central;S;intercitystation
-MANNHE;Mannheim Hbf;D;intercitystation
-MG;Mantgum;NL;stoptreinstation
-MRB;Mariënberg;NL;knooppuntSneltreinstation
-MARNE;Marne-la-Vallée-Chessy;F;stoptreinstation
-MARS;Marseille-St-Charles;F;intercitystation
-MTH;Martenshoek;NL;stoptreinstation
-MECH;Mechelen;B;knooppuntIntercitystation
-MES;Meerssen;NL;sneltreinstation
-LM;Melsele;B;stoptreinstation
-MP;Meppel;NL;knooppuntStoptreinstation
-EMTE;Metelen Land;D;stoptreinstation
-MDB;Middelburg;NL;stoptreinstation
-DOMOD;Milano Porta Garibaldi;I;intercitystation
-BLTM;Milmort;B;stoptreinstation
-MINDEN;Minden (Westf);D;stoptreinstation
-MCGB;Mönchengladbach Hbf;D;knooppuntIntercitystation
-MMLH;Mook-Molenhoek;NL;stoptreinstation
-MOUT;Moutiers-Salins-Brides;F;stoptreinstation
-MUNCHH;München Hbf;D;megastation
-STRAUB;München Ost;D;intercitystation
-ENHF;Münster (W) Zentrum Nord;D;stoptreinstation
-MUNST;Münster (Westf) Hbf;D;knooppuntIntercitystation
-ENBE;Münster-Häger;D;stoptreinstation
-NDB;Naarden-Bussum;NL;knooppuntStoptreinstation
-NEUSS;Neuss Hbf;D;stoptreinstation
-LNI;Niel;B;stoptreinstation
-NA;Nieuw Amsterdam;NL;sneltreinstation
-NVP;Nieuw Vennep;NL;stoptreinstation
-NWK;Nieuwerkerk a/d IJssel;NL;stoptreinstation
-FNU;Nieuwkerken-Waas;B;stoptreinstation
-NKK;Nijkerk;NL;stoptreinstation
-NM;Nijmegen;NL;knooppuntIntercitystation
-NMD;Nijmegen Dukenburg;NL;stoptreinstation
-NMGO;Nijmegen Goffert;NL;stoptreinstation
-NMH;Nijmegen Heyendaal;NL;stoptreinstation
-NML;Nijmegen Lent;NL;stoptreinstation
-NVD;Nijverdal;NL;stoptreinstation
-NDKP;Noorderkempen;B;knooppuntIntercitystation
-ENOW;Nordwalde;D;stoptreinstation
-NS;Nunspeet;NL;stoptreinstation
-NURNB;Nürnberg Hbf;D;intercitystation
-NH;Nuth;NL;stoptreinstation
-OBD;Obdam;NL;stoptreinstation
-OBERH;Oberhausen Hbf;D;knooppuntStoptreinstation
-OBERHS;Oberhausen-Sterkrade;D;stoptreinstation
-EOP;Ochtrup;D;stoptreinstation
-RO;Offenburg;D;sneltreinstation
-OT;Oisterwijk;NL;stoptreinstation
-ODZ;Oldenzaal;NL;stoptreinstation
-OST;Olst;NL;intercitystation
-OMN;Ommen;NL;knooppuntSneltreinstation
-OTB;Oosterbeek;NL;stoptreinstation
-OP;Opheusden;NL;stoptreinstation
-OSNH;Osnabrück Hbf;D;megastation
-O;Oss;NL;knooppuntIntercitystation
-OW;Oss West;NL;stoptreinstation
-ODB;Oudenbosch;NL;stoptreinstation
-OVN;Overveen;NL;stoptreinstation
-PARIS;Paris-Nord;F;megastation
-PASS;Passau Hbf;D;intercitystation
-TP;Plochingen;D;sneltreinstation
-EPRA;Praest;D;stoptreinstation
-EPRN;Preussen;D;stoptreinstation
-PMR;Purmerend;NL;knooppuntStoptreinstation
-PMO;Purmerend Overwhere;NL;stoptreinstation
-PMW;Purmerend Weidevenne;NL;stoptreinstation
-PT;Putten;NL;stoptreinstation
-FRP;Puurs;B;stoptreinstation
-RAT;Raalte;NL;stoptreinstation
-RVS;Ravenstein;NL;stoptreinstation
-REGENB;Regensburg Hbf;D;intercitystation
-RV;Reuver;NL;stoptreinstation
-RH;Rheden;NL;stoptreinstation
-RHEINE;Rheine;D;knooppuntIntercitystation
-RHN;Rhenen;NL;knooppuntStoptreinstation
-RSN;Rijssen;NL;stoptreinstation
-RSW;Rijswijk;NL;stoptreinstation
-RB;Rilland-Bath;NL;stoptreinstation
-RM;Roermond;NL;knooppuntIntercitystation
-RD;Roodeschool;NL;stoptreinstation
-RSD;Roosendaal;NL;knooppuntIntercitystation
-EHW;Rosendahl-Holtwick;D;stoptreinstation
-ROSENH;Rosenheim;D;intercitystation
-RS;Rosmalen;NL;stoptreinstation
-RTA;Rotterdam Alexander;NL;intercitystation
-RTB;Rotterdam Blaak;NL;stoptreinstation
-RTD;Rotterdam Centraal;NL;megastation
-RLB;Rotterdam Lombardijen;NL;stoptreinstation
-RTN;Rotterdam Noord;NL;stoptreinstation
-RTST;Rotterdam Stadion;NL;facultatiefStation
-RTZ;Rotterdam Zuid;NL;stoptreinstation
-FSV;Ruisbroek-Sauvegarde;B;stoptreinstation
-RL;Ruurlo;NL;stoptreinstation
-SCHARD;Salzburg Hbf;A;intercitystation
-SPTN;Santpoort Noord;NL;stoptreinstation
-SPTZ;Santpoort Zuid;NL;stoptreinstation
-SSH;Sassenheim;NL;stoptreinstation
-SWD;Sauwerd;NL;stoptreinstation
-SGN;Schagen;NL;stoptreinstation
-SDA;Scheemda;NL;stoptreinstation
-SCHLL;Schelle;B;stoptreinstation
-SDM;Schiedam Centrum;NL;stoptreinstation
-SOG;Schin op Geul;NL;stoptreinstation
-SN;Schinnen;NL;stoptreinstation
-SHL;Schiphol Airport;NL;megastation
-KSWE;Schwelm;D;stoptreinstation
-ESRT;Schwerte (Ruhr);D;stoptreinstation
-ESEM;Selm;D;stoptreinstation
-ESEB;Selm-Beifang;D;stoptreinstation
-KSB;Siegburg/Bonn;D;stoptreinstation
-LSW;Sinaai;B;stoptreinstation
-MARIA;Sint-Mariaburg;B;stoptreinstation
-FSN;Sint-Niklaas;B;stoptreinstation
-STD;Sittard;NL;knooppuntIntercitystation
-SDT;Sliedrecht;NL;stoptreinstation
-SDTB;Sliedrecht Baanhoek;NL;stoptreinstation
-SK;Sneek;NL;knooppuntStoptreinstation
-SKND;Sneek Noord;NL;stoptreinstation
-ST;Soest;NL;knooppuntStoptreinstation
-STZ;Soest Zuid;NL;stoptreinstation
-SD;Soestdijk;NL;stoptreinstation
-SBK;Spaubeek;NL;stoptreinstation
-POLTEN;St.Pölten Hbf;A;intercitystation
-STV;Stavoren;NL;stoptreinstation
-STM;Stedum;NL;stoptreinstation
-SWK;Steenwijk;NL;intercitystation
-EBGO;Steinfurt-Borghorst;D;stoptreinstation
-EBFT;Steinfurt-Burgsteinfurt;D;stoptreinstation
-EGRK;Steinfurt-Grottenkamp;D;stoptreinstation
-LS;Stendal;D;intercitystation
-TS;Stuttgart Hbf;D;knooppuntIntercitystation
-SRN;Susteren;NL;stoptreinstation
-SM;Swalmen;NL;stoptreinstation
-TG;Tegelen;NL;stoptreinstation
-TBG;Terborg;NL;stoptreinstation
-TL;Tiel;NL;knooppuntStoptreinstation
-TPSW;Tiel Passewaaij;NL;stoptreinstation
-TB;Tilburg;NL;knooppuntIntercitystation
-TBR;Tilburg Reeshof;NL;stoptreinstation
-TBU;Tilburg Universiteit;NL;stoptreinstation
-FTG;Tongeren;B;stoptreinstation
-KT;Troisdorf;D;intercitystation
-TWL;Twello;NL;stoptreinstation
-UTG;Uitgeest;NL;knooppuntStoptreinstation
-UHZ;Uithuizen;NL;stoptreinstation
-UHM;Uithuizermeeden;NL;stoptreinstation
-TU;Ulm Hbf;D;sneltreinstation
-EUN;Unna;D;stoptreinstation
-UST;Usquert;NL;stoptreinstation
-UT;Utrecht Centraal;NL;megastation
-UTLR;Utrecht Leidsche Rijn;NL;stoptreinstation
-UTLN;Utrecht Lunetten;NL;stoptreinstation
-UTM;Utrecht Maliebaan;NL;stoptreinstation
-UTO;Utrecht Overvecht;NL;knooppuntStoptreinstation
-UTT;Utrecht Terwijde;NL;stoptreinstation
-UTVR;Utrecht Vaartsche Rijn;NL;knooppuntStoptreinstation
-UTZL;Utrecht Zuilen;NL;stoptreinstation
-VALTGV;Valence TGV;F;stoptreinstation
-VK;Valkenburg;NL;knooppuntSneltreinstation
-VSV;Varsseveld;NL;stoptreinstation
-VDM;Veendam;NL;knooppuntStoptreinstation
-VNDC;Veenendaal Centrum;NL;knooppuntStoptreinstation
-VNDW;Veenendaal West;NL;stoptreinstation
-KLP;Veenendaal-De Klomp;NL;stoptreinstation
-VP;Velp;NL;stoptreinstation
-MEREL;Venezia Santa Lucia;I;intercitystation
-VL;Venlo;NL;knooppuntIntercitystation
-VRY;Venray;NL;knooppuntStoptreinstation
-VLB;Vierlingsbeek;NL;stoptreinstation
-VIERS;Viersen;D;stoptreinstation
-FVS;Visé;B;knooppuntStoptreinstation
-VTN;Vleuten;NL;stoptreinstation
-VS;Vlissingen;NL;knooppuntIntercitystation
-VSS;Vlissingen Souburg;NL;stoptreinstation
-VDL;Voerendaal;NL;stoptreinstation
-VB;Voorburg;NL;stoptreinstation
-VH;Voorhout;NL;stoptreinstation
-VST;Voorschoten;NL;stoptreinstation
-VEM;Voorst-Empe;NL;stoptreinstation
-VD;Vorden;NL;stoptreinstation
-VZ;Vriezenveen;NL;stoptreinstation
-VHP;Vroomshoop;NL;stoptreinstation
-VG;Vught;NL;stoptreinstation
-WAD;Waddinxveen;NL;stoptreinstation
-WADN;Waddinxveen Noord;NL;stoptreinstation
-WADT;Waddinxveen Triangel;NL;stoptreinstation
-WFM;Warffum;NL;stoptreinstation
-WR;Weener;D;stoptreinstation
-WT;Weert;NL;intercitystation
-WP;Weesp;NL;knooppuntStoptreinstation
-WL;Wehl;NL;stoptreinstation
-WELS;Wels Hbf;A;intercitystation
-WESEL;Wesel;D;stoptreinstation
-WTV;Westervoort;NL;stoptreinstation
-WZ;Wezep;NL;stoptreinstation
-WBF;Wien Hbf;A;intercitystation
-WIENH;Wien Hütteldorf;A;intercitystation
-WDN;Wierden;NL;knooppuntStoptreinstation
-WC;Wijchen;NL;stoptreinstation
-WH;Wijhe;NL;intercitystation
-GWD;Wildert;B;stoptreinstation
-WS;Winschoten;NL;knooppuntStoptreinstation
-WSM;Winsum;NL;stoptreinstation
-WW;Winterswijk;NL;knooppuntStoptreinstation
-WWW;Winterswijk West;NL;stoptreinstation
-WD;Woerden;NL;knooppuntStoptreinstation
-WF;Wolfheze;NL;stoptreinstation
-HWOB;Wolfsburg Hbf;D;sneltreinstation
-WV;Wolvega;NL;stoptreinstation
-WORGL;Wörgl;A;intercitystation
-WK;Workum;NL;stoptreinstation
-WM;Wormerveer;NL;stoptreinstation
-WUPPH;Wuppertal Hbf;D;stoptreinstation
-KWBA;Wuppertal-Barmen;D;stoptreinstation
-KWO;Wuppertal-Oberbarmen;D;stoptreinstation
-WUPPV;Wuppertal-Vohwinkel;D;stoptreinstation
-WURZB;Würzburg Hbf;D;intercitystation
-ZD;Zaandam;NL;knooppuntIntercitystation
-ZDK;Zaandam Kogerveld;NL;stoptreinstation
-ZZS;Zaandijk Zaanse Schans;NL;knooppuntStoptreinstation
-ZBM;Zaltbommel;NL;stoptreinstation
-ZVT;Zandvoort aan Zee;NL;stoptreinstation
-ZA;Zetten-Andelst;NL;stoptreinstation
-ZV;Zevenaar;NL;knooppuntStoptreinstation
-ZVB;Zevenbergen;NL;stoptreinstation
-ZTM;Zoetermeer;NL;knooppuntStoptreinstation
-ZTMO;Zoetermeer Oost;NL;stoptreinstation
-ZB;Zuidbroek;NL;knooppuntStoptreinstation
-ZH;Zuidhorn;NL;stoptreinstation
-ZUE;Zürich HB;CH;intercitystation
-ZP;Zutphen;NL;knooppuntIntercitystation
-ZWD;Zwijndrecht;NL;stoptreinstation
-LZD;Zwijndrecht (B);B;stoptreinstation
-ZL;Zwolle;NL;knooppuntIntercitystation
-ZLSH;Zwolle Stadshagen;NL;stoptreinstation
+code,name_long,country,type
+HT,'s-Hertogenbosch,NL,knooppuntIntercitystation
+HTO,'s-Hertogenbosch Oost,NL,stoptreinstation
+HDE,'t Harde,NL,stoptreinstation
+AHBF,Aachen Hbf,D,knooppuntIntercitystation
+AW,Aachen West,D,stoptreinstation
+ATN,Aalten,NL,stoptreinstation
+AC,Abcoude,NL,stoptreinstation
+EAHS,Ahaus,D,stoptreinstation
+AIME,Aime-la-Plagne,F,intercitystation
+ACDG,Airport Charles de Gaulle,F,knooppuntIntercitystation
+AIXTGV,Aix-en-Provence TGV,F,intercitystation
+AKM,Akkrum,NL,stoptreinstation
+ALBERT,Albertville,F,intercitystation
+AMR,Alkmaar,NL,knooppuntIntercitystation
+AMRN,Alkmaar Noord,NL,stoptreinstation
+AML,Almelo,NL,knooppuntIntercitystation
+AMRI,Almelo de Riet,NL,stoptreinstation
+ALMB,Almere Buiten,NL,stoptreinstation
+ALM,Almere Centrum,NL,knooppuntIntercitystation
+ALMM,Almere Muziekwijk,NL,stoptreinstation
+ALMO,Almere Oostvaarders,NL,stoptreinstation
+ALMP,Almere Parkwijk,NL,stoptreinstation
+AMPO,Almere Poort,NL,stoptreinstation
+APN,Alphen a/d Rijn,NL,knooppuntIntercitystation
+EABG,Altenberge,D,stoptreinstation
+AMF,Amersfoort Centraal,NL,knooppuntIntercitystation
+AMFS,Amersfoort Schothorst,NL,stoptreinstation
+AVAT,Amersfoort Vathorst,NL,stoptreinstation
+ASA,Amsterdam Amstel,NL,intercitystation
+ASB,Amsterdam Bijlmer ArenA,NL,knooppuntStoptreinstation
+ASD,Amsterdam Centraal,NL,megastation
+ASHD,Amsterdam Holendrecht,NL,stoptreinstation
+ASDL,Amsterdam Lelylaan,NL,stoptreinstation
+ASDM,Amsterdam Muiderpoort,NL,stoptreinstation
+RAI,Amsterdam RAI,NL,stoptreinstation
+ASSP,Amsterdam Science Park,NL,stoptreinstation
+ASS,Amsterdam Sloterdijk,NL,knooppuntIntercitystation
+ASDZ,Amsterdam Zuid,NL,intercitystation
+AMST,Amstetten NÖ,A,intercitystation
+ANA,Anna Paulowna,NL,stoptreinstation
+BERCH,Antwerpen-Berchem,B,knooppuntIntercitystation
+ATW,Antwerpen-Centraal,B,megastation
+ATWLB,Antwerpen-Luchtbal,B,stoptreinstation
+ANDD,Antwerpen-Noorderdokken,B,stoptreinstation
+FNZD,Antwerpen-Zuid,B,stoptreinstation
+APD,Apeldoorn,NL,knooppuntIntercitystation
+APDM,Apeldoorn De Maten,NL,stoptreinstation
+APDO,Apeldoorn Osseveld,NL,stoptreinstation
+APG,Appingedam,NL,stoptreinstation
+AKL,Arkel,NL,stoptreinstation
+ARN,Arnemuiden,NL,stoptreinstation
+AH,Arnhem Centraal,NL,knooppuntIntercitystation
+AHPR,Arnhem Presikhaaf,NL,stoptreinstation
+AHP,Arnhem Velperpoort,NL,stoptreinstation
+AHZ,Arnhem Zuid,NL,stoptreinstation
+ASN,Assen,NL,knooppuntIntercitystation
+MA,Augsburg Hbf,D,sneltreinstation
+AVTGV,Avignon TGV,F,megastation
+BRN,Baarn,NL,knooppuntStoptreinstation
+BH,Bad Bentheim,D,knooppuntIntercitystation
+NSCH,Bad Nieuweschans,NL,knooppuntStoptreinstation
+OEYNH,Bad Oeynhausen,D,intercitystation
+BADENZ,Baden (CH),CH,stoptreinstation
+BF,Baflo,NL,stoptreinstation
+BRD,Barendrecht,NL,stoptreinstation
+BNC,Barneveld Centrum,NL,stoptreinstation
+BNN,Barneveld Noord,NL,stoptreinstation
+BNZ,Barneveld Zuid,NL,stoptreinstation
+BASELB,Basel Bad Bf,D,stoptreinstation
+BASELS,Basel SBB,CH,megastation
+BDM,Bedum,NL,stoptreinstation
+BK,Beek-Elsloo,NL,stoptreinstation
+BSD,Beesd,NL,stoptreinstation
+BL,Beilen,NL,stoptreinstation
+LLB,Belsele,B,stoptreinstation
+BGN,Bergen op Zoom,NL,stoptreinstation
+GSB,Berlin Gesundbrunnen,D,intercitystation
+BERHBL,Berlin Hbf,D,megastation
+BHF,Berlin Ostbahnhof,D,knooppuntIntercitystation
+BSPD,Berlin-Spandau,D,intercitystation
+BET,Best,NL,stoptreinstation
+FBR,Beveren,B,stoptreinstation
+BV,Beverwijk,NL,stoptreinstation
+BIELEF,Bielefeld Hbf,D,stoptreinstation
+BHV,Bilthoven,NL,stoptreinstation
+FIE,Bilzen,B,stoptreinstation
+BR,Blerick,NL,stoptreinstation
+BLL,Bloemendaal,NL,stoptreinstation
+BDG,Bodegraven,NL,stoptreinstation
+KBOI,Boisheim,D,intercitystation
+ALESS,Bologna Centrale,I,intercitystation
+EBEO,Bönen,D,stoptreinstation
+BONN,Bonn Hbf,D,stoptreinstation
+KBB,Bonn-Beuel,D,intercitystation
+FMB,Boom,B,stoptreinstation
+EBOK,Bork (Westf),D,stoptreinstation
+BN,Borne,NL,stoptreinstation
+BSK,Boskoop,NL,stoptreinstation
+BSKS,Boskoop Snijdelwijk,NL,stoptreinstation
+BOURG,Bourg-St-Maurice,F,intercitystation
+BHDV,Boven-Hardinxveld,NL,stoptreinstation
+BKF,Bovenkarspel Flora,NL,stoptreinstation
+BKG,Bovenkarspel-Grootebroek,NL,stoptreinstation
+BMR,Boxmeer,NL,knooppuntStoptreinstation
+BTL,Boxtel,NL,knooppuntStoptreinstation
+BD,Breda,NL,knooppuntIntercitystation
+BDPB,Breda-Prinsenbeek,NL,stoptreinstation
+BRESSX,Bressoux,B,stoptreinstation
+BKL,Breukelen,NL,knooppuntStoptreinstation
+KBRY,Breyell,D,intercitystation
+BMN,Brummen,NL,stoptreinstation
+BRUSC,Brussel-Centraal,B,intercitystation
+BRUSN,Brussel-Noord,B,knooppuntIntercitystation
+BRUSZ,Brussel-Zuid Midi,B,megastation
+FBNL,Brussels Airport-Zaventem,B,megastation
+BP,Buitenpost,NL,knooppuntSneltreinstation
+BDE,Bunde,NL,stoptreinstation
+BUENDE,Bünde (Westf),D,stoptreinstation
+BNK,Bunnik,NL,stoptreinstation
+BSMZ,Bussum Zuid,NL,stoptreinstation
+CPS,Capelle Schollevaar,NL,stoptreinstation
+CAS,Castricum,NL,intercitystation
+CHAMB,Chambéry,F,intercitystation
+CVM,Chevremont,NL,stoptreinstation
+ECMF,Coesfeld (Westf),D,stoptreinstation
+CO,Coevorden,NL,knooppuntSneltreinstation
+COMO,Como S. Giovanni,I,intercitystation
+CK,Cuijk,NL,stoptreinstation
+CL,Culemborg,NL,stoptreinstation
+DA,Daarlerveen,NL,stoptreinstation
+DLN,Dalen,NL,stoptreinstation
+DL,Dalfsen,NL,sneltreinstation
+DVNK,De Vink,NL,stoptreinstation
+DWE,De Westereen,NL,stoptreinstation
+DEI,Deinum,NL,stoptreinstation
+DDN,Delden,NL,stoptreinstation
+DT,Delft,NL,knooppuntIntercitystation
+DTCP,Delft Campus,NL,stoptreinstation
+DZ,Delfzijl,NL,stoptreinstation
+DZW,Delfzijl West,NL,stoptreinstation
+DLD,Den Dolder,NL,knooppuntStoptreinstation
+GVC,Den Haag Centraal,NL,megastation
+GV,Den Haag HS,NL,knooppuntIntercitystation
+LAA,Den Haag Laan v NOI,NL,knooppuntStoptreinstation
+GVM,Den Haag Mariahoeve,NL,stoptreinstation
+GVMW,Den Haag Moerwijk,NL,stoptreinstation
+YPB,Den Haag Ypenburg,NL,stoptreinstation
+HDR,Den Helder,NL,intercitystation
+HDRZ,Den Helder Zuid,NL,stoptreinstation
+DN,Deurne,NL,stoptreinstation
+DV,Deventer,NL,knooppuntIntercitystation
+DVC,Deventer Colmschate,NL,stoptreinstation
+DID,Didam,NL,stoptreinstation
+DMN,Diemen,NL,stoptreinstation
+DMNZ,Diemen Zuid,NL,stoptreinstation
+GDP,Diepenbeek,B,stoptreinstation
+DR,Dieren,NL,intercitystation
+DTC,Doetinchem,NL,knooppuntStoptreinstation
+DTCH,Doetinchem De Huet,NL,stoptreinstation
+DDR,Dordrecht,NL,knooppuntIntercitystation
+DDRS,Dordrecht Stadspolders,NL,stoptreinstation
+DDZD,Dordrecht Zuid,NL,stoptreinstation
+EDD,Dortmund Derne,D,stoptreinstation
+EDO,Dortmund Hbf,D,knooppuntIntercitystation
+EDKD,Dortmund Kirchderne,D,stoptreinstation
+DB,Driebergen-Zeist,NL,knooppuntStoptreinstation
+DRH,Driehuis,NL,stoptreinstation
+DRP,Dronryp,NL,stoptreinstation
+DRON,Dronten,NL,stoptreinstation
+DUISB,Duisburg Hbf,D,knooppuntIntercitystation
+DVN,Duiven,NL,stoptreinstation
+DVD,Duivendrecht,NL,knooppuntStoptreinstation
+KDUL,Dülken,D,intercitystation
+EDULH,Dülmen,D,stoptreinstation
+KDFFH,Düsseldorf Flughafen,D,knooppuntIntercitystation
+DUSSEL,Düsseldorf Hbf,D,megastation
+EC,Echt,NL,stoptreinstation
+EDC,Ede Centrum,NL,stoptreinstation
+ED,Ede-Wageningen,NL,knooppuntIntercitystation
+EEM,Eemshaven,NL,stoptreinstation
+EDN,Eijsden,NL,stoptreinstation
+EHV,Eindhoven Centraal,NL,megastation
+EHS,Eindhoven Strijp-S,NL,stoptreinstation
+LKR,Ekeren,B,stoptreinstation
+EST,Elst,NL,knooppuntStoptreinstation
+EMN,Emmen,NL,sneltreinstation
+EMNZ,Emmen Zuid,NL,sneltreinstation
+EM,Emmerich,D,knooppuntStoptreinstation
+EL,Emmerich-Elten,D,stoptreinstation
+EKZ,Enkhuizen,NL,stoptreinstation
+EENP,Ennepetal,D,stoptreinstation
+ES,Enschede,NL,knooppuntIntercitystation
+ESE,Enschede De Eschmarke,NL,stoptreinstation
+ESK,Enschede Kennispark,NL,stoptreinstation
+EEPE,Epe (Westf),D,stoptreinstation
+EML,Ermelo,NL,stoptreinstation
+ESN,Essen,B,stoptreinstation
+ETN,Etten-Leur,NL,intercitystation
+EGH,Eygelshoven,NL,stoptreinstation
+EGHM,Eygelshoven Markt,NL,stoptreinstation
+FWD,Feanwâlden,NL,stoptreinstation
+LIVOR,Firenze Campo di Marte,I,intercitystation
+FN,Franeker,NL,stoptreinstation
+FFFM,Frankfurt (M) Hbf,D,knooppuntIntercitystation
+FFS,Frankfurt (Main) Süd,D,intercitystation
+FNAF,Frankfurt Flughafen Fernb,D,knooppuntIntercitystation
+RF,Freiburg (Breisgau) Hbf,D,sneltreinstation
+GDR,Gaanderen,NL,stoptreinstation
+GDM,Geldermalsen,NL,knooppuntStoptreinstation
+GP,Geldrop,NL,knooppuntStoptreinstation
+GLN,Geleen Oost,NL,stoptreinstation
+LUT,Geleen-Lutterade,NL,stoptreinstation
+FGSP,Gent Sint Pieters,B,stoptreinstation
+GZ,Gilze-Rijen,NL,stoptreinstation
+GBR,Glanerbrug,NL,stoptreinstation
+LGL,Glons,B,stoptreinstation
+GS,Goes,NL,stoptreinstation
+GO,Goor,NL,stoptreinstation
+TGO,Göppingen,D,sneltreinstation
+GR,Gorinchem,NL,knooppuntStoptreinstation
+HOJE,Göteborg Central,S,intercitystation
+GD,Gouda,NL,knooppuntIntercitystation
+GDG,Gouda Goverwelle,NL,stoptreinstation
+GBG,Gramsbergen,NL,stoptreinstation
+GK,Grijpskerk,NL,stoptreinstation
+G,Gronau (Westf.),D,knooppuntStoptreinstation
+GN,Groningen,NL,knooppuntIntercitystation
+GERP,Groningen Europapark,NL,stoptreinstation
+GNN,Groningen Noord,NL,stoptreinstation
+GW,Grou-Jirnsum,NL,stoptreinstation
+MGZB,Günzburg,D,sneltreinstation
+HLM,Haarlem,NL,knooppuntIntercitystation
+HLMS,Haarlem Spaarnwoude,NL,stoptreinstation
+HAGEN,Hagen Hbf,D,knooppuntSneltreinstation
+HWZB,Halfweg-Zwanenburg,NL,stoptreinstation
+HAMM,Hamm (Westf.),D,knooppuntStoptreinstation
+HANN,Hannover Hbf,D,megastation
+HDB,Hardenberg,NL,sneltreinstation
+HD,Harderwijk,NL,knooppuntStoptreinstation
+HBZM,Hardinxveld Blauwe Zoom,NL,stoptreinstation
+GND,Hardinxveld-Giessendam,NL,stoptreinstation
+HRN,Haren,NL,stoptreinstation
+HLG,Harlingen,NL,stoptreinstation
+HLGH,Harlingen Haven,NL,stoptreinstation
+FHS,Hasselt,B,stoptreinstation
+HK,Heemskerk,NL,stoptreinstation
+HAD,Heemstede-Aerdenhout,NL,intercitystation
+HR,Heerenveen,NL,intercitystation
+HRY,Heerenveen IJsstadion,NL,facultatiefStation
+HWD,Heerhugowaard,NL,knooppuntStoptreinstation
+HRL,Heerlen,NL,knooppuntIntercitystation
+HRLW,Heerlen Woonboulevard,NL,stoptreinstation
+HZE,Heeze,NL,stoptreinstation
+MID,Heide (B),B,stoptreinstation
+HLO,Heiloo,NL,stoptreinstation
+HNO,Heino,NL,stoptreinstation
+HM,Helmond,NL,knooppuntIntercitystation
+HMH,Helmond 't Hout,NL,stoptreinstation
+HMBV,Helmond Brandevoort,NL,stoptreinstation
+HMBH,Helmond Brouwhuis,NL,stoptreinstation
+LKM,Hemiksem,B,stoptreinstation
+HMN,Hemmen-Dodewaard,NL,stoptreinstation
+HGL,Hengelo,NL,knooppuntIntercitystation
+HGLG,Hengelo Gezondheidspark,NL,stoptreinstation
+HGLO,Hengelo Oost,NL,stoptreinstation
+LHS,Herstal,B,stoptreinstation
+HZ,Herzogenrath,D,stoptreinstation
+HIL,Hillegom,NL,stoptreinstation
+HVS,Hilversum,NL,knooppuntIntercitystation
+HVSM,Hilversum Media Park,NL,stoptreinstation
+HVSP,Hilversum Sportpark,NL,stoptreinstation
+HNP,Hindeloopen,NL,stoptreinstation
+FOE,Hoboken-Polder,B,stoptreinstation
+HB,Hoensbroek,NL,stoptreinstation
+HVL,Hoevelaken,NL,stoptreinstation
+HOR,Hollandsche Rading,NL,stoptreinstation
+HON,Holten,NL,stoptreinstation
+EHZW,Holzwickede,D,stoptreinstation
+HFD,Hoofddorp,NL,stoptreinstation
+HGV,Hoogeveen,NL,stoptreinstation
+HGZ,Hoogezand-Sappemeer,NL,knooppuntStoptreinstation
+HKS,Hoogkarspel,NL,stoptreinstation
+HN,Hoorn,NL,knooppuntIntercitystation
+HNK,Hoorn Kersenboogerd,NL,stoptreinstation
+HOPF,Hopfgarten,A,stoptreinstation
+HRT,Horst-Sevenum,NL,stoptreinstation
+HTN,Houten,NL,knooppuntStoptreinstation
+HTNC,Houten Castellum,NL,stoptreinstation
+SGL,Houthem-St. Gerlach,NL,stoptreinstation
+HDG,Hurdegaryp,NL,stoptreinstation
+IJT,IJlst,NL,stoptreinstation
+INNSB,Innsbruck Hbf,A,knooppuntIntercitystation
+JENBAC,Jenbach,A,stoptreinstation
+KN,Kaldenkirchen,D,stoptreinstation
+FKTH,Kalmthout,B,stoptreinstation
+KPN,Kampen,NL,stoptreinstation
+KPNZ,Kampen Zuid,NL,stoptreinstation
+BZL,Kapelle-Biezelinge,NL,stoptreinstation
+LKP,Kapellen,B,stoptreinstation
+KARLSR,Karlsruhe Hbf,D,intercitystation
+KRD,Kerkrade Centrum,NL,knooppuntStoptreinstation
+KTR,Kesteren,NL,stoptreinstation
+GKT,Kijkuit,B,stoptreinstation
+KBK,Klarenbeek,NL,stoptreinstation
+KMR,Klimmen-Ransdaal,NL,stoptreinstation
+KKO,Koblenz Hbf,D,intercitystation
+KOLN,Köln Hbf,D,megastation
+KKD,Köln Messe/Deutz,D,megastation
+KKW,Köln West,D,intercitystation
+KKERP,Köln-Ehrenfeld,D,stoptreinstation
+KKM,Köln-Mülheim,D,intercitystation
+KZ,Koog aan de Zaan,NL,stoptreinstation
+KMW,Koudum-Molkwerum,NL,stoptreinstation
+ODENS,Københavns Lufthavn St,DK,intercitystation
+KBD,Krabbendijke,NL,stoptreinstation
+KMA,Krommenie-Assendelft,NL,stoptreinstation
+KW,Kropswolde,NL,stoptreinstation
+KRG,Kruiningen-Yerseke,NL,stoptreinstation
+KUFST,Kufstein,A,intercitystation
+ZLW,Lage Zwaluwe,NL,knooppuntStoptreinstation
+LG,Landgraaf,NL,knooppuntStoptreinstation
+LANDRY,Landry,F,intercitystation
+LLZM,Lansingerland-Zoetermeer,NL,stoptreinstation
+LEER,Leer (Ostfriesl),D,stoptreinstation
+LDM,Leerdam,NL,stoptreinstation
+LW,Leeuwarden,NL,knooppuntIntercitystation
+LWC,Leeuwarden Camminghaburen,NL,stoptreinstation
+ELGD,Legden,D,stoptreinstation
+LEDN,Leiden Centraal,NL,knooppuntIntercitystation
+LDL,Leiden Lammenschans,NL,stoptreinstation
+LLS,Lelystad Centrum,NL,knooppuntIntercitystation
+ELET,Lette (Kr Coesfeld),D,stoptreinstation
+LEUVEN,Leuven,B,intercitystation
+LTV,Lichtenvoorde-Groenlo,NL,stoptreinstation
+FLJ,Liège-Carré,B,stoptreinstation
+LUIK,Liège-Guillemins,B,knooppuntIntercitystation
+FLGP,Liège-Saint-Lambert,B,stoptreinstation
+LSL,Liers,B,stoptreinstation
+LILLEE,Lille Europe,F,intercitystation
+FLB,Limburg Süd,D,stoptreinstation
+LINZ,Linz Hbf,A,intercitystation
+LC,Lochem,NL,stoptreinstation
+FLK,Lokeren,B,stoptreinstation
+STP,London St. Pancras Int.,GB,megastation
+LP,Loppersum,NL,stoptreinstation
+ELDH,Lüdinghausen,D,stoptreinstation
+ELUE,Lünen Hbf,D,stoptreinstation
+LTN,Lunteren,NL,stoptreinstation
+MZ,Maarheeze,NL,stoptreinstation
+MRN,Maarn,NL,knooppuntStoptreinstation
+MAS,Maarssen,NL,stoptreinstation
+MT,Maastricht,NL,knooppuntIntercitystation
+MTN,Maastricht Noord,NL,stoptreinstation
+MTR,Maastricht Randwyck,NL,knooppuntStoptreinstation
+FMZ,Mainz Hbf,D,intercitystation
+RINGS,Malmö Central,S,intercitystation
+MANNHE,Mannheim Hbf,D,intercitystation
+MG,Mantgum,NL,stoptreinstation
+MRB,Mariënberg,NL,knooppuntSneltreinstation
+MARNE,Marne-la-Vallée-Chessy,F,stoptreinstation
+MARS,Marseille-St-Charles,F,intercitystation
+MTH,Martenshoek,NL,stoptreinstation
+MECH,Mechelen,B,knooppuntIntercitystation
+MES,Meerssen,NL,sneltreinstation
+LM,Melsele,B,stoptreinstation
+MP,Meppel,NL,knooppuntStoptreinstation
+EMTE,Metelen Land,D,stoptreinstation
+MDB,Middelburg,NL,stoptreinstation
+DOMOD,Milano Porta Garibaldi,I,intercitystation
+BLTM,Milmort,B,stoptreinstation
+MINDEN,Minden (Westf),D,stoptreinstation
+MCGB,Mönchengladbach Hbf,D,knooppuntIntercitystation
+MMLH,Mook-Molenhoek,NL,stoptreinstation
+MOUT,Moutiers-Salins-Brides,F,stoptreinstation
+MUNCHH,München Hbf,D,megastation
+STRAUB,München Ost,D,intercitystation
+ENHF,Münster (W) Zentrum Nord,D,stoptreinstation
+MUNST,Münster (Westf) Hbf,D,knooppuntIntercitystation
+ENBE,Münster-Häger,D,stoptreinstation
+NDB,Naarden-Bussum,NL,knooppuntStoptreinstation
+NEUSS,Neuss Hbf,D,stoptreinstation
+LNI,Niel,B,stoptreinstation
+NA,Nieuw Amsterdam,NL,sneltreinstation
+NVP,Nieuw Vennep,NL,stoptreinstation
+NWK,Nieuwerkerk a/d IJssel,NL,stoptreinstation
+FNU,Nieuwkerken-Waas,B,stoptreinstation
+NKK,Nijkerk,NL,stoptreinstation
+NM,Nijmegen,NL,knooppuntIntercitystation
+NMD,Nijmegen Dukenburg,NL,stoptreinstation
+NMGO,Nijmegen Goffert,NL,stoptreinstation
+NMH,Nijmegen Heyendaal,NL,stoptreinstation
+NML,Nijmegen Lent,NL,stoptreinstation
+NVD,Nijverdal,NL,stoptreinstation
+NDKP,Noorderkempen,B,knooppuntIntercitystation
+ENOW,Nordwalde,D,stoptreinstation
+NS,Nunspeet,NL,stoptreinstation
+NURNB,Nürnberg Hbf,D,intercitystation
+NH,Nuth,NL,stoptreinstation
+OBD,Obdam,NL,stoptreinstation
+OBERH,Oberhausen Hbf,D,knooppuntStoptreinstation
+OBERHS,Oberhausen-Sterkrade,D,stoptreinstation
+EOP,Ochtrup,D,stoptreinstation
+RO,Offenburg,D,sneltreinstation
+OT,Oisterwijk,NL,stoptreinstation
+ODZ,Oldenzaal,NL,stoptreinstation
+OST,Olst,NL,intercitystation
+OMN,Ommen,NL,knooppuntSneltreinstation
+OTB,Oosterbeek,NL,stoptreinstation
+OP,Opheusden,NL,stoptreinstation
+OSNH,Osnabrück Hbf,D,megastation
+O,Oss,NL,knooppuntIntercitystation
+OW,Oss West,NL,stoptreinstation
+ODB,Oudenbosch,NL,stoptreinstation
+OVN,Overveen,NL,stoptreinstation
+PARIS,Paris-Nord,F,megastation
+PASS,Passau Hbf,D,intercitystation
+TP,Plochingen,D,sneltreinstation
+EPRA,Praest,D,stoptreinstation
+EPRN,Preussen,D,stoptreinstation
+PMR,Purmerend,NL,knooppuntStoptreinstation
+PMO,Purmerend Overwhere,NL,stoptreinstation
+PMW,Purmerend Weidevenne,NL,stoptreinstation
+PT,Putten,NL,stoptreinstation
+FRP,Puurs,B,stoptreinstation
+RAT,Raalte,NL,stoptreinstation
+RVS,Ravenstein,NL,stoptreinstation
+REGENB,Regensburg Hbf,D,intercitystation
+RV,Reuver,NL,stoptreinstation
+RH,Rheden,NL,stoptreinstation
+RHEINE,Rheine,D,knooppuntIntercitystation
+RHN,Rhenen,NL,knooppuntStoptreinstation
+RSN,Rijssen,NL,stoptreinstation
+RSW,Rijswijk,NL,stoptreinstation
+RB,Rilland-Bath,NL,stoptreinstation
+RM,Roermond,NL,knooppuntIntercitystation
+RD,Roodeschool,NL,stoptreinstation
+RSD,Roosendaal,NL,knooppuntIntercitystation
+EHW,Rosendahl-Holtwick,D,stoptreinstation
+ROSENH,Rosenheim,D,intercitystation
+RS,Rosmalen,NL,stoptreinstation
+RTA,Rotterdam Alexander,NL,intercitystation
+RTB,Rotterdam Blaak,NL,stoptreinstation
+RTD,Rotterdam Centraal,NL,megastation
+RLB,Rotterdam Lombardijen,NL,stoptreinstation
+RTN,Rotterdam Noord,NL,stoptreinstation
+RTST,Rotterdam Stadion,NL,facultatiefStation
+RTZ,Rotterdam Zuid,NL,stoptreinstation
+FSV,Ruisbroek-Sauvegarde,B,stoptreinstation
+RL,Ruurlo,NL,stoptreinstation
+SCHARD,Salzburg Hbf,A,intercitystation
+SPTN,Santpoort Noord,NL,stoptreinstation
+SPTZ,Santpoort Zuid,NL,stoptreinstation
+SSH,Sassenheim,NL,stoptreinstation
+SWD,Sauwerd,NL,stoptreinstation
+SGN,Schagen,NL,stoptreinstation
+SDA,Scheemda,NL,stoptreinstation
+SCHLL,Schelle,B,stoptreinstation
+SDM,Schiedam Centrum,NL,stoptreinstation
+SOG,Schin op Geul,NL,stoptreinstation
+SN,Schinnen,NL,stoptreinstation
+SHL,Schiphol Airport,NL,megastation
+KSWE,Schwelm,D,stoptreinstation
+ESRT,Schwerte (Ruhr),D,stoptreinstation
+ESEM,Selm,D,stoptreinstation
+ESEB,Selm-Beifang,D,stoptreinstation
+KSB,Siegburg/Bonn,D,stoptreinstation
+LSW,Sinaai,B,stoptreinstation
+MARIA,Sint-Mariaburg,B,stoptreinstation
+FSN,Sint-Niklaas,B,stoptreinstation
+STD,Sittard,NL,knooppuntIntercitystation
+SDT,Sliedrecht,NL,stoptreinstation
+SDTB,Sliedrecht Baanhoek,NL,stoptreinstation
+SK,Sneek,NL,knooppuntStoptreinstation
+SKND,Sneek Noord,NL,stoptreinstation
+ST,Soest,NL,knooppuntStoptreinstation
+STZ,Soest Zuid,NL,stoptreinstation
+SD,Soestdijk,NL,stoptreinstation
+SBK,Spaubeek,NL,stoptreinstation
+POLTEN,St.Pölten Hbf,A,intercitystation
+STV,Stavoren,NL,stoptreinstation
+STM,Stedum,NL,stoptreinstation
+SWK,Steenwijk,NL,intercitystation
+EBGO,Steinfurt-Borghorst,D,stoptreinstation
+EBFT,Steinfurt-Burgsteinfurt,D,stoptreinstation
+EGRK,Steinfurt-Grottenkamp,D,stoptreinstation
+LS,Stendal,D,intercitystation
+TS,Stuttgart Hbf,D,knooppuntIntercitystation
+SRN,Susteren,NL,stoptreinstation
+SM,Swalmen,NL,stoptreinstation
+TG,Tegelen,NL,stoptreinstation
+TBG,Terborg,NL,stoptreinstation
+TL,Tiel,NL,knooppuntStoptreinstation
+TPSW,Tiel Passewaaij,NL,stoptreinstation
+TB,Tilburg,NL,knooppuntIntercitystation
+TBR,Tilburg Reeshof,NL,stoptreinstation
+TBU,Tilburg Universiteit,NL,stoptreinstation
+FTG,Tongeren,B,stoptreinstation
+KT,Troisdorf,D,intercitystation
+TWL,Twello,NL,stoptreinstation
+UTG,Uitgeest,NL,knooppuntStoptreinstation
+UHZ,Uithuizen,NL,stoptreinstation
+UHM,Uithuizermeeden,NL,stoptreinstation
+TU,Ulm Hbf,D,sneltreinstation
+EUN,Unna,D,stoptreinstation
+UST,Usquert,NL,stoptreinstation
+UT,Utrecht Centraal,NL,megastation
+UTLR,Utrecht Leidsche Rijn,NL,stoptreinstation
+UTLN,Utrecht Lunetten,NL,stoptreinstation
+UTM,Utrecht Maliebaan,NL,stoptreinstation
+UTO,Utrecht Overvecht,NL,knooppuntStoptreinstation
+UTT,Utrecht Terwijde,NL,stoptreinstation
+UTVR,Utrecht Vaartsche Rijn,NL,knooppuntStoptreinstation
+UTZL,Utrecht Zuilen,NL,stoptreinstation
+VALTGV,Valence TGV,F,stoptreinstation
+VK,Valkenburg,NL,knooppuntSneltreinstation
+VSV,Varsseveld,NL,stoptreinstation
+VDM,Veendam,NL,knooppuntStoptreinstation
+VNDC,Veenendaal Centrum,NL,knooppuntStoptreinstation
+VNDW,Veenendaal West,NL,stoptreinstation
+KLP,Veenendaal-De Klomp,NL,stoptreinstation
+VP,Velp,NL,stoptreinstation
+MEREL,Venezia Santa Lucia,I,intercitystation
+VL,Venlo,NL,knooppuntIntercitystation
+VRY,Venray,NL,knooppuntStoptreinstation
+VLB,Vierlingsbeek,NL,stoptreinstation
+VIERS,Viersen,D,stoptreinstation
+FVS,Visé,B,knooppuntStoptreinstation
+VTN,Vleuten,NL,stoptreinstation
+VS,Vlissingen,NL,knooppuntIntercitystation
+VSS,Vlissingen Souburg,NL,stoptreinstation
+VDL,Voerendaal,NL,stoptreinstation
+VB,Voorburg,NL,stoptreinstation
+VH,Voorhout,NL,stoptreinstation
+VST,Voorschoten,NL,stoptreinstation
+VEM,Voorst-Empe,NL,stoptreinstation
+VD,Vorden,NL,stoptreinstation
+VZ,Vriezenveen,NL,stoptreinstation
+VHP,Vroomshoop,NL,stoptreinstation
+VG,Vught,NL,stoptreinstation
+WAD,Waddinxveen,NL,stoptreinstation
+WADN,Waddinxveen Noord,NL,stoptreinstation
+WADT,Waddinxveen Triangel,NL,stoptreinstation
+WFM,Warffum,NL,stoptreinstation
+WR,Weener,D,stoptreinstation
+WT,Weert,NL,intercitystation
+WP,Weesp,NL,knooppuntStoptreinstation
+WL,Wehl,NL,stoptreinstation
+WELS,Wels Hbf,A,intercitystation
+WESEL,Wesel,D,stoptreinstation
+WTV,Westervoort,NL,stoptreinstation
+WZ,Wezep,NL,stoptreinstation
+WBF,Wien Hbf,A,intercitystation
+WIENH,Wien Hütteldorf,A,intercitystation
+WDN,Wierden,NL,knooppuntStoptreinstation
+WC,Wijchen,NL,stoptreinstation
+WH,Wijhe,NL,intercitystation
+GWD,Wildert,B,stoptreinstation
+WS,Winschoten,NL,knooppuntStoptreinstation
+WSM,Winsum,NL,stoptreinstation
+WW,Winterswijk,NL,knooppuntStoptreinstation
+WWW,Winterswijk West,NL,stoptreinstation
+WD,Woerden,NL,knooppuntStoptreinstation
+WF,Wolfheze,NL,stoptreinstation
+HWOB,Wolfsburg Hbf,D,sneltreinstation
+WV,Wolvega,NL,stoptreinstation
+WORGL,Wörgl,A,intercitystation
+WK,Workum,NL,stoptreinstation
+WM,Wormerveer,NL,stoptreinstation
+WUPPH,Wuppertal Hbf,D,stoptreinstation
+KWBA,Wuppertal-Barmen,D,stoptreinstation
+KWO,Wuppertal-Oberbarmen,D,stoptreinstation
+WUPPV,Wuppertal-Vohwinkel,D,stoptreinstation
+WURZB,Würzburg Hbf,D,intercitystation
+ZD,Zaandam,NL,knooppuntIntercitystation
+ZDK,Zaandam Kogerveld,NL,stoptreinstation
+ZZS,Zaandijk Zaanse Schans,NL,knooppuntStoptreinstation
+ZBM,Zaltbommel,NL,stoptreinstation
+ZVT,Zandvoort aan Zee,NL,stoptreinstation
+ZA,Zetten-Andelst,NL,stoptreinstation
+ZV,Zevenaar,NL,knooppuntStoptreinstation
+ZVB,Zevenbergen,NL,stoptreinstation
+ZTM,Zoetermeer,NL,knooppuntStoptreinstation
+ZTMO,Zoetermeer Oost,NL,stoptreinstation
+ZB,Zuidbroek,NL,knooppuntStoptreinstation
+ZH,Zuidhorn,NL,stoptreinstation
+ZUE,Zürich HB,CH,intercitystation
+ZP,Zutphen,NL,knooppuntIntercitystation
+ZWD,Zwijndrecht,NL,stoptreinstation
+LZD,Zwijndrecht (B),B,stoptreinstation
+ZL,Zwolle,NL,knooppuntIntercitystation
+ZLSH,Zwolle Stadshagen,NL,stoptreinstation

@@ -54,7 +54,7 @@ An example for each version can be found in `runs/example/v_/`
    - `scorecard.csv`: `scorekaart2023.xlsx`, but with the following changes: deleted both of the 'via HSL' lines, and adjusted some name to match `stations-2023-09.csv`. Cleaned up and kept the relevant information
    - `scorekaart2023.xlsx`: https://www.kilometerkampioen.nl/ -> 'Download Scorekaart'. Contains the kilometers between hub stations
    - `station_distances.json`: https://github.com/nanderv/trainkms/blob/main/routes.json -> With one minor change 'dtz' -> 'dtcp' (Delft Zuid -> Delft Campus)
-   - `stations-2023-09.csv`: https://www.rijdendetreinen.nl/en/open-data/stations
+   - `stations-2023-09.csv`: https://www.rijdendetreinen.nl/en/open-data/stations -> One minor change: ';' -> ',' for consistency among datasets
 
 # V0
 ## Data (see `data/v0/` files)

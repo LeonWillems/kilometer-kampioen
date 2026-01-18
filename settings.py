@@ -67,6 +67,10 @@ class BaseSettings:
     DISTANCES_PATH: Path = INFORMATION_DIR / DISTANCES_FILE
     PROCESSED_DISTANCES_PATH: Path = DATA_DIR / DISTANCES_FILE_PROCESSED
 
+    # The station file is given and constant
+    STATIONS_FILE: str = 'stations-2023-09.csv'
+    STATIONS_PATH: Path = INFORMATION_DIR / STATIONS_FILE
+
 
 @dataclass
 class VersionSettings(BaseSettings):
