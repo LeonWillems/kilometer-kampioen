@@ -103,7 +103,7 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
     new_columns = ['Station', 'To', 'Departure', 'Arrival', 'Type', 'ID']
 
     # Go over each section ID, representing one whole section from first to
-    # last station for one specific train. The ID is unique for train & section 
+    # last station for one specific train. The ID is unique for train & section
     for section_id in section_ids:
         section_rows = timetable_df[
             timetable_df['Service:RDT-ID'] == section_id
