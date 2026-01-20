@@ -153,7 +153,16 @@ def filter_empty_dates(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def preprocess():
-    """Function to preprocess the raw dataset."""
+    """Function to preprocess the raw dataset.
+
+    After downloading, and before running anything, do not forget to delete the
+    following rows (if running for day 2025-10-04). Somehow Dordrecht appeared
+    out of nowhere in a few rows, heavily influencing some speeds.
+
+    16911556, DDR (index 221558)
+    16911368, DDR (index 219962)
+    16909085, DDR (index 200595)
+    """
     raw_file_name = 'services-2025-10.csv'
     path_to_raw_file = SETTINGS.DATA_PATH / raw_file_name
     path_to_timetable = SETTINGS.DATA_PATH / SETTINGS.TIMETABLE_FILE
