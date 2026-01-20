@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from .find_intercity_distance import BFS
+from .find_intercity_distance import Dijkstra
 from .preprocess_data import perform_preprocesing
 from .data_utils import (
     save_intermediate_stations,
@@ -103,17 +103,16 @@ class TimetableProcessor:
         unique_pairs = self.timetable_df[['Station', 'To']] \
             .drop_duplicates().values.tolist()
 
-        # Initialize BFS instance with the distances dictionary once
+        # Initialize a Dijkstra instance with the distances dictionary once
         # Deepcopy is used to avoid modifying the original distances,
-        # and to ensure BFS works with the current state of distances
-        bfs = BFS(adjacency_list=deepcopy(self.distances))
+        # and to ensure Dijkstra works with the current state of distances
+        dijkstra = Dijkstra(adjacency_list=deepcopy(self.distances))
 
         for from_station, to_station in unique_pairs:
             if to_station not in self.distances[from_station]:
                 # If the distance does not exist, calculate it
-                path, distance = bfs.search(
-                    start=from_station, goal=to_station
-                )
+                dijkstra.construct_paths(from_station)
+                path, distance = dijkstra.search(to_station)
 
                 # If a path was found with some non-zero distance
                 if path and distance > 0:

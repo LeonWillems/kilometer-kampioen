@@ -12,38 +12,50 @@ Some context:
     this distance to the station_distances.
 
 How?
-- We will use breadth-first search (BFS) to find a direct path between
-    two stations.
+- We will use Dijkstra's Algorithm to find a direct path between
+    two stations, which is the shortest in terms of distance travelled.
 
-Pseudocode for BFS:
+Pseudocode for Dijkstra:
 - Input:
     - A graph G (an adjacency list with distances)
     - The starting vertex root of G (a station)
-- Output: Goal state. The parent links trace the shortest path back to root
+- Output: Given a goal vertex, the shortest path & distance from the root
 
- 1  procedure BFS(G, root):
- 2      let Q be a queue
- 3      label root as explored
- 4      Q.enqueue(root)
- 5      while Q is not empty do
- 6          v := Q.dequeue()
- 7          if v is the goal then
- 8              return v
- 9          for all edges from v to w in G.adjacentEdges(v) do
-10              if w is not labeled as explored then
-11                  label w as explored
-12                  w.parent := v
-13                  Q.enqueue(w)
+First, initialize some data structures:
+ 1  procedure Initialization(G, root):
+ 2      for each vertex v in G:
+ 3          dist[v] <- infinity
+ 4          parent[v] <- undefined
+ 5          add v to queue Q
+ 6      dist[root] = 0
 
-Important to note! BFS will not actually find the shortest distance for any
-graph, but it will find a direct path with least nodes. For now, that is fine.
-For later, check whether this is still the way to go for our train network, as
-a counter-example might exist. If latter, implement Dijkstra's
-algorithm instead.
+To find the paths to all vertices from some root:
+ 1  procedure Dijkstra(G, root):
+ 2      while Q is not empty do
+ 3          v := v in Q with minimum dist[v]
+ 4          Q.remove(v)
+ 5
+ 6          for each edge (v, u) where v in Q and u is a direct neighbor of v:
+ 7              new_dist := dist[v] + d(v, u) (in G)
+ 8              if new_dist < dist[u]:
+ 9                  dist[u] := new_dist
+
+To find the shortest path from root to some goal:
+ 1  procedure Search(root, goal):
+ 2      path := empty sequence
+ 3      u := goal
+ 4
+ 5      if prev[u] is defined or u == root:
+ 6          while u is defined:
+ 7              path.insert(u) (insert at start)
+ 8              u := prev[u]
 """
 
+from numpy import inf
+from copy import deepcopy
 
-class BFS:
+
+class Dijkstra:
     def __init__(self, adjacency_list: dict[str, dict[str, float]]):
         """Only need the grap G, represented as an adjacency list
         with distances.
@@ -53,56 +65,125 @@ class BFS:
             values are dictionaries of neighboring stations with
             their distances.
             Example: {"Bhv": {"Utm": 6.2, "Uto": 5.6, "Dld": 2.9}, ...}
+
+        Attributes:
+        - nodes (list): The keys of the graph, example: ['Bhv', 'Ehv', ...]
         """
         self.graph = adjacency_list
+        self.nodes = list(self.graph)
 
-    def _reconstruct_path(self, parent: dict[str, str], goal: str):
-        """Reconstruct the path from start to goal using parent links.
-        In other words, backwards tracing from goal to start.
+    def _init_data_structures(self, start: str):
+        """When constructing paths, start with fresh data structures.
 
         Args:
-        - parent (dict): A dictionary mapping each node to its parent in
-            the BFS tree
-        - goal (str): The goal node to reconstruct the path to
+        - start (str): Starting node, or the root. Example 'b'
+
+        Attributes (in this example, the start is 'b'):
+        - dists (dict): Distances from start to each node, example
+            before: {'a': inf, 'b': 0, ...}, after: {'a': 4, 'b': 0, ...}
+        - parents (dict): Predecessor (parent) of each node, example
+            before: {'a': None, 'b': None, ...},
+            after: {'a': 'b', 'b': None, ...}
+        - queue (list): Queue of the nodes to still process,
+            example ['a', 'b', ...]
         """
-        path = []
-        total_distance = 0.0  # Keep track of distance travelled
+        self.start = start
 
-        while goal is not None:
-            path.append(goal)
-            goal = parent[goal]
-            total_distance += self.graph.get(goal, {}).get(path[-1], 0.0)
+        self.dists = {node: inf for node in self.nodes}
+        self.dists[self.start] = 0  # Starting node gets distance 0
 
-        return path[::-1], total_distance  # Return reversed path & distance
+        self.parents = {node: None for node in self.nodes}
+        self.queue = deepcopy(self.nodes)
 
-    def search(self, start: str, goal: str) -> tuple[list, float]:
-        """Perform BFS to find the shortest path from start to goal.
+    def _get_min_dist(self) -> str:
+        """Gets the node in the `queue` with the minimum distance in `dists`.
+        First, initialize the distance for each node in queue. Then, find the
+        minimum. Lastly, deleted the found node from the queue.
+        """
+        queue_dists = {node: self.dists[node] for node in self.queue}
+        min_dist_node = min(queue_dists, key=queue_dists.get)
+        self.queue.remove(min_dist_node)
+        return min_dist_node
+
+    def construct_paths(self, start: str):
+        """Given a start node, will invoke Dijkstra's Algorithm for
+        calculate distances of shortest paths to each other node,
+        keeping track of each node's parent node.
 
         Args:
-        - start (str): The starting station
-        - goal (str): The destination station
+        - start (str): Starting node, or the root. Example 'b'
+        """
+        self._init_data_structures(start)
+
+        while self.queue:
+            current = self._get_min_dist()
+
+            for neighbor, dist in self.graph[current].items():
+                new_dist_current = self.dists[current] + dist
+
+                if new_dist_current < self.dists[neighbor]:
+                    self.dists[neighbor] = new_dist_current
+                    self.parents[neighbor] = current
+
+    def _find_shortest_path(self, goal: str) -> list[str]:
+        """Find the shortest path from the start node to the goal node.
+
+        Args:
+        - start (str): Example 'b'
+        - goal (str): Example 'g'
 
         Returns:
-        - tuple: A tuple containing the path as a list of station names and
-            the total distance as a float. If no path is found,
-            returns ([], 0.0)
+        - list[str]: Path of nodes visited, example ['b', 'a', 'g']. Always
+            includes both the start and the goal nodes.
         """
-        queue = [start]
-        visited = {start}
-        parent = {start: None}
+        path = []
+        parent = goal
 
-        # Evaluate all nodes, or find the goal node and terminate
-        while queue:
-            current = queue.pop(0)  # Dequeue the first element
+        if goal in self.parents or self.start == parent:
+            while parent in self.parents:
+                path.insert(0, parent)
+                parent = self.parents[parent]
 
-            if current == goal:  # Shortest path found
-                return self._reconstruct_path(parent, goal)
+        return path
 
-            for neighbor in self.graph.get(current, {}):
-                # Only enqueue unvisited neighbors
-                if neighbor not in visited:
-                    visited.add(neighbor)
-                    parent[neighbor] = current
-                    queue.append(neighbor)
+    def search(self, goal: str) -> tuple[list[str], float]:
+        """Given a goal node, finds the shortest path by backtraking, returns
+        this path and the distance.
 
-        return [], 0.0  # No path found
+        Args:
+        - start (str): Example 'b'
+        - goal (str): Example 'g'
+
+        Returns:
+        - tuple[list[str], float]: Shortest path and its distance, example
+            (['b', 'a', 'g'], 6)
+        """
+        shortest_path = self._find_shortest_path(goal)
+        return shortest_path, self.dists[goal]
+
+
+if __name__ == "__main__":
+    # Example usage to find the shortest path between 'a' and 'i'
+    distances = {
+        'a': {'b': 1, 'f': 2},
+        'b': {'a': 1, 'c': 1},
+        'c': {'b': 1, 'd': 1},
+        'd': {'c': 1, 'e': 1},
+        'e': {'d': 1, 'g': 2, 'h': 1},
+        'f': {'a': 2, 'g': 2},
+        'g': {'e': 2, 'f': 2},
+        'h': {'e': 1, 'i': 1},
+        'i': {'h': 1},
+    }
+
+    start, goal = 'a', 'i'
+
+    dijkstra = Dijkstra(adjacency_list=distances)
+    dijkstra.construct_paths(start)
+
+    # If we fix the start and run the above, we can run the line below
+    # for each possible goal to quickly find the distance
+    path, distance = dijkstra.search(goal)
+
+    print(f"Path found: {path}")
+    print(f"With distance: {distance}")
