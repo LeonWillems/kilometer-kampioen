@@ -5,7 +5,7 @@ from dataclasses import dataclass, asdict, field
 
 @dataclass
 class Parameters:
-    VERSION: str = 'v0'  # 'v0' / 'v1'
+    VERSION: str = 'v1'  # 'v0' / 'v1'
     START_STATION: str = 'Ehv'
     START_TIME: str = '08:00'
     END_TIME: str = '20:00'
