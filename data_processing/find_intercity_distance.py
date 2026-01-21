@@ -129,7 +129,6 @@ class Dijkstra:
         """Find the shortest path from the start node to the goal node.
 
         Args:
-        - start (str): Example 'b'
         - goal (str): Example 'g'
 
         Returns:
@@ -151,7 +150,6 @@ class Dijkstra:
         this path and the distance.
 
         Args:
-        - start (str): Example 'b'
         - goal (str): Example 'g'
 
         Returns:

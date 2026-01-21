@@ -28,17 +28,16 @@ class TimetableProcessor:
             found between bigger (intercity) connections
 
         Methods:
-        - add_minute_stamps: Add integer timestamps since epochS
-        - add_duration: Calculate duration between departure and arrival
+        - add_minute_stamps: Add integer timestamps since epoch, plus
+            the duration of the ride
+        - _update_intermediate_stations: Update the intermediate stations
+            when new ones are found/needed
         - enhance_distances_dict: Add distances for station pairs not in the
             distances dictionary
         - add_distances: Add distances to the timetable DataFrame
         - add_average_speed: Calculate average speed based on distance
             and duration
         - process_timetable: Run all processing steps in order
-        - save_timetable: Save the processed timetable to a CSV file
-        - filter_and_sort: Filter and sort the timetable based on station,
-            time, and transfer conditions
         """
         self.distances = load_distances()
         self.timetable_df = read_timetable(processed=False, set_index=False)
@@ -68,7 +67,7 @@ class TimetableProcessor:
         to_station: str,
         path: list[str],
     ):
-        """ Update the intermediate stations dictionary
+        """Update the intermediate stations dictionary
         with any stations found between from_station and to_station.
 
         Args:

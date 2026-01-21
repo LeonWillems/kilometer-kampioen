@@ -1,8 +1,10 @@
 import unittest
+
 from .test_utils import (
     get_log_contents, get_parms_contents, get_route_contents,
 )
 from data_processing.data_utils import timestamp_to_int
+
 from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 

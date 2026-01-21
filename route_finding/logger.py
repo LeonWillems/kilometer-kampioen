@@ -9,7 +9,7 @@ def setup_logger(timestamp: pd.Timestamp) -> logging.Logger:
     """Setup logger for the route finding algorithm.
 
     Args:
-    - version (str): Version of the timetable being used
+    - timestamp (datetime): Current time when running the algorithm
 
     Returns:
     - logging.Logger: Configured logger instance

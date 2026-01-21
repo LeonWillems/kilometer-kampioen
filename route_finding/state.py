@@ -44,9 +44,6 @@ class State:
         """Sets the initial state with the current time and starting station.
 
         Args:
-        - version (str): Version of the timetable data (example: 'v0')
-        - current_time (str): The current time in the route finding process
-        - current_station (str): The station where the route finding starts
         - logger (Logger): Logger instance for logging information
         """
         self.current_time = timestamp_to_int(

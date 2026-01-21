@@ -289,9 +289,6 @@ def filter_timetable(
     - timetable_df (pd.DataFrame): Timetable to filter and sort
     - station (str): The station to filter by
     - current_time (int): The current time to filter departures
-    - end_time (int): The end time to filter arrivals
-    - min_transfer_time (int): Minimum transfer time in minutes
-    - max_transfer_time (int): Maximum transfer time in minutes
     - id_previous_train (int): ID of the last train to consider for transfers
 
     Returns:

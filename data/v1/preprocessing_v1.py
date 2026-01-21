@@ -41,6 +41,7 @@ def keep_dutch_stations(timetable_df: pd.DataFrame) -> pd.DataFrame:
     dutch_stations = stations[stations['country'] == 'NL']
     dutch_codes = dutch_stations['code'].to_list()
 
+    # Return only rows where the station code is Dutch
     return timetable_df[timetable_df['Stop:Station code'].isin(dutch_codes)]
 
 

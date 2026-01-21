@@ -1,5 +1,6 @@
 import signal
 import pandas as pd
+from logging import Logger
 from datetime import datetime
 
 from .state import State
@@ -18,30 +19,28 @@ class GreedyDFS:
     """Greedy Depth-First Search for route finding.
 
     Args:
-    - end_time (str): The time by which the route must be completed
-      - attr end_time (pd.Timestmap): Complete datatime
-    - min_transfer_time (int): Minimum transfer time in minutes
-    - max_transfer_time (int): Maximum transfer time in minutes
+    - timestamp (datetime): Current time when running the algorithm
 
     Attributes:
     - timetable_df (pd.DataFrame): DataFrame containing the timetable data
     - best_state (State): The best state found during the search
     - best_distance (float): The best distance found during the search
-    - routes_path (Path): Path to save the best routes found
+    - iterations (int): Number of recursive dfs calls
+    - logger (Logger): Used for logging purposes
     """
     def __init__(self, timestamp: datetime):
         self.timestamp = timestamp
 
-        self.timetable_df = read_timetable(processed=True)
-        self.best_state = State()
-        self.best_distance = 0
-        self.iterations = 0
+        self.timetable_df: pd.DataFrame = read_timetable(processed=True)
+        self.best_state: State = State()
+        self.best_distance: float = 0
+        self.iterations: int = 0
 
         # Setup interrupt handling
         signal.signal(signal.SIGINT, self._handle_interrupt)
 
         # Setup logger
-        self.logger = setup_logger(timestamp=self.timestamp)
+        self.logger: Logger = setup_logger(timestamp=self.timestamp)
         self.logger.info(
             "Starting new route finding run with parameters:\n"
             f"Version: {SETTINGS.VERSION} ({SETTINGS.VERSION_NAME})\n"
@@ -51,7 +50,9 @@ class GreedyDFS:
         )
 
     def _handle_interrupt(self, signum, frame):
-        """Handle interrupt signal (Ctrl+C) by saving current best state."""
+        """Handle interrupt signal (Ctrl+C) by saving current
+        best state, and exiting the current run.
+        """
         self.logger.info("Interrupt received")
         self._save_best_route()
         exit(0)
@@ -221,11 +222,7 @@ def run_greedy_dfs(timestamp: datetime):
     """Main function to run the GreedyDFS route finding algorithm.
 
     Args:
-    - prms (dict): Parameter settings to run algo, example;
-        {'version': 'v0', 'start_station': 'Ht',
-         'start_time': '12:00', 'end_time': '15:00',
-         'min_transfer_time': 3, 'max_transfer_time': 15,
-         'timestamp': datetime}
+    - timestamp (datetime): Current time when running the algorithm
     """
     greedy_dfs = GreedyDFS(timestamp=timestamp)
 
