@@ -8,7 +8,8 @@ from .logger import setup_logger
 from data_processing.data_utils import (
     read_timetable, save_timetable,
     add_duration_in_minutes,
-    filter_timetable, int_to_timestamp
+    filter_timetable, int_to_timestamp,
+    pre_filter_timetable
 )
 
 from settings import Parameters, VersionSettings
@@ -31,7 +32,16 @@ class GreedyDFS:
     def __init__(self, timestamp: datetime):
         self.timestamp = timestamp
 
-        self.timetable_df: pd.DataFrame = read_timetable(processed=True)
+        self.timetable_df: pd.DataFrame \
+            = pre_filter_timetable(read_timetable(processed=True))
+
+        self.stations = self.timetable_df['Station'].unique()
+        self.timetables = {
+            station: self.timetable_df[self.timetable_df['Station'] == station]
+            for station in self.stations
+        }
+        print(self.timetables['Ehv'])
+
         self.best_state: State = State()
         self.best_distance: float = 0
         self.iterations: int = 0
@@ -64,10 +74,6 @@ class GreedyDFS:
 
         # Construct custom df for the best found route
         best_route_df = pd.DataFrame(data=self.best_state.route)
-
-        # Add the 'from station' index label as an extra column (leftmost)
-        from_stations = [section.name for section in self.best_state.route]
-        best_route_df.insert(0, 'Station', from_stations)
 
         # Save to designated folder (/routes/version/...)
         save_timetable(
@@ -123,7 +129,7 @@ class GreedyDFS:
         #    counted for the current sections. See 'information/rules.py'
         transfer_options['Distance_Counted'] = transfer_options.apply(
             lambda row: state.route_indicator.get_distance_counted(
-                from_station=row.name,
+                from_station=row['Station'],
                 to_station=row['To'],
                 train_type=row['Type'],
                 distance=row['Distance'],
@@ -164,13 +170,18 @@ class GreedyDFS:
         )
 
         # 1. Get options from current position (station & time filtered)
-        transfer_options = filter_timetable(
+        """transfer_options = filter_timetable(
             timetable_df=self.timetable_df,
             station=current_state.current_station,
             current_time=current_state.current_time,
             id_previous_train=current_state.id_previous_train,
-        )
+        )"""
 
+        transfer_options = filter_timetable(
+            timetable_df=self.timetables[current_state.current_station],
+            current_time=current_state.current_time,
+            id_previous_train=current_state.id_previous_train,
+        )
         # 2. If no options are available, return
         if transfer_options.empty:
             self.logger.debug(
@@ -186,7 +197,7 @@ class GreedyDFS:
             transfer_options, current_state
         )
         self.logger.debug(
-            f"Top transfer option: {top_transfers.iloc[0].name} -> "
+            f"Top transfer option: {top_transfers.iloc[0]['Station']} -> "
             f"{top_transfers.iloc[0]['To']} ({top_transfers.iloc[0]['Type']})"
         )
 
