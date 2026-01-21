@@ -6,6 +6,7 @@ SETTINGS = VersionSettings.get_version_settings()
 
 
 def perform_preprocesing():
+    """Calls the right preprocessing functionality based on the version."""
     match SETTINGS.VERSION:
         case 'v0':
             preprocessing_v0.preprocess()

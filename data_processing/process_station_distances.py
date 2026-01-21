@@ -42,7 +42,11 @@ class StationDistanceProcessor:
         self.processed_distances = self._process_distances()
 
     def _load_distances(self) -> list[dict]:
-        """Loads station distances. See explanation above for structure."""
+        """Loads station distances. See explanation above for structure.
+
+        Returns:
+        - list: See explanation above for exact structure.
+        """
         with open(SETTINGS.DISTANCES_PATH, mode='r') as f:
             return json.load(f)
 
