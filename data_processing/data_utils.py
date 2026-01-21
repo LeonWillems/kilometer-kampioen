@@ -99,7 +99,6 @@ def save_df_to_csv(df: pd.DataFrame, path_to_file: Path):
         path_to_file,
         sep=',',
         index=False,
-        index_label='Station',
         float_format='%.1f'  # Format distances and speeds to one decimal place
     )
 
@@ -120,17 +119,14 @@ def load_stations() -> pd.DataFrame:
 def read_timetable(
     processed: bool = True,
     timetable_path: Path = None,
-    set_index: bool = True,
 ) -> pd.DataFrame:
     """Read the timetable CSV file into a pandas DataFrame. Interpret the
     'Departure' and 'Arrival' columns as datetime objects. (Format: '14:20')
 
     Args:
-    - settings (VersionSettings): Contains settings based on the version
     - processed (bool): True if processed timetable required,
         False if unprocessed
     - timetable_path (Path, optional): Path to timetable file location
-    - set_index (bool): Set the 'From' column as index if True
 
     Returns:
     - pd.DataFrame: DataFrame containing the timetable data
@@ -153,10 +149,6 @@ def read_timetable(
 
     # Sort on 'Departure' because we will filter on it often
     timetable_df.sort_values(by='Departure', inplace=True)
-
-    if set_index:
-        # If index, easier to filter on departure station
-        timetable_df.set_index('Station', inplace=True)
 
     return timetable_df
 
@@ -181,39 +173,28 @@ def save_timetable(
     save_df_to_csv(df=timetable_df, path_to_file=timetable_path)
 
 
-def timestamp_to_int(
-    current_timestamp: pd.Timestamp | str,
-    from_epoch: bool = True,
-    start_timestamp: pd.Timestamp | str | None = None,
-) -> int:
-    """Takes the difference of two timestamps and return it
-    in minutes. With seconds as intermediate step.
+def timestamp_to_int(current_timestamp: pd.Timestamp | str) -> int:
+    """Calculates the difference in minutes from current_timestamp
+    and the epoch timestamp.
 
     Args:
     - current_timestamp (pd.Timestamp | str): Datetime to subtract from,
         can be either a full Timestmap including day, or a time
         indication ('15:10'). If latter, transform to full timestamp
-    - from_epoch (bool): Whether to count the epoch timestamp as
-        start_timestamp, defaults to True. If False, start_timestamp is needed
-    - start_timestamp (pd.Timestamp | str | None): Datatime to subtract,
-        same as for end_time. Not necessary when from_epoch is True
 
     Returns:
     - int: Time difference in minutes
     """
+
     if isinstance(current_timestamp, str):
         current_timestamp = pd.Timestamp(
             f"{SETTINGS.DAY_OF_RUN} {current_timestamp}"
         )
 
-    if from_epoch:
-        start_timestamp = SETTINGS.EPOCH_TIMESTAMP
-    elif isinstance(start_timestamp, str):
-        start_timestamp = pd.Timestamp(
-            f"{SETTINGS.DAY_OF_RUN} {start_timestamp}"
-        )
+    total_seconds = (
+        current_timestamp - SETTINGS.EPOCH_TIMESTAMP
+    ).total_seconds()
 
-    total_seconds = (current_timestamp - start_timestamp).total_seconds()
     total_minutes = int(total_seconds // 60)
     return total_minutes
 
@@ -276,42 +257,58 @@ def int_to_timestamp(current_time: int) -> pd.Timestamp:
     return SETTINGS.EPOCH_TIMESTAMP + pd.Timedelta(minutes=current_time)
 
 
-def filter_timetable(
+def pre_filter_timetable(
     timetable_df: pd.DataFrame,
-    station: str,
-    current_time: int,
-    id_previous_train: int,
 ) -> pd.DataFrame:
-    """Filter and sort the timetable based on station, time,
-    and transfer conditions.
+    """Before actual use by the algorithm, filter the timetable on times
+    within our current scope. More specifically, departure times from the
+    start time onward, and arrival times at end time latest.
 
     Args:
     - timetable_df (pd.DataFrame): Timetable to filter and sort
-    - station (str): The station to filter by
-    - current_time (int): The current time to filter departures
-    - id_previous_train (int): ID of the last train to consider for transfers
 
     Returns:
     - pd.DataFrame: filtered and sorted timetable
     """
-    # Calculate time window
-    min_time = current_time + Parameters.MIN_TRANSFER_TIME
-    max_time = current_time + Parameters.MAX_TRANSFER_TIME
-    end_time_int = timestamp_to_int(Parameters.END_TIME, from_epoch=True)
+    start_time_int = timestamp_to_int(Parameters.START_TIME)
+    end_time_int = timestamp_to_int(Parameters.END_TIME)
 
-    # First, filter on departures from our current station.
-    # Then, either we are driving the same train with 0 minutes transer (or
-    # slightly more, if trains stops for a while), or we are looking for
-    # a new train between min_time and max_time, indicating margins in
-    # which we look. Arrival time must be before we reach the end time.
     df_filtered = timetable_df[
-        (timetable_df.index == station)
-        & ((timetable_df['Departure_Int'] >= min_time)
-            | ((timetable_df['Departure_Int'] >= current_time)
-                & (timetable_df['ID'] == id_previous_train)))
-        & (timetable_df['Departure_Int'] <= max_time)
+        (timetable_df['Departure_Int'] >= start_time_int)
         & (timetable_df['Arrival_Int'] <= end_time_int)
     ]
 
-    df_copy = deepcopy(df_filtered)
-    return df_copy
+    return df_filtered
+
+
+def filter_timetable(
+    timetable_df: pd.DataFrame,
+    current_time: int,
+    id_previous_train: int,
+) -> pd.DataFrame:
+    """Filter the timetable based on time and transfer conditions.
+
+    Args:
+    - timetable_df (pd.DataFrame): Timetable to filter and sort
+    - current_time (int): The current time (in minutes) to filter departures
+    - id_previous_train (int): ID of the last train to consider for transfers
+
+    Returns:
+    - pd.DataFrame: filtered timetable
+    """
+    # Calculate time window
+    min_departure_time = current_time + Parameters.MIN_TRANSFER_TIME
+    max_departure_time = current_time + Parameters.MAX_TRANSFER_TIME
+
+    # The departure time is at latest the maximum departure time, and the
+    # departure time is at least the minimum departure time, or it is at least
+    # the current time if we sit in the same train (train ID corresponds to
+    # previous train ID)
+    df_filtered = timetable_df[
+        (timetable_df['Departure_Int'] <= max_departure_time)
+        & ((timetable_df['Departure_Int'] >= min_departure_time)
+            | ((timetable_df['Departure_Int'] >= current_time)
+                & (timetable_df['ID'].values == id_previous_train)))
+    ]
+
+    return deepcopy(df_filtered)

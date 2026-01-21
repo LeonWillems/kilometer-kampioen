@@ -39,9 +39,6 @@ def get_route_contents():
     routes_path = SETTINGS.ROUTES_PATH
     route_file_path = _get_file_path(routes_path)
 
-    route_df = read_timetable(
-        timetable_path=route_file_path,
-        set_index=False,
-    ).reset_index()
+    route_df = read_timetable(timetable_path=route_file_path).reset_index()
 
     return route_df

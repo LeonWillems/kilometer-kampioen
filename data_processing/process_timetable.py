@@ -40,7 +40,7 @@ class TimetableProcessor:
         - process_timetable: Run all processing steps in order
         """
         self.distances = load_distances()
-        self.timetable_df = read_timetable(processed=False, set_index=False)
+        self.timetable_df = read_timetable(processed=False)
         self.intermediate_stations = {}
 
     def add_minute_stamps(self):
