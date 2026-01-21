@@ -173,39 +173,28 @@ def save_timetable(
     save_df_to_csv(df=timetable_df, path_to_file=timetable_path)
 
 
-def timestamp_to_int(
-    current_timestamp: pd.Timestamp | str,
-    from_epoch: bool = True,
-    start_timestamp: pd.Timestamp | str | None = None,
-) -> int:
-    """Takes the difference of two timestamps and return it
-    in minutes. With seconds as intermediate step.
+def timestamp_to_int(current_timestamp: pd.Timestamp | str) -> int:
+    """Calculates the difference in minutes from current_timestamp
+    and the epoch timestamp.
 
     Args:
     - current_timestamp (pd.Timestamp | str): Datetime to subtract from,
         can be either a full Timestmap including day, or a time
         indication ('15:10'). If latter, transform to full timestamp
-    - from_epoch (bool): Whether to count the epoch timestamp as
-        start_timestamp, defaults to True. If False, start_timestamp is needed
-    - start_timestamp (pd.Timestamp | str | None): Datatime to subtract,
-        same as for end_time. Not necessary when from_epoch is True
 
     Returns:
     - int: Time difference in minutes
     """
+
     if isinstance(current_timestamp, str):
         current_timestamp = pd.Timestamp(
             f"{SETTINGS.DAY_OF_RUN} {current_timestamp}"
         )
 
-    if from_epoch:
-        start_timestamp = SETTINGS.EPOCH_TIMESTAMP
-    elif isinstance(start_timestamp, str):
-        start_timestamp = pd.Timestamp(
-            f"{SETTINGS.DAY_OF_RUN} {start_timestamp}"
-        )
+    total_seconds = (
+        current_timestamp - SETTINGS.EPOCH_TIMESTAMP
+    ).total_seconds()
 
-    total_seconds = (current_timestamp - start_timestamp).total_seconds()
     total_minutes = int(total_seconds // 60)
     return total_minutes
 
@@ -281,8 +270,8 @@ def pre_filter_timetable(
     Returns:
     - pd.DataFrame: filtered and sorted timetable
     """
-    start_time_int = timestamp_to_int(Parameters.START_TIME, from_epoch=True)
-    end_time_int = timestamp_to_int(Parameters.END_TIME, from_epoch=True)
+    start_time_int = timestamp_to_int(Parameters.START_TIME)
+    end_time_int = timestamp_to_int(Parameters.END_TIME)
 
     df_filtered = timetable_df[
         (timetable_df['Departure_Int'] >= start_time_int)

@@ -6,9 +6,9 @@ from dataclasses import dataclass, asdict, field
 @dataclass
 class Parameters:
     VERSION: str = 'v1'  # 'v0' / 'v1'
-    START_STATION: str = 'Ehv'
-    START_TIME: str = '08:00'
-    END_TIME: str = '20:00'
+    START_STATION: str = 'Ehv'  # 'Ht' / 'Ehv'
+    START_TIME: str = '08:00'  # '12:00' / '08:00'
+    END_TIME: str = '20:00'  # '15:00' / '20:00'
     MIN_TRANSFER_TIME: int = 3
     MAX_TRANSFER_TIME: int = 15
 
