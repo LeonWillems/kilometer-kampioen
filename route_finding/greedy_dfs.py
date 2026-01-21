@@ -24,6 +24,7 @@ class GreedyDFS:
 
     Attributes:
     - timetable_df (pd.DataFrame): DataFrame containing the timetable data
+    - timetables (list[pd.DataFrame]): One timetable df for each 'Station'
     - best_state (State): The best state found during the search
     - best_distance (float): The best distance found during the search
     - iterations (int): Number of recursive dfs calls
@@ -35,12 +36,14 @@ class GreedyDFS:
         self.timetable_df: pd.DataFrame \
             = pre_filter_timetable(read_timetable(processed=True))
 
-        self.stations = self.timetable_df['Station'].unique()
-        self.timetables = {
+        # Create one timetable for each separate station, reducing the
+        # filtering time per call
+        stations = self.timetable_df['Station'].unique()
+
+        self.timetables: dict[str, pd.DataFrame] = {
             station: self.timetable_df[self.timetable_df['Station'] == station]
-            for station in self.stations
+            for station in stations
         }
-        print(self.timetables['Ehv'])
 
         self.best_state: State = State()
         self.best_distance: float = 0
