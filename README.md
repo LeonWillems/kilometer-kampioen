@@ -40,6 +40,7 @@ An example for each version can be found in `runs/example/v_/`
 - Find all rules here: https://www.kilometerkampioen.nl/
 - Find kilometer count courtesy here: https://github.com/nanderv/trainkms
    - Contains the 'ground-truth' kilometer distances used by kilometerkampioen
+- Some detailed track information can be found here: https://spoorkaart.mwnn.nl/
 
 ## Data sources
 - `data/`
@@ -57,6 +58,9 @@ An example for each version can be found in `runs/example/v_/`
    - `scorekaart2023.xlsx`: https://www.kilometerkampioen.nl/ -> 'Download Scorekaart'. Contains the kilometers between hub stations
    - `station_distances.json`: https://github.com/nanderv/trainkms/blob/main/routes.json -> With one minor change 'dtz' -> 'dtcp' (Delft Zuid -> Delft Campus)
    - `stations-2023-09.csv`: https://www.rijdendetreinen.nl/en/open-data/stations -> One minor change: ';' -> ',' for consistency among datasets
+- `visualization/`
+   - `spoorkaart-simple.png`: https://en.wikipedia.org/wiki/Railway_stations_in_the_Netherlands
+   - `spoorkaart-extended.pdf`: https://www.treinreiziger.nl/spoorkaart-2019-deze-vier-versies-zijn-er/
 
 # V0
 ## Data (see `data/v0/` files)
