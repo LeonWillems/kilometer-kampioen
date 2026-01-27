@@ -19,13 +19,18 @@ Drive as many kilometers by train as possible within 24 hours - with the help of
    python -m tests.route_compliance
    ```
 
-   The main parameters in `settings.py` that you can modify are:
-   - `version`: Version of the timetable data (default: 'v1')
-   - `start_station`: Starting station (default: 'Ehv' - Eindhoven Centraal)
-   - `start_time`: Starting time (default: 08:00)
-   - `end_time`: Time by which the route must be completed (default: 20:00)
-   - `min_transfer_time`: Minimum transfer time in minutes (default: 3)
-   - `max_transfer_time`: Maximum transfer time in minutes (default: 15)
+6. Visualize the found route:
+   ```bash
+   python -m visualization.plot_route
+   ```
+
+The main parameters in `settings.py` that you can modify are:
+- `version`: Version of the timetable data (default: 'v1')
+- `start_station`: Starting station (default: 'Ehv' - Eindhoven Centraal)
+- `start_time`: Starting time (default: 08:00)
+- `end_time`: Time by which the route must be completed (default: 20:00)
+- `min_transfer_time`: Minimum transfer time in minutes (default: 3)
+- `max_transfer_time`: Maximum transfer time in minutes (default: 15)
 
 
 ### Output
@@ -61,6 +66,7 @@ An example for each version can be found in `runs/example/v_/`
 - `visualization/`
    - `spoorkaart-simple.png`: https://en.wikipedia.org/wiki/Railway_stations_in_the_Netherlands
    - `spoorkaart-extended.pdf`: https://www.treinreiziger.nl/spoorkaart-2019-deze-vier-versies-zijn-er/
+   - `station_coordinates.json`: F*ckton of manual labor to get all coordinates
 
 # V0
 ## Data (see `data/v0/` files)
