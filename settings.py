@@ -42,9 +42,11 @@ class BaseSettings:
 
     # Base dirs
     ROOT_DIR: Path = Path(__file__).resolve().parent
+
     DATA_DIR: Path = ROOT_DIR / 'data'
-    RUNS_DIR: Path = ROOT_DIR / 'runs'
     INFORMATION_DIR: Path = ROOT_DIR / 'information'
+    RUNS_DIR: Path = ROOT_DIR / 'runs'
+    VISUALIZATION_DIR: Path = ROOT_DIR / 'visualization'
 
     LOGS_DIR: Path = RUNS_DIR / 'logs'
     ROUTES_DIR: Path = RUNS_DIR / 'routes'
@@ -70,6 +72,13 @@ class BaseSettings:
     # The station file is given and constant
     STATIONS_FILE: str = 'stations-2023-09.csv'
     STATIONS_PATH: Path = INFORMATION_DIR / STATIONS_FILE
+
+    # Spoorkaart and coordinates files are constant
+    SPOORKAART_FILE: str = 'spoorkaart-simple.png'
+    COORDINATES_FILE: str = 'station-coordinates.json'
+
+    SPOORKAART_PATH: Path = VISUALIZATION_DIR / SPOORKAART_FILE
+    COORDINATES_PATH: Path = VISUALIZATION_DIR / COORDINATES_FILE
 
 
 @dataclass
