@@ -64,6 +64,7 @@ An example for each version can be found in `runs/example/v_/`
    - `station_distances.json`: https://github.com/nanderv/trainkms/blob/main/routes.json -> With one minor change 'dtz' -> 'dtcp' (Delft Zuid -> Delft Campus)
    - `stations-2023-09.csv`: https://www.rijdendetreinen.nl/en/open-data/stations -> One minor change: ';' -> ',' for consistency among datasets
 - `visualization/`
+   - `route_plotted.png`: Obtained by running `plot_route.py`
    - `spoorkaart-simple.png`: https://en.wikipedia.org/wiki/Railway_stations_in_the_Netherlands
    - `spoorkaart-extended.pdf`: https://www.treinreiziger.nl/spoorkaart-2019-deze-vier-versies-zijn-er/
    - `station-coordinates.json`: F*ckton of manual labor to get all coordinates
