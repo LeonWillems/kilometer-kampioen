@@ -127,7 +127,7 @@ class RoutePlotter:
 
             # Plot the line, then the numbered station visit
             self.ax.plot(
-                [x1, x2], [y1, y2], color=color, 
+                [x1, x2], [y1, y2], color=color,
                 linewidth=linewidth, zorder=zorder,
             )
             self._annotate_numbered_station(i, x1, y1, offset)
