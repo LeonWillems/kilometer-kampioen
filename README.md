@@ -66,7 +66,7 @@ An example for each version can be found in `runs/example/v_/`
 - `visualization/`
    - `spoorkaart-simple.png`: https://en.wikipedia.org/wiki/Railway_stations_in_the_Netherlands
    - `spoorkaart-extended.pdf`: https://www.treinreiziger.nl/spoorkaart-2019-deze-vier-versies-zijn-er/
-   - `station_coordinates.json`: F*ckton of manual labor to get all coordinates
+   - `station-coordinates.json`: F*ckton of manual labor to get all coordinates
 
 # V0
 ## Data (see `data/v0/` files)
