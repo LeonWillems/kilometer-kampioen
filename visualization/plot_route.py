@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from data_processing.data_utils import read_csv_to_df
+from data_processing.data_utils import (
+    read_csv_to_df, load_intermediate_stations
+)
 from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
@@ -66,6 +68,7 @@ class RoutePlotter:
         self.coordinates: dict = _get_coordinates()
         self.spoorkaart_img: np.ndarray = _read_image()
         self.route_df: pd.DataFrame = _get_latest_route()
+        self.intermediate_stations: dict = load_intermediate_stations()
 
         # Create the Matplotlib figure and axes
         self.fig: Figure = plt.figure(
@@ -109,6 +112,7 @@ class RoutePlotter:
         coordinate_count = {}
 
         for i, row in self.route_df.iterrows():
+            # First, focus on the numbered labels
             x1, y1 = self.coordinates[row['Station']]
             x2, y2 = self.coordinates[row['To']]
             coords = (x1, y1)
@@ -119,18 +123,29 @@ class RoutePlotter:
             else:
                 coordinate_count[coords] = 0
 
-            # Get the offset tuple, and color & width depending on train type
+            # Get the offset tuple
             offset = self.offsets[coordinate_count[coords] % 4]
+            self._annotate_numbered_station(i, x1, y1, offset)
+
+            # After numbered labels, deal with section lines
+            # Color & width depending on train type
             color = 'r' if row['Type'] == 'Int' else 'b'
             linewidth = 4 if row['Type'] == 'Int' else 2
             zorder = 1 if row['Type'] == 'Int' else 2
 
-            # Plot the line, then the numbered station visit
-            self.ax.plot(
-                [x1, x2], [y1, y2], color=color,
-                linewidth=linewidth, zorder=zorder,
-            )
-            self._annotate_numbered_station(i, x1, y1, offset)
+            # List of codes of all intermediate stations (including start/stop)
+            stations = self.intermediate_stations[row['Station']][row['To']]
+
+            # Go over each consecutive pair
+            for start, stop in zip(stations[:-1], stations[1:]):
+                x1, y1 = self.coordinates[start]
+                x2, y2 = self.coordinates[stop]
+
+                # Plot the line between two neighboring stations
+                self.ax.plot(
+                    [x1, x2], [y1, y2], color=color,
+                    linewidth=linewidth, zorder=zorder,
+                )
 
         # Annotate for the final station as well
         self._annotate_numbered_station(i+1, x2, y2, offset)
