@@ -21,6 +21,12 @@ Counting a connection:
         as there are no inbetween stations, so count twice. Can ofcourse also
         take the sprinter once or twice
 
+- As can be seen from the map, the HSL ('hoge snelheids lijn') has separate
+    tracks it takes. More specifically, it rides its own route between
+    Hoofddorp - Rotterdam Centraal, and between Rotterdam Lombardijen - Breda
+    Prinsenbeek. Note that both Shl-Rtd and Bd-Rtd can only be counted once,
+    as we are skipping the smaller stations.
+
 - To make communication a bit easier, the Kilometer Kampioen organisation
     regards a 'traject' as a route from one intersection to the next
     - So, Vlissingen - Roosendaal is one 'traject' but consists of many

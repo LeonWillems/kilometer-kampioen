@@ -73,12 +73,14 @@ class BaseSettings:
     STATIONS_FILE: str = 'stations-2023-09.csv'
     STATIONS_PATH: Path = INFORMATION_DIR / STATIONS_FILE
 
-    # Spoorkaart and coordinates files are constant
+    # Files for plotting purposes are constant
     SPOORKAART_FILE: str = 'spoorkaart-simple.png'
     COORDINATES_FILE: str = 'station-coordinates.json'
+    CORNERS_FILE: str = 'corners.json'
 
     SPOORKAART_PATH: Path = VISUALIZATION_DIR / SPOORKAART_FILE
     COORDINATES_PATH: Path = VISUALIZATION_DIR / COORDINATES_FILE
+    CORNERS_PATH: Path = VISUALIZATION_DIR / CORNERS_FILE
 
 
 @dataclass
