@@ -1,60 +1,17 @@
-import json
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from data_processing.data_utils import (
-    read_csv_to_df, load_intermediate_stations
+from .vis_utils import (
+    get_coordinates, read_image, get_latest_route, get_corners
 )
+from data_processing.data_utils import load_intermediate_stations
 from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 IMG_DPI = 96  # Check manually
-
-
-def _get_coordinates() -> dict:
-    """Gets the station coordinates from the coordinates JSON
-    file. Each pair of coordinates represents the middle of
-    the station on the spoorkaart image. Keys are station codes.
-
-    Returns:
-    - dict: Dictionary of station coordinates. Example:
-        {"Ehv": [927, 1389], "Gp": [945, 1407], ...}
-    """
-    coordinates_path = SETTINGS.COORDINATES_PATH
-    with open(coordinates_path, mode='r') as f:
-        coordinates = json.load(f)
-
-    return coordinates
-
-
-def _read_image() -> np.array:
-    """Reads in the spoorkaart image from file.
-
-    Returns:
-    - np.array: Image array of the spoorkaart
-    """
-    spoorkaart_path = SETTINGS.SPOORKAART_PATH
-    img = plt.imread(spoorkaart_path)
-
-    return img
-
-
-def _get_latest_route() -> pd.DataFrame:
-    """Will get the latest saved route from the routes
-    directory for the current version (in settings).
-
-    Returns:
-    - pd.DataFrame: DataFrame containing the latest route
-    """
-    routes_path = SETTINGS.ROUTES_PATH
-    route_files_paths = sorted(routes_path.glob('*.csv'))
-    latest_route_path = route_files_paths[-1]
-    route_df = read_csv_to_df(latest_route_path)
-
-    return route_df
 
 
 class RoutePlotter:
@@ -65,16 +22,17 @@ class RoutePlotter:
     """
     def __init__(self):
         # Three files to read in
-        self.coordinates: dict = _get_coordinates()
-        self.spoorkaart_img: np.ndarray = _read_image()
-        self.route_df: pd.DataFrame = _get_latest_route()
+        self.coordinates: dict = get_coordinates()
+        self.spoorkaart_img: np.ndarray = read_image()
+        self.route_df: pd.DataFrame = get_latest_route()
         self.intermediate_stations: dict = load_intermediate_stations()
+        self.corners: dict = get_corners()
 
         # Create the Matplotlib figure and axes
         self.fig: Figure = plt.figure(
             figsize=(
-                self.spoorkaart_img.shape[0] / IMG_DPI,  # w
-                self.spoorkaart_img.shape[1] / IMG_DPI,  # h
+                self.spoorkaart_img.shape[1] / IMG_DPI,  # Width
+                self.spoorkaart_img.shape[0] / IMG_DPI,  # Height
             ),
             dpi=IMG_DPI
         )
@@ -89,8 +47,8 @@ class RoutePlotter:
         self.offsets = [
             (self.h_delta, self.v_delta),    # Topright
             (-self.h_delta, self.v_delta),   # Topleft
-            (-self.h_delta, -self.v_delta),  # Bottomleft
             (self.h_delta, -self.v_delta),   # Bottomright
+            (-self.h_delta, -self.v_delta),  # Bottomleft
         ]
 
     def _annotate_numbered_station(
@@ -137,9 +95,20 @@ class RoutePlotter:
             stations = self.intermediate_stations[row['Station']][row['To']]
 
             # Go over each consecutive pair
-            for start, stop in zip(stations[:-1], stations[1:]):
+            for start, stop in zip(stations[:-1], stations[1:]):                
                 x1, y1 = self.coordinates[start]
                 x2, y2 = self.coordinates[stop]
+
+                if start in self.corners and stop in self.corners[start]:
+                    # If there are corners, plot them as well
+                    corner_coords = self.corners[start][stop]
+
+                    for corner_x, corner_y in corner_coords:
+                        self.ax.plot(
+                            [x1, corner_x], [y1, corner_y], color=color,
+                            linewidth=linewidth, zorder=zorder,
+                        )
+                        x1, y1 = corner_x, corner_y
 
                 # Plot the line between two neighboring stations
                 self.ax.plot(
