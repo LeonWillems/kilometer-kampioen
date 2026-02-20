@@ -1,0 +1,27 @@
+14:43:47 - INFO - Starting new route finding run with parameters:
+Version: v0 (greedy_dfs)
+End time: 15:00
+Transfer time range: 3-15 minutes
+14:43:47 - INFO - Starting new route finding run with parameters:
+Current station: Ehv
+Current time: 2025-08-02 12:00:00
+
+14:43:47 - INFO - New best route found! Distance: 36.9km  (+36.9km)
+14:43:47 - INFO - New best route found! Distance: 59.2km  (+22.3km)
+14:43:47 - INFO - New best route found! Distance: 81.5km  (+22.3km)
+14:43:47 - INFO - New best route found! Distance: 93.7km  (+12.2km)
+14:43:47 - INFO - New best route found! Distance: 97.9km  (+4.2km)
+14:43:47 - INFO - New best route found! Distance: 105.9km  (+8.0km)
+14:43:48 - INFO - New best route found! Distance: 108.4km  (+2.5km)
+14:43:48 - INFO - New best route found! Distance: 115.8km  (+7.4km)
+14:43:48 - INFO - New best route found! Distance: 118.4km  (+2.6km)
+14:43:48 - INFO - New best route found! Distance: 130.6km  (+12.2km)
+14:43:48 - INFO - New best route found! Distance: 140.2km  (+9.6km)
+14:43:48 - INFO - New best route found! Distance: 142.8km  (+2.6km)
+14:43:49 - INFO - New best route found! Distance: 142.8km  (+0.0km)
+14:43:56 - INFO - Saved best route to: C:\VS-Code\Kilometer-Kampioen\kilometer-kampioen\runs\routes\v0\20260220_144347_1428.csv
+Number of transfers: 14
+Final distance: 142.8km
+Total iterations: 5224
+End station: Ehv
+End time: 2025-08-02 14:47:00
