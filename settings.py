@@ -3,18 +3,24 @@ from pandas import Timestamp
 from dataclasses import dataclass, asdict, field
 
 
-@dataclass
-class Parameters:
-    VERSION: str = 'v1'  # 'v0' / 'v1'
-    START_STATION: str = 'Ehv'  # 'Ht' / 'Ehv'
-    START_TIME: str = '08:00'  # '12:00' / '08:00'
-    END_TIME: str = '20:00'  # '15:00' / '20:00'
-    MIN_TRANSFER_TIME: int = 3
-    MAX_TRANSFER_TIME: int = 15
-
-
+# These are just the proposed standard values. Feel free to play around
+# with any of the values. For value constraints, see the READMM.
 VERSION_SETTINGS = {
     'versions': ['v0', 'v1'],
+    'start_station': {
+        'v0': 'Ehv',
+        'v1': 'Ehv',
+    },
+    'start_time': {
+        'v0': '12:00',
+        'v1': '08:00',
+    },
+    'end_time': {
+        'v0': '15:00',
+        'v1': '20:00',
+    },
+    'min_transfer_time':  3,  # So far, this has not been changed
+    'max_transfer_time': 15,  # So far, this has not been changed
     'name': {
         'v0': 'greedy_dfs',
         'v1': 'whole_day_data',
@@ -28,6 +34,16 @@ VERSION_SETTINGS = {
         'v1': 'ISO8601',  # 'RFC3339'
     },
 }
+
+
+@dataclass
+class Parameters:
+    VERSION: str = 'v1'  # 'v0' / 'v1'
+    START_STATION: str = VERSION_SETTINGS['start_station'][VERSION]
+    START_TIME: str = VERSION_SETTINGS['start_time'][VERSION]
+    END_TIME: str = VERSION_SETTINGS['end_time'][VERSION]
+    MIN_TRANSFER_TIME: int = VERSION_SETTINGS['min_transfer_time']
+    MAX_TRANSFER_TIME: int = VERSION_SETTINGS['max_transfer_time']
 
 
 @dataclass
