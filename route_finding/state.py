@@ -40,6 +40,12 @@ class State:
         self.id_previous_train = None
         self.logger = None
 
+    def __lt__(self, other):
+        """< comparison for min-heap purposes, see the explore_set algo.
+        Note: in this case, a larger total_distance for self returns True.
+        """
+        return -self.total_distance < -other.total_distance
+
     def set_initial_state(self, logger: Logger):
         """Sets the initial state with the current time and starting station.
 

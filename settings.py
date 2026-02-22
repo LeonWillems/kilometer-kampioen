@@ -6,39 +6,45 @@ from dataclasses import dataclass, asdict, field
 # These are just the proposed standard values. Feel free to play around
 # with any of the values. For value constraints, see the READMM.
 VERSION_SETTINGS = {
-    'versions': ['v0', 'v1'],
+    'versions': ['v0', 'v1', 'v2'],
     'start_station': {
         'v0': 'Ehv',
         'v1': 'Ehv',
+        'v2': 'Ehv',
     },
     'start_time': {
         'v0': '12:00',
         'v1': '08:00',
+        'v2': '08:00',
     },
     'end_time': {
         'v0': '15:00',
         'v1': '20:00',
+        'v2': '20:00',
     },
     'min_transfer_time':  3,  # So far, this has not been changed
     'max_transfer_time': 15,  # So far, this has not been changed
     'name': {
         'v0': 'greedy_dfs',
         'v1': 'whole_day_data',
+        'v2': 'explore_set'
     },
     'day_of_run': {
         'v0': '2025-08-02',  # Day where the train times come from
         'v1': '2025-10-04',
+        'v2': '2025-10-04',
     },
     'datetime_format': {
         'v0': 'ISO8601',  # YYYY-MM-DDThh:mm:ss (or similar!)
         'v1': 'ISO8601',  # 'RFC3339'
+        'v2': 'ISO8601',  # 'RFC3339'
     },
 }
 
 
 @dataclass
 class Parameters:
-    VERSION: str = 'v1'  # 'v0' / 'v1'
+    VERSION: str = 'v2'  # 'v0' / 'v1' / 'v2'
     START_STATION: str = VERSION_SETTINGS['start_station'][VERSION]
     START_TIME: str = VERSION_SETTINGS['start_time'][VERSION]
     END_TIME: str = VERSION_SETTINGS['end_time'][VERSION]
@@ -61,6 +67,7 @@ class BaseSettings:
 
     DATA_DIR: Path = ROOT_DIR / 'data'
     INFORMATION_DIR: Path = ROOT_DIR / 'information'
+
     RUNS_DIR: Path = ROOT_DIR / 'runs'
     VISUALIZATION_DIR: Path = ROOT_DIR / 'visualization'
 
