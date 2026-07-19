@@ -2,6 +2,8 @@ from pathlib import Path
 from pandas import Timestamp
 from dataclasses import dataclass, asdict, field
 
+# Choose version first
+VERSION = 'v2'  # 'v0' / 'v1' / 'v2'
 
 # These are just the proposed standard values. Feel free to play around
 # with any of the values. For value constraints, see the READMM.
@@ -44,7 +46,7 @@ VERSION_SETTINGS = {
 
 @dataclass
 class Parameters:
-    VERSION: str = 'v2'  # 'v0' / 'v1' / 'v2'
+    VERSION: str = VERSION  # 'v0' / 'v1' / 'v2'
     START_STATION: str = VERSION_SETTINGS['start_station'][VERSION]
     START_TIME: str = VERSION_SETTINGS['start_time'][VERSION]
     END_TIME: str = VERSION_SETTINGS['end_time'][VERSION]
