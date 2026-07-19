@@ -39,6 +39,13 @@ class State:
         self.current_station = None
         self.id_previous_train = None
         self.logger = None
+        self.score = 0
+
+    def __lt__(self, other: "State"):
+        """< comparison for min-heap purposes, see the explore_set algo.
+        Note: in this case, a larger score for self returns True.
+        """
+        return -self.score < -other.score
 
     def set_initial_state(self, logger: Logger):
         """Sets the initial state with the current time and starting station.
@@ -72,4 +79,5 @@ class State:
         new_state.current_time = self.current_time
         new_state.current_station = self.current_station
         new_state.id_previous_train = self.id_previous_train
+        new_state.score = self.score
         return new_state

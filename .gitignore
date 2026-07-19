@@ -211,7 +211,7 @@ data/*/timetable_processed.csv
 data/*/intermediate_stations.json
 
 # Version specific data files
-data/v1/services-2025-10.csv
+data/*/services-2025-10.csv
 
 # For my local development process
 user.txt

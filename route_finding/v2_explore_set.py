@@ -2,9 +2,10 @@ import signal
 import pandas as pd
 from logging import Logger
 from datetime import datetime
+from queue import PriorityQueue
 
-from ..state import State
-from ..logger import setup_logger
+from .state import State
+from .logger import setup_logger
 from data_processing.data_utils import (
     read_timetable, save_timetable,
     add_duration_in_minutes,
@@ -16,8 +17,10 @@ from settings import Parameters, VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 
-class GreedyDFS:
-    """Greedy Depth-First Search for route finding.
+class ExploreSet:
+    """A route finding algorithm that keeps a priority queue of states, ergo
+    routes, from best to worst. Runs best, and adds consequent possible states/
+    routes to the queue.
 
     Args:
     - timestamp (datetime): Current time when running the algorithm
@@ -28,6 +31,8 @@ class GreedyDFS:
     - best_state (State): The best state found during the search
     - best_distance (float): The best distance found during the search
     - iterations (int): Number of recursive dfs calls
+    - priority_queue (PriorityQueue): Minheap with the best possible states/
+        routes as the lowest values
     - logger (Logger): Used for logging purposes
     """
     def __init__(self, timestamp: datetime):
@@ -49,6 +54,10 @@ class GreedyDFS:
         self.best_distance: float = 0
         self.iterations: int = 0
 
+        # Will contain pairs: (-State.score, State),
+        # as it will be treated as a min-heap
+        self.priority_queue = PriorityQueue()
+
         # Setup interrupt handling
         signal.signal(signal.SIGINT, self._handle_interrupt)
 
@@ -67,6 +76,16 @@ class GreedyDFS:
         best state, and exiting the current run.
         """
         self.logger.info("Interrupt received")
+
+        # Below is for testing purposes. TODO: get rid when done
+        print(f"Size of Queue: {self.priority_queue.qsize()}\n")
+
+        for i in range(5):
+            queue_min: State = self.priority_queue.get()[1]
+            print(f"===== State {i+1}")
+            print(f"Total dist: {queue_min.total_distance:.2f}")
+            print(f"Score: {queue_min.score:.2f}\n")
+
         self._save_best_route()
         exit(0)
 
@@ -105,6 +124,7 @@ class GreedyDFS:
         Steps:
         1. Calculate waiting time (in minutes) for each transfer option
         2. Calculate the average speed of each option, including waiting time
+            -> Speed in km/h
         3. Sort options by score in descending order
         4. Add 'Section_Driven' for current train type as a column (1 or 0)
         5. Sort on 'Section_Driven' (ascending, 0 is good)
@@ -140,9 +160,9 @@ class GreedyDFS:
             axis=1
         )
 
-        # 3. Calculate score distance_counted/(waiting_time + travel_time)
+        # 3. Calculate score; km/h for this section
         transfer_options['Score'] = (
-            transfer_options['Distance_Counted']
+            60 * transfer_options['Distance_Counted']
             / (transfer_options['Waiting_Time'] + transfer_options['Duration'])
         )
 
@@ -151,26 +171,19 @@ class GreedyDFS:
             by='Score', ascending=False
         )
 
-        # 5. Return the top 2 options. For now, we find that the code
-        # runs for way too long if we don't limit the number of options.
-        # This is because we exhaustively search all options.
-        return transfer_options.head(2)
+        # 5. Return the top 3 options. TODO: tweak this number. Set too high?
+        # We will have many candidates for the minheap, and it will get too big
+        # (and perhaps slow)
+        return transfer_options.head(3)
 
-    def dfs(self, current_state: State):
-        """Perform a greedy depth-first search to find the best route.
+    def explore_state(self, current_state: State):
+        """Explore the current state. Finds the top 2 best states and adds
+        these to the priority queue.
 
         Args:
         - current_state (State): The current state of the route finding process
         """
         self.iterations += 1
-
-        # Log current state
-        self.logger.debug(
-            f"Iteration {self.iterations}\n"
-            f"Current station: {current_state.current_station}\n"
-            f"Time: {int_to_timestamp(current_state.current_time)}\n"
-            f"Distance: {current_state.total_distance:.1f}km"
-        )
 
         # 1. Get options from current position (station & time filtered)
         transfer_options = filter_timetable(
@@ -194,12 +207,7 @@ class GreedyDFS:
             transfer_options, current_state
         )
 
-        self.logger.debug(
-            f"Top transfer option: {top_transfers.iloc[0]['Station']} -> "
-            f"{top_transfers.iloc[0]['To']} ({top_transfers.iloc[0]['Type']})"
-        )
-
-        # 4. Go over options
+        # 4. Go over options, add to the priority queue
         for _, row in top_transfers.iterrows():
             # a. Create new state for this branch
             new_state = current_state.copy()
@@ -210,10 +218,16 @@ class GreedyDFS:
             new_state.id_previous_train = row['ID']
             new_state.route_indicator.update_indicator_table(row)
             new_state.total_distance += row['Distance_Counted']
+            new_state.score = row['Score']
             new_state.route.append(row)
 
+            # Build a queue pair based on the score of interest. Current
+            # version: min negative total distance (so max total distance)
+            queue_pair = (-new_state.score, new_state)
+            self.priority_queue.put(queue_pair)
+
             # c. Update best state if better
-            if new_state.total_distance > self.best_distance:
+            if new_state.total_distance > self.best_state.total_distance:
                 self.logger.info(
                     "New best route found! Distance: "
                     f"{new_state.total_distance:.1f}km  (+"
@@ -223,20 +237,22 @@ class GreedyDFS:
                 self.best_distance = new_state.total_distance
                 self.best_state = new_state.copy()
 
-            # d. Iterate recursively on newly found transfer
-            self.dfs(new_state)
 
-
-def run_greedy_dfs(timestamp: datetime):
-    """Main function to run the GreedyDFS route finding algorithm.
+def run_explore_set(timestamp: datetime):
+    """Main function to run the ExploreSet route finding algorithm.
 
     Args:
     - timestamp (datetime): Current time when running the algorithm
     """
-    greedy_dfs = GreedyDFS(timestamp=timestamp)
+    explore_set = ExploreSet(timestamp=timestamp)
 
     initial_state = State()
-    initial_state.set_initial_state(logger=greedy_dfs.logger)
+    initial_state.set_initial_state(logger=explore_set.logger)
 
-    greedy_dfs.dfs(initial_state)
-    greedy_dfs._save_best_route()
+    explore_set.explore_state(initial_state)
+
+    while not explore_set.priority_queue.empty():
+        best_state = explore_set.priority_queue.get()[1]
+        explore_set.explore_state(best_state)
+
+    explore_set._save_best_route()

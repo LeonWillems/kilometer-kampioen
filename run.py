@@ -16,6 +16,10 @@ def run_algo(timestamp):
                 import run_greedy_dfs
             run_greedy_dfs(timestamp)
 
+        case 'v2':
+            from route_finding.v2_explore_set import run_explore_set
+            run_explore_set(timestamp)
+
 
 if __name__ == "__main__":
     time_start = time()
