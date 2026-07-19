@@ -54,7 +54,7 @@ class ExploreSet:
         self.best_distance: float = 0
         self.iterations: int = 0
 
-        # Will contain pairs: (-State.total_distance, State),
+        # Will contain pairs: (-State.score, State),
         # as it will be treated as a min-heap
         self.priority_queue = PriorityQueue()
 
@@ -76,6 +76,16 @@ class ExploreSet:
         best state, and exiting the current run.
         """
         self.logger.info("Interrupt received")
+
+        # Below is for testing purposes. TODO: get rid when done
+        print(f"Size of Queue: {self.priority_queue.qsize()}\n")
+
+        for i in range(5):
+            queue_min: State = self.priority_queue.get()[1]
+            print(f"===== State {i+1}")
+            print(f"Total dist: {queue_min.total_distance:.2f}")
+            print(f"Score: {queue_min.score:.2f}\n")
+
         self._save_best_route()
         exit(0)
 
@@ -114,6 +124,7 @@ class ExploreSet:
         Steps:
         1. Calculate waiting time (in minutes) for each transfer option
         2. Calculate the average speed of each option, including waiting time
+            -> Speed in km/h
         3. Sort options by score in descending order
         4. Add 'Section_Driven' for current train type as a column (1 or 0)
         5. Sort on 'Section_Driven' (ascending, 0 is good)
@@ -149,9 +160,9 @@ class ExploreSet:
             axis=1
         )
 
-        # 3. Calculate score distance_counted/(waiting_time + travel_time)
+        # 3. Calculate score; km/h for this section
         transfer_options['Score'] = (
-            transfer_options['Distance_Counted']
+            60 * transfer_options['Distance_Counted']
             / (transfer_options['Waiting_Time'] + transfer_options['Duration'])
         )
 
@@ -160,10 +171,10 @@ class ExploreSet:
             by='Score', ascending=False
         )
 
-        # 5. Return the top 2 options. For now, we find that the code
-        # runs for way too long if we don't limit the number of options.
-        # This is because we exhaustively search all options.
-        return transfer_options.head(2)
+        # 5. Return the top 3 options. TODO: tweak this number. Set too high?
+        # We will have many candidates for the minheap, and it will get too big
+        # (and perhaps slow)
+        return transfer_options.head(3)
 
     def explore_state(self, current_state: State):
         """Explore the current state. Finds the top 2 best states and adds
@@ -173,8 +184,6 @@ class ExploreSet:
         - current_state (State): The current state of the route finding process
         """
         self.iterations += 1
-
-        # TODO: log current state? Compare with v1, might not be necessary
 
         # 1. Get options from current position (station & time filtered)
         transfer_options = filter_timetable(
@@ -209,15 +218,16 @@ class ExploreSet:
             new_state.id_previous_train = row['ID']
             new_state.route_indicator.update_indicator_table(row)
             new_state.total_distance += row['Distance_Counted']
+            new_state.score = row['Score']
             new_state.route.append(row)
 
             # Build a queue pair based on the score of interest. Current
             # version: min negative total distance (so max total distance)
-            queue_pair = (-new_state.total_distance, new_state)
+            queue_pair = (-new_state.score, new_state)
             self.priority_queue.put(queue_pair)
 
             # c. Update best state if better
-            if new_state.total_distance > self.best_distance:
+            if new_state.total_distance > self.best_state.total_distance:
                 self.logger.info(
                     "New best route found! Distance: "
                     f"{new_state.total_distance:.1f}km  (+"
