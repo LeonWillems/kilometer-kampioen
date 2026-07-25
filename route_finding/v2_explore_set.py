@@ -160,21 +160,25 @@ class ExploreSet:
             axis=1
         )
 
-        # 3. Calculate score; km/h for this section
-        transfer_options['Score'] = (
+        # 3. Calculate score; first km/h for this section
+        km_per_hour = (
             60 * transfer_options['Distance_Counted']
             / (transfer_options['Waiting_Time'] + transfer_options['Duration'])
         )
 
-        # 4. Sort by score (descending), higher is better
+        # Then a combination of the score for current section (local)
+        # and the whole route (global)
+        transfer_options['Score'] = (
+            state.total_distance / 10
+            + km_per_hour
+        )
+
+        # 4. Sort by score (descending), higher is better. Then, return all
         transfer_options = transfer_options.sort_values(
             by='Score', ascending=False
         )
 
-        # 5. Return the top 3 options. TODO: tweak this number. Set too high?
-        # We will have many candidates for the minheap, and it will get too big
-        # (and perhaps slow)
-        return transfer_options.head(3)
+        return transfer_options
 
     def explore_state(self, current_state: State):
         """Explore the current state. Finds the top 2 best states and adds
