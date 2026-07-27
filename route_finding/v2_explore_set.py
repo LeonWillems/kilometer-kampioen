@@ -86,6 +86,8 @@ class ExploreSet:
             print(f"Total dist: {queue_min.total_distance:.2f}")
             print(f"Score: {queue_min.score:.2f}\n")
 
+        print(self.best_state.route)
+
         self._save_best_route()
         exit(0)
 
@@ -160,11 +162,12 @@ class ExploreSet:
             axis=1
         )
 
-        # 3. Calculate score; first km/h for this section
+        # 3. Calculate score; first km/h for this section (add to transfer)
         km_per_hour = (
             60 * transfer_options['Distance_Counted']
             / (transfer_options['Waiting_Time'] + transfer_options['Duration'])
         )
+        transfer_options['Speed_With_Stop'] = km_per_hour
 
         # Then a combination of the score for current section (local)
         # and the whole route (global)
