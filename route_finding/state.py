@@ -22,7 +22,7 @@ class State:
         usually the time of the last train arrival, in minutes after epoch
     - current_station (str): The station where the route finding is currently,
         usually the arrival station of the last train
-    - id_previous_train (str): The ID of the last train used in the
+    - id_previous_train (str): The Section_ID of the last train used in the
         route finding
     - logger (Logger): Logger instance for logging information
 

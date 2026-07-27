@@ -55,7 +55,7 @@ idea what happens under the hood. Enjoy!
 - current_station
 - the timetable of all trains, end time,
   min transfer time, max transfer time,
-  and the ID of the previous train
+  and the Section_ID of the previous train
 
 == Procedure:
 1. Filter on current_station
@@ -67,7 +67,8 @@ idea what happens under the hood. Enjoy!
     current_time + min_transfer_time and
     current_time + max_transfer_time, or the departure_time
     lies between current_time and current_time + max_transfer_time
-    if the ID of the previous train equal the ID of the current train
+    if the Section_ID of the previous train equal the Section_ID of the current
+    train
 5. Return the filtered & sorted timetable
 
 

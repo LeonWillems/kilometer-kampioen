@@ -107,7 +107,7 @@ class TestRouteCompliance(unittest.TestCase):
                 f"Transfer time exceeds maximum at row {idx}"
             )
 
-            if next_train['ID'] == current['ID']:
+            if next_train['Section_ID'] == current['Section_ID']:
                 # Same train, might continue immediately
                 self.assertGreaterEqual(
                     next_departure,

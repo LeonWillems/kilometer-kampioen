@@ -207,7 +207,7 @@ class GreedyDFS:
             # b. Update new state with this ride
             new_state.current_time = row['Arrival_Int']
             new_state.current_station = row['To']
-            new_state.id_previous_train = row['ID']
+            new_state.id_previous_train = row['Section_ID']
             new_state.route_indicator.update_indicator_table(row)
             new_state.total_distance += row['Distance_Counted']
             new_state.route.append(row)
