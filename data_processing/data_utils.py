@@ -291,7 +291,8 @@ def filter_timetable(
     Args:
     - timetable_df (pd.DataFrame): Timetable to filter and sort
     - current_time (int): The current time (in minutes) to filter departures
-    - id_previous_train (int): ID of the last train to consider for transfers
+    - id_previous_train (int): Section_ID of the last train to consider for
+        transfers
 
     Returns:
     - pd.DataFrame: filtered timetable
@@ -302,13 +303,36 @@ def filter_timetable(
 
     # The departure time is at latest the maximum departure time, and the
     # departure time is at least the minimum departure time, or it is at least
-    # the current time if we sit in the same train (train ID corresponds to
-    # previous train ID)
+    # the current time if we sit in the same train (Section_ID
+    # corresponds to previous Section_ID)
     df_filtered = timetable_df[
         (timetable_df['Departure_Int'] <= max_departure_time)
         & ((timetable_df['Departure_Int'] >= min_departure_time)
             | ((timetable_df['Departure_Int'] >= current_time)
-                & (timetable_df['ID'].values == id_previous_train)))
+                & (timetable_df['Section_ID'].values == id_previous_train)))
     ]
 
     return deepcopy(df_filtered)
+
+
+def construct_route_table(
+    dataset: pd.DataFrame,
+    route_list: list[int]
+) -> pd.DataFrame:
+    """Constructs the DataFrame for a given route (list of IDs). Used a
+    processed dataset.
+
+    Args:
+    - dataset (pd.DataFrame): Original processed dataset
+    - route_list (list[int]): Route, consisting of Stop_ID integers
+
+    Returns:
+    - pd.DataFrame: Original dataset, but only the rows for Stop_IDs, in order
+    """
+    # Step 1: Filter rows where 'Stop_ID' is in stop_id_list
+    filtered_df = dataset[dataset['Stop_ID'].isin(route_list)]
+
+    # Step 2: Set 'Stop_ID' as index and reorder using .loc
+    ordered_df = filtered_df.set_index('Stop_ID').loc[route_list].reset_index()
+
+    return ordered_df

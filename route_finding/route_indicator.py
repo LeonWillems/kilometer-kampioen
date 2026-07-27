@@ -1,4 +1,5 @@
 import pandas as pd
+from copy import deepcopy
 
 from data_processing.data_utils import (
     load_intermediate_stations, load_distances
@@ -6,18 +7,24 @@ from data_processing.data_utils import (
 from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
+# Dictionary with pairwise distances for all neighboring stations
+INTERMEDIATE_STATIONS = load_intermediate_stations()
+
+# Dictionary that includes all intermediate stations
+# for any intercity run in the dataset
+STATION_DISTANCES = load_distances()
+
+# Get all unique station names, ground truth = distances table
+ALL_STATIONS = sorted(list(set(STATION_DISTANCES.keys())))
+
 
 class RouteIndicator:
     def __init__(self):
         """Initialize the RouteIndicator with a timetable.
 
-        Attributes:
-        - indicator_table: DataFrame to hold the route indicators
-            between stations
-        - intermediate_stations: Dictionary that includes all intermediate
-            stations for any intercity run in the dataset
-        - station_distances: Dictionary with pairwise distances for all
-            neighboring stations
+        Attributes
+        - indicator_dict: Dict to hold the route indicators between stations.
+            Example: {'Ht': {'Ehv': 'I', 'Tb': 'I}, ...}
 
         Methods
         - init_indicator_table: Initialize the indicator_table
@@ -26,27 +33,30 @@ class RouteIndicator:
           specific train type
         - copy: Create a copy of the RouteIndicator instance
         """
-        self.intermediate_stations = dict()
-        self.station_distances = dict()
-        self.indicator_table = pd.DataFrame()
+        self.indicator_dict: dict[str, dict[str, str]] = dict()
 
-    def init_indicator_table(self):
-        """Initialize the indicator table, based on a set of stations.
+    def _add_to_dict(
+        self,
+        from_station: str,
+        to_station: str,
+        train_type: str
+    ) -> None:
+        """Deal with all cases of appending the train_type string to the
+        possible already existing train types.
 
         Args:
-        - stations (list): List of unique stations in de timetable.
-        - version (str): Version of the timetable data (example: 'v0')
+        - from_station (str): Station code, example 'Ehv'
+        - to_station (str): Station code, example 'Ht'
+        - train_type (str): Type of train, 'S' or 'I'
         """
-        self.intermediate_stations = load_intermediate_stations()
-        self.station_distances = load_distances()
+        if from_station not in self.indicator_dict:
+            self.indicator_dict[from_station] = {to_station: train_type}
 
-        # Get all unique station names, ground truth = distances table
-        all_stations = sorted(list(set(self.station_distances.keys())))
-        self.indicator_table = pd.DataFrame(
-            index=all_stations,
-            columns=all_stations,
-            data=''
-        )
+        elif to_station not in self.indicator_dict[from_station]:
+            self.indicator_dict[from_station][to_station] = train_type
+
+        else:
+            self.indicator_dict[from_station][to_station] += train_type
 
     def update_indicator_table(self, timetable_row: pd.Series) -> None:
         """Update the indicator table based on a timetable row.
@@ -63,26 +73,24 @@ class RouteIndicator:
         """
         from_station = timetable_row['Station']
         to_station = timetable_row['To']
-        train_type = timetable_row['Type']
+        long_train_type = timetable_row['Type']
 
         # Convert to 'S' for Sprinter or 'I' for Intercity
-        if train_type not in SETTINGS.TYPE_CONVERSION:
-            raise ValueError(f"Unknown train type: {train_type}")
+        if long_train_type not in SETTINGS.TYPE_CONVERSION:
+            raise ValueError(f"Unknown train type: {long_train_type}")
 
-        short_train_type = SETTINGS.TYPE_CONVERSION[train_type]
-        self.indicator_table.at[from_station, to_station] += short_train_type
-        self.indicator_table.at[to_station, from_station] += short_train_type
+        train_type = SETTINGS.TYPE_CONVERSION[long_train_type]
+        self._add_to_dict(from_station, to_station, train_type)
+        self._add_to_dict(to_station, from_station, train_type)
 
         # Include all intermediate stations for an intercity as well
-        if short_train_type == 'I':
-            stations = self.intermediate_stations[from_station][to_station]
+        if train_type == 'I':
+            stations = INTERMEDIATE_STATIONS[from_station][to_station]
 
             # Go over each consecutive pair in the intermediate stations list
             for from_station, to_station in zip(stations[:-1], stations[1:]):
-                self.indicator_table.at[from_station, to_station] \
-                    += short_train_type
-                self.indicator_table.at[to_station, from_station] \
-                    += short_train_type
+                self._add_to_dict(from_station, to_station, train_type)
+                self._add_to_dict(to_station, from_station, train_type)
 
     def get_distance_counted(
         self,
@@ -117,20 +125,23 @@ class RouteIndicator:
         if short_train_type == 'S':  # No intermediate stations (by design)
             # Get string of train types that have already driven the current
             # section. Example: 'SSI' (two sprinters, one intercity)
-            types_driven = self.indicator_table.at[from_station, to_station]
+            types_driven = self.indicator_dict.get(
+                from_station, {}
+            ).get(to_station, '')
 
             if len(types_driven) < 2:  # May only count twice at most
                 distance_counted += distance
 
         else:  # Intercity section with intermediate stations (by design)
-            stations = self.intermediate_stations[from_station][to_station]
+            stations = INTERMEDIATE_STATIONS[from_station][to_station]
 
             # Go over each consecutive pair in the intermediate stations list
             for from_station, to_station in zip(stations[:-1], stations[1:]):
-                types_driven \
-                    = self.indicator_table.at[from_station, to_station]
+                types_driven = self.indicator_dict.get(
+                    from_station, {}
+                ).get(to_station, '')
                 intermediate_distance \
-                    = self.station_distances[from_station][to_station]
+                    = STATION_DISTANCES[from_station][to_station]
 
                 # 'I' may only be counted once!
                 if len(types_driven) == 1 and 'I' not in types_driven:
@@ -148,9 +159,7 @@ class RouteIndicator:
             copied indicator table
         """
         new_indicator = RouteIndicator()
-        new_indicator.intermediate_stations = self.intermediate_stations
-        new_indicator.station_distances = self.station_distances
-        new_indicator.indicator_table = self.indicator_table.copy()
+        new_indicator.indicator_dict = deepcopy(self.indicator_dict)
         return new_indicator
 
 
@@ -173,11 +182,8 @@ if __name__ == "__main__":
     stations_list = timetable_df['Station'].unique()
     test_rides = timetable_df.sample(n=4)
 
-    # Initialize the indicator table with the stations
-    indicator.init_indicator_table(stations=stations_list, version=version)
-
     # Iteratively update the indicator table with the test rides
     for _, row in test_rides.iterrows():
         indicator.update_indicator_table(row)
 
-    print(indicator.indicator_table)
+    print(indicator.indicator_dict)

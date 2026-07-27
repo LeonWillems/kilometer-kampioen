@@ -8,7 +8,7 @@ SETTINGS = VersionSettings.get_version_settings()
 
 COLUMNS_OF_INTEREST = [
     'Stop:Station code', 'Stop:Arrival time',
-    'Stop:Departure time',
+    'Stop:Departure time', 'Stop:RDT-ID',
     'Service:Type', 'Service:RDT-ID',
 ]
 
@@ -101,7 +101,10 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
     section_ids: pd.DataFrame = timetable_df['Service:RDT-ID'].unique()
 
     new_df_lines = []
-    new_columns = ['Station', 'To', 'Departure', 'Arrival', 'Type', 'ID']
+    new_columns = [
+        'Station', 'To', 'Departure', 'Arrival',
+        'Type', 'Section_ID', 'Stop_ID'
+    ]
 
     # Go over each section ID, representing one whole section from first to
     # last station for one specific train. The ID is unique for train & section
@@ -123,11 +126,12 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
 
             departure_time = section_rows.loc[i, 'Stop:Departure time']
             arrival_time = section_rows.loc[i+1, 'Stop:Arrival time']
+            stop_id = section_rows.loc[i+1, 'Stop:RDT-ID']
 
             # Each connection will appear as one line in the new dataset
             new_df_lines.append([
-                from_station, to_station, departure_time,
-                arrival_time, mapped_train_type, section_id,
+                from_station, to_station, departure_time, arrival_time,
+                mapped_train_type, section_id, stop_id,
             ])
 
     structured_df = pd.DataFrame(
