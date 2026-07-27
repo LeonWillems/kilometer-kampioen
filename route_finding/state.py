@@ -1,3 +1,4 @@
+import pandas as pd
 from logging import Logger
 
 from .route_indicator import RouteIndicator
@@ -57,7 +58,6 @@ class State:
             current_timestamp=Parameters.START_TIME
         )
         self.current_station = Parameters.START_STATION
-        self.route_indicator.init_indicator_table()
         self.logger = logger
 
         self.logger.info(
@@ -81,3 +81,17 @@ class State:
         new_state.id_previous_train = self.id_previous_train
         new_state.score = self.score
         return new_state
+
+    def update_state(self, row: pd.Series):
+        """Updates the state given a new row, ergo a new ride.
+
+        Args:
+        - row (pd.Series): Row of a dataset
+        """
+        self.total_distance += row['Distance_Counted']
+        self.route.append(row['Stop_ID'])
+        self.route_indicator.update_indicator_table(row)
+        self.current_time = row['Arrival_Int']
+        self.current_station = row['To']
+        self.id_previous_train = row['Section_ID']
+        self.score = row['Score']

@@ -313,3 +313,26 @@ def filter_timetable(
     ]
 
     return deepcopy(df_filtered)
+
+
+def construct_route_table(
+    dataset: pd.DataFrame,
+    route_list: list[int]
+) -> pd.DataFrame:
+    """Constructs the DataFrame for a given route (list of IDs). Used a
+    processed dataset.
+
+    Args:
+    - dataset (pd.DataFrame): Original processed dataset
+    - route_list (list[int]): Route, consisting of Stop_ID integers
+
+    Returns:
+    - pd.DataFrame: Original dataset, but only the rows for Stop_IDs, in order
+    """
+    # Step 1: Filter rows where 'Stop_ID' is in stop_id_list
+    filtered_df = dataset[dataset['Stop_ID'].isin(route_list)]
+
+    # Step 2: Set 'Stop_ID' as index and reorder using .loc
+    ordered_df = filtered_df.set_index('Stop_ID').loc[route_list].reset_index()
+
+    return ordered_df

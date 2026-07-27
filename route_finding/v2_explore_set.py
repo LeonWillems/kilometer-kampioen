@@ -10,7 +10,7 @@ from data_processing.data_utils import (
     read_timetable, save_timetable,
     add_duration_in_minutes,
     filter_timetable, int_to_timestamp,
-    pre_filter_timetable
+    pre_filter_timetable, construct_route_table
 )
 
 from settings import Parameters, VersionSettings
@@ -76,18 +76,6 @@ class ExploreSet:
         best state, and exiting the current run.
         """
         self.logger.info("Interrupt received")
-
-        # Below is for testing purposes. TODO: get rid when done
-        print(f"Size of Queue: {self.priority_queue.qsize()}\n")
-
-        for i in range(5):
-            queue_min: State = self.priority_queue.get()[1]
-            print(f"===== State {i+1}")
-            print(f"Total dist: {queue_min.total_distance:.2f}")
-            print(f"Score: {queue_min.score:.2f}\n")
-
-        print(self.best_state.route)
-
         self._save_best_route()
         exit(0)
 
@@ -96,19 +84,40 @@ class ExploreSet:
         hms_driven = int(self.best_distance * 10)  # Convert to hectometers
         file_path = SETTINGS.ROUTES_PATH / f"{self.timestamp}_{hms_driven}.csv"
 
-        # Construct custom df for the best found route
-        best_route_df = pd.DataFrame(data=self.best_state.route)
+        # Build route table based on route list containing Stop_IDs
+        best_route_df = construct_route_table(
+            dataset=self.timetable_df,
+            route_list=self.best_state.route,
+        )
+
+        # Redo the score calculations; yields more columns for the output df
+        state = State()
+        state.set_initial_state(logger=self.logger)
+
+        updated_rows: list[pd.Series] = []
+
+        # Recreate the search, but for our given best route in order
+        for _, row in best_route_df.iterrows():
+            state = state.copy()
+
+            # Return the only transfer in this df, but with scores and such
+            top_transfer = self._apply_score_function(
+                pd.DataFrame([row]), state
+            ).iloc[0]
+
+            updated_rows.append(top_transfer)
+            state.update_state(top_transfer)
 
         # Save to designated folder (/routes/version/...)
         save_timetable(
-            timetable_df=best_route_df,
+            timetable_df=pd.DataFrame(updated_rows),
             timetable_path=file_path
         )
 
         # Log statistics
         self.logger.info(
             f"Saved best route to: {file_path}\n"
-            f"Number of transfers: {len(best_route_df)}\n"
+            f"Number of transfers: {len(updated_rows)}\n"
             f"Final distance: {self.best_distance:.1f}km\n"
             f"Total iterations: {self.iterations}\n"
             f"End station: {self.best_state.current_station}\n"
@@ -220,13 +229,7 @@ class ExploreSet:
             new_state = current_state.copy()
 
             # b. Update new state with this ride
-            new_state.current_time = row['Arrival_Int']
-            new_state.current_station = row['To']
-            new_state.id_previous_train = row['Section_ID']
-            new_state.route_indicator.update_indicator_table(row)
-            new_state.total_distance += row['Distance_Counted']
-            new_state.score = row['Score']
-            new_state.route.append(row)
+            new_state.update_state(row)
 
             # Build a queue pair based on the score of interest. Current
             # version: min negative total distance (so max total distance)
