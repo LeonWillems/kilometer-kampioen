@@ -190,6 +190,9 @@ class ExploreSet:
             by='Score', ascending=False
         )
 
+        # 5. Add stamp indicator as well
+        transfer_options['Got_Stamp'] = int(state.got_stamp)
+
         return transfer_options
 
     def explore_state(self, current_state: State):
@@ -231,12 +234,16 @@ class ExploreSet:
             # b. Update new state with this ride
             new_state.update_state(row)
 
-            # Build a queue pair based on the score of interest. Current
+            # c. Check if we need a stamp, and if it's not too late
+            if new_state.stamp_missed():
+                continue
+
+            # d. Build a queue pair based on the score of interest. Current
             # version: min negative total distance (so max total distance)
             queue_pair = (-new_state.score, new_state)
             self.priority_queue.put(queue_pair)
 
-            # c. Update best state if better
+            # e. Update best state if better
             if new_state.total_distance > self.best_state.total_distance:
                 self.logger.info(
                     "New best route found! Distance: "
