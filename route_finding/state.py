@@ -33,14 +33,15 @@ class State:
     - copy(): Returns a deep copy of the current state
     """
     def __init__(self):
-        self.total_distance = 0
-        self.route = []
-        self.route_indicator = RouteIndicator()
-        self.current_time = None
-        self.current_station = None
-        self.id_previous_train = None
-        self.logger = None
-        self.score = 0
+        self.total_distance: int = 0
+        self.route: list[int] = []
+        self.route_indicator: RouteIndicator = RouteIndicator()
+        self.current_time: int = 0
+        self.current_station: str = ''
+        self.id_previous_train: int = 0
+        self.logger: Logger = None
+        self.score: int = 0
+        self.got_stamp: bool = False
 
     def __lt__(self, other: "State"):
         """< comparison for min-heap purposes, see the explore_set algo.
@@ -66,6 +67,10 @@ class State:
             f"Current time: {int_to_timestamp(self.current_time)}\n"
         )
 
+        # If we do not need a stamp, just consider we already have it
+        if not SETTINGS.STAMP.NEED_STAMP:
+            self.got_stamp = True
+
     def copy(self):
         """Returns a deep copy of the current state.
 
@@ -80,7 +85,35 @@ class State:
         new_state.current_station = self.current_station
         new_state.id_previous_train = self.id_previous_train
         new_state.score = self.score
+        new_state.got_stamp = self.got_stamp
         return new_state
+
+    def _check_stamp(self, station: str, arrival_int: int):
+        """Check at current stop for stamp"""
+        if self.got_stamp:
+            return True
+
+        # Already handled at initialization, but just in case
+        if not SETTINGS.STAMP.NEED_STAMP:
+            return True
+
+        # We can only get a stamp at the right station
+        if station != SETTINGS.STAMP.STATION:
+            return False
+
+        # Check if arrival is within the time window. When leaving the train,
+        # account for 5 minutes of getting the stamp in both the window,
+        # and the current time (just add 5)
+        if (
+            timestamp_to_int(SETTINGS.STAMP.START_TIME)
+            <= arrival_int
+            <= timestamp_to_int(SETTINGS.STAMP.END_TIME) - 5
+        ):
+            self.current_time += 5
+            return True
+
+        # Correct station, but not within time window
+        return False
 
     def update_state(self, row: pd.Series):
         """Updates the state given a new row, ergo a new ride.
@@ -95,3 +128,19 @@ class State:
         self.current_station = row['To']
         self.id_previous_train = row['Section_ID']
         self.score = row['Score']
+        self.got_stamp = self._check_stamp(row['To'], row['Arrival_Int'])
+
+    def stamp_missed(self) -> bool:
+        """Check if we missed the stamp; ergo we do not have it yet, and it is
+        too late to get one.
+
+        Returns:
+        - bool: True is missed (then cancel searching), False if not
+        """
+        if self.got_stamp:
+            return False
+
+        if self.current_time > timestamp_to_int(SETTINGS.STAMP.END_TIME):
+            return True
+
+        return False

@@ -41,6 +41,16 @@ VERSION_SETTINGS = {
         'v1': 'ISO8601',  # 'RFC3339'
         'v2': 'ISO8601',  # 'RFC3339'
     },
+    'stamp': {
+        'v0': {'need_stamp': False},
+        'v1': {'need_stamp': False},
+        'v2': {
+            'need_stamp': True,
+            'start_time': '11:00',
+            'end_time': '15:00',
+            'station': 'Zl',  # Zwolle
+        }
+    }
 }
 
 
@@ -52,6 +62,17 @@ class Parameters:
     END_TIME: str = VERSION_SETTINGS['end_time'][VERSION]
     MIN_TRANSFER_TIME: int = VERSION_SETTINGS['min_transfer_time']
     MAX_TRANSFER_TIME: int = VERSION_SETTINGS['max_transfer_time']
+
+
+STAMP_DICT: dict = VERSION_SETTINGS['stamp'][Parameters.VERSION]
+
+
+@dataclass
+class Stamp:
+    NEED_STAMP: bool = STAMP_DICT.get('need_stamp', False)
+    START_TIME: str = STAMP_DICT.get('start_time', '')
+    END_TIME: str = STAMP_DICT.get('end_time', '')
+    STATION: str = STAMP_DICT.get('station', '')
 
 
 @dataclass
@@ -115,6 +136,8 @@ class VersionSettings(BaseSettings):
     DAY_OF_RUN: str = field(default='')
     DATETIME_FORMAT: str = field(default='')
 
+    STAMP: Stamp = field(default_factory=Stamp)
+
     DATA_PATH: Path = field(default=Path())
     LOGS_PATH: Path = field(default=Path())
     ROUTES_PATH: Path = field(default=Path())
@@ -133,6 +156,8 @@ class VersionSettings(BaseSettings):
             VERSION_NAME=VERSION_SETTINGS['name'][version],
             DAY_OF_RUN=VERSION_SETTINGS['day_of_run'][version],
             DATETIME_FORMAT=VERSION_SETTINGS['datetime_format'][version],
+
+            STAMP=Stamp,
 
             DATA_PATH=settings_dict['DATA_DIR'] / version,
             LOGS_PATH=settings_dict['LOGS_DIR'] / version,
