@@ -165,8 +165,6 @@ class ExploreSet:
             lambda row: state.route_indicator.get_distance_counted(
                 from_station=row['Station'],
                 to_station=row['To'],
-                train_type=row['Type'],
-                distance=row['Distance'],
             ),
             axis=1
         )

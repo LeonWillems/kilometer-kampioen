@@ -48,7 +48,7 @@ VERSION_SETTINGS = {
             'need_stamp': True,
             'start_time': '11:00',
             'end_time': '15:00',
-            'station': 'Zl',  # Zwolle
+            'station': 'Rtd',  # Rotterdam Centraal
         }
     }
 }

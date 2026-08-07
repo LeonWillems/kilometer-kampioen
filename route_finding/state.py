@@ -109,6 +109,8 @@ class State:
             <= arrival_int
             <= timestamp_to_int(SETTINGS.STAMP.END_TIME) - 5
         ):
+            # Due to new rules, we can permit to reset our indicator
+            self.route_indicator: RouteIndicator = RouteIndicator()
             self.current_time += 5
             return True
 
@@ -123,7 +125,7 @@ class State:
         """
         self.total_distance += row['Distance_Counted']
         self.route.append(row['Stop_ID'])
-        self.route_indicator.update_indicator_table(row)
+        self.route_indicator.update_indicator_dict(row)
         self.current_time = row['Arrival_Int']
         self.current_station = row['To']
         self.id_previous_train = row['Section_ID']
