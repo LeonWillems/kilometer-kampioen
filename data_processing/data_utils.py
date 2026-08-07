@@ -199,6 +199,11 @@ def timestamp_to_int(current_timestamp: pd.Timestamp | str) -> int:
     return total_minutes
 
 
+def add_duration_to_int_timestamp(int_timestamp: int) -> int:
+    hours = Parameters.DURATION
+    return int_timestamp + 60 * hours
+
+
 def add_minutes_from_epoch(
     timetable_df: pd.DataFrame,
     datetime_col: str,
@@ -271,7 +276,7 @@ def pre_filter_timetable(
     - pd.DataFrame: filtered and sorted timetable
     """
     start_time_int = timestamp_to_int(Parameters.START_TIME)
-    end_time_int = timestamp_to_int(Parameters.END_TIME)
+    end_time_int = add_duration_to_int_timestamp(start_time_int)
 
     df_filtered = timetable_df[
         (timetable_df['Departure_Int'] >= start_time_int)

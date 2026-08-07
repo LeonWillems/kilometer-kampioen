@@ -57,7 +57,7 @@ class GreedyDFS:
         self.logger.info(
             "Starting new route finding run with parameters:\n"
             f"Version: {SETTINGS.VERSION} ({SETTINGS.VERSION_NAME})\n"
-            f"End time: {Parameters.END_TIME}\n"
+            f"Duration: {Parameters.DURATION} hours\n"
             f"Transfer time range: {Parameters.MIN_TRANSFER_TIME}"
             f"-{Parameters.MAX_TRANSFER_TIME} minutes"
         )

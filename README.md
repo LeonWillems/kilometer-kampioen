@@ -28,7 +28,7 @@ The main parameters in `settings.py` that you can modify are:
 - `version`: Version of the timetable data (default: 'v1')
 - `start_station`: Starting station (default: 'Ehv' - Eindhoven Centraal)
 - `start_time`: Starting time (default: 08:00)
-- `end_time`: Time by which the route must be completed (default: 20:00)
+- `duration`: Duration in hours for the current run (default: 12)
 - `min_transfer_time`: Minimum transfer time in minutes (default: 3)
 - `max_transfer_time`: Maximum transfer time in minutes (default: 15)
 

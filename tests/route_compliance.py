@@ -3,7 +3,9 @@ import unittest
 from .test_utils import (
     get_log_contents, get_parms_contents, get_route_contents,
 )
-from data_processing.data_utils import timestamp_to_int
+from data_processing.data_utils import (
+    timestamp_to_int, add_duration_to_int_timestamp
+)
 
 from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
@@ -37,7 +39,7 @@ class TestRouteCompliance(unittest.TestCase):
         start_time = timestamp_to_int(
             current_timestamp=self.parms['START_TIME']
         )
-        end_time = timestamp_to_int(current_timestamp=self.parms['END_TIME'])
+        end_time = add_duration_to_int_timestamp(start_time)
 
         for idx, row in self.route.iterrows():
             # Test non-negative values
