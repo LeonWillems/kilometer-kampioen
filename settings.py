@@ -19,10 +19,10 @@ VERSION_SETTINGS = {
         'v1': '08:00',
         'v2': '08:00',
     },
-    'end_time': {
-        'v0': '15:00',
-        'v1': '20:00',
-        'v2': '20:00',
+    'duration': {  # In number of hours
+        'v0': 3,
+        'v1': 12,
+        'v2': 12,
     },
     'min_transfer_time':  3,  # So far, this has not been changed
     'max_transfer_time': 15,  # So far, this has not been changed
@@ -59,7 +59,7 @@ class Parameters:
     VERSION: str = VERSION  # 'v0' / 'v1' / 'v2'
     START_STATION: str = VERSION_SETTINGS['start_station'][VERSION]
     START_TIME: str = VERSION_SETTINGS['start_time'][VERSION]
-    END_TIME: str = VERSION_SETTINGS['end_time'][VERSION]
+    DURATION: str = VERSION_SETTINGS['duration'][VERSION]
     MIN_TRANSFER_TIME: int = VERSION_SETTINGS['min_transfer_time']
     MAX_TRANSFER_TIME: int = VERSION_SETTINGS['max_transfer_time']
 

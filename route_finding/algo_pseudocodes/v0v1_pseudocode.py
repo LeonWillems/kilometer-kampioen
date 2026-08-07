@@ -12,7 +12,7 @@ idea what happens under the hood. Enjoy!
 == Global constants:
 - min_transfer_time (3 (minutes))
 - max_transfer_time (15 (minutes))
-- end_time (15:00)
+- duration (3 (hours))
 
 == Initiation parameters:
 - start_time (12:00)
