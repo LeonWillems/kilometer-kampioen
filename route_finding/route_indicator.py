@@ -17,6 +17,10 @@ STATION_DISTANCES = load_distances()
 # Get all unique station names, ground truth = distances table
 ALL_STATIONS = sorted(list(set(STATION_DISTANCES.keys())))
 
+# Exception to the main 2026 rule
+# Both before and after getting the stamp, you may drive one of these twice
+EXCEPTION_SECTIONS = (('Zl', 'Mp'), ('Mp', 'Zl'), ('Std', 'Rm'), ('Rm', 'Std'))
+
 
 class RouteIndicator:
     def __init__(self):
@@ -26,6 +30,8 @@ class RouteIndicator:
         Attributes
         - indicator_dict: Dict to hold the route indicators between stations.
             Example: {'Ht': {'Ehv': 1, 'Tb': 2}, ...}
+        - exception_used: Bool to indicate whether any of the exception sec-
+            tions has been driven twice (may count before and after stamp)
 
         Methods
         - init_indicator_table: Initialize the indicator_table
@@ -34,6 +40,7 @@ class RouteIndicator:
         - copy: Create a copy of the RouteIndicator instance
         """
         self.indicator_dict: dict[str, dict[str, int]] = dict()
+        self.exception_used: bool = False
 
     def _add_to_dict(self, from_station: str, to_station: str) -> None:
         """Deal with all cases of adding one to the number of times driven.
@@ -112,6 +119,15 @@ class RouteIndicator:
             if times_driven == 0:  # Section not driven at all yet
                 distance_counted += intermediate_distance
 
+            # One exception can be counted twice! Both before and after stamp
+            elif (
+                times_driven == 1
+                and (from_station, to_station) in EXCEPTION_SECTIONS
+                and not self.exception_used
+            ):
+                distance_counted += intermediate_distance
+                self.exception_used = True
+
         return distance_counted
 
     def copy(self):
@@ -123,6 +139,7 @@ class RouteIndicator:
         """
         new_indicator = RouteIndicator()
         new_indicator.indicator_dict = deepcopy(self.indicator_dict)
+        new_indicator.exception_used = self.exception_used
         return new_indicator
 
 

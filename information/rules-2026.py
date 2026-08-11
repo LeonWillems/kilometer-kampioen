@@ -13,7 +13,7 @@ Counting a connection:
   - Once before getting a stamp
   - Once after getting a stamp
 - One exception on the rule:
-  - Both before and after getting the stamp, one might count double:
+  - Both before and after getting the stamp, ONLY ONE might count double:
     - Either Zwolle - Meppel
     - Or Sittard - Roermond
 
