@@ -1,7 +1,7 @@
 import signal
 import pandas as pd
+from pathlib import Path
 from logging import Logger
-from datetime import datetime
 from queue import PriorityQueue
 
 from .state import State
@@ -23,7 +23,7 @@ class ExploreSet:
     routes to the queue.
 
     Args:
-    - timestamp (datetime): Current time when running the algorithm
+    - run_path (Path): Path to store files for current run
 
     Attributes:
     - timetable_df (pd.DataFrame): DataFrame containing the timetable data
@@ -35,8 +35,8 @@ class ExploreSet:
         routes as the lowest values
     - logger (Logger): Used for logging purposes
     """
-    def __init__(self, timestamp: datetime):
-        self.timestamp = timestamp
+    def __init__(self, run_path: Path):
+        self.run_path = run_path
 
         self.timetable_df: pd.DataFrame \
             = pre_filter_timetable(read_timetable(processed=True))
@@ -62,7 +62,7 @@ class ExploreSet:
         signal.signal(signal.SIGINT, self._handle_interrupt)
 
         # Setup logger
-        self.logger: Logger = setup_logger(timestamp=self.timestamp)
+        self.logger: Logger = setup_logger(run_path)
         self.logger.info(
             "Starting new route finding run with parameters:\n"
             f"Version: {SETTINGS.VERSION} ({SETTINGS.VERSION_NAME})\n"
@@ -82,7 +82,7 @@ class ExploreSet:
     def _save_best_route(self):
         """Save the current best route as a .csv to the routes folder."""
         hms_driven = int(self.best_distance * 10)  # Convert to hectometers
-        file_path = SETTINGS.ROUTES_PATH / f"{self.timestamp}_{hms_driven}.csv"
+        file_path = (self.run_path / f'route_{hms_driven}').with_suffix('.csv')
 
         # Build route table based on route list containing Stop_IDs
         best_route_df = construct_route_table(
@@ -252,13 +252,13 @@ class ExploreSet:
                 self.best_state = new_state.copy()
 
 
-def run_explore_set(timestamp: datetime):
+def run_explore_set(run_path: Path):
     """Main function to run the ExploreSet route finding algorithm.
 
     Args:
-    - timestamp (datetime): Current time when running the algorithm
+    - run_path (Path): Path to store files for current run
     """
-    explore_set = ExploreSet(timestamp=timestamp)
+    explore_set = ExploreSet(run_path=run_path)
 
     initial_state = State()
     initial_state.set_initial_state(logger=explore_set.logger)
