@@ -90,13 +90,8 @@ class BaseSettings:
 
     DATA_DIR: Path = ROOT_DIR / 'data'
     INFORMATION_DIR: Path = ROOT_DIR / 'information'
-
     RUNS_DIR: Path = ROOT_DIR / 'runs'
     VISUALIZATION_DIR: Path = ROOT_DIR / 'visualization'
-
-    LOGS_DIR: Path = RUNS_DIR / 'logs'
-    ROUTES_DIR: Path = RUNS_DIR / 'routes'
-    PARAMETERS_DIR: Path = RUNS_DIR / 'parameters'
 
     # Intermediate stations file
     INTERMEDIATE_STATIONS_FILE: str = 'intermediate_stations.json'
@@ -139,9 +134,7 @@ class VersionSettings(BaseSettings):
     STAMP: Stamp = field(default_factory=Stamp)
 
     DATA_PATH: Path = field(default=Path())
-    LOGS_PATH: Path = field(default=Path())
-    ROUTES_PATH: Path = field(default=Path())
-    PARAMETERS_PATH: Path = field(default=Path())
+    RUNS_PATH: Path = field(default=Path())
 
     @classmethod
     def get_version_settings(cls):
@@ -158,11 +151,8 @@ class VersionSettings(BaseSettings):
             DATETIME_FORMAT=VERSION_SETTINGS['datetime_format'][version],
 
             STAMP=Stamp,
-
             DATA_PATH=settings_dict['DATA_DIR'] / version,
-            LOGS_PATH=settings_dict['LOGS_DIR'] / version,
-            ROUTES_PATH=settings_dict['ROUTES_DIR'] / version,
-            PARAMETERS_PATH=settings_dict['PARAMETERS_DIR'] / version,
+            RUNS_PATH=settings_dict['RUNS_DIR'] / version,
 
             **settings_dict
         )

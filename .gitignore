@@ -217,6 +217,6 @@ data/*/services-2025-10.csv
 user.txt
 
 # Folders created from running the algorithms
-runs/logs/*
-runs/parameters/*
-runs/routes/*
+runs/v0/*
+runs/v1/*
+runs/v2/*

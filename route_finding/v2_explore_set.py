@@ -1,16 +1,15 @@
 import signal
 import pandas as pd
+from pathlib import Path
 from logging import Logger
-from datetime import datetime
 from queue import PriorityQueue
 
 from .state import State
 from .logger import setup_logger
 from data_processing.data_utils import (
-    read_timetable, save_timetable,
-    add_duration_in_minutes,
-    filter_timetable, int_to_timestamp,
-    pre_filter_timetable, construct_route_table
+    read_timetable, save_timetable, add_duration_in_minutes,
+    filter_timetable, int_to_timestamp, pre_filter_timetable,
+    construct_route_table
 )
 
 from settings import Parameters, VersionSettings
@@ -23,7 +22,7 @@ class ExploreSet:
     routes to the queue.
 
     Args:
-    - timestamp (datetime): Current time when running the algorithm
+    - run_path (Path): Path to store files for current run
 
     Attributes:
     - timetable_df (pd.DataFrame): DataFrame containing the timetable data
@@ -35,8 +34,8 @@ class ExploreSet:
         routes as the lowest values
     - logger (Logger): Used for logging purposes
     """
-    def __init__(self, timestamp: datetime):
-        self.timestamp = timestamp
+    def __init__(self, run_path: Path):
+        self.run_path = run_path
 
         self.timetable_df: pd.DataFrame \
             = pre_filter_timetable(read_timetable(processed=True))
@@ -62,7 +61,7 @@ class ExploreSet:
         signal.signal(signal.SIGINT, self._handle_interrupt)
 
         # Setup logger
-        self.logger: Logger = setup_logger(timestamp=self.timestamp)
+        self.logger: Logger = setup_logger(run_path)
         self.logger.info(
             "Starting new route finding run with parameters:\n"
             f"Version: {SETTINGS.VERSION} ({SETTINGS.VERSION_NAME})\n"
@@ -79,25 +78,30 @@ class ExploreSet:
         self._save_best_route()
         exit(0)
 
-    def _save_best_route(self):
-        """Save the current best route as a .csv to the routes folder."""
-        hms_driven = int(self.best_distance * 10)  # Convert to hectometers
-        file_path = SETTINGS.ROUTES_PATH / f"{self.timestamp}_{hms_driven}.csv"
+    def construct_state_from_route(
+        self,
+        route_df: pd.DataFrame
+    ) -> tuple[State, pd.DataFrame]:
+        """Given a route, reconstruct State and RouteIndicator.
 
-        # Build route table based on route list containing Stop_IDs
-        best_route_df = construct_route_table(
-            dataset=self.timetable_df,
-            route_list=self.best_state.route,
-        )
+        Args:
+        - route_df (pd.DataFrame): Route, may or may not include scores (and
+            other relevant columns)
 
+        Returns:
+        - State: Rebuilt State for given route
+        - pd.DataFrame: Original route_df, but including scores and such in
+            case they were not there yet
+        """
         # Redo the score calculations; yields more columns for the output df
         state = State()
         state.set_initial_state(logger=self.logger)
 
+        # Gradually build route, then convert to pd.DataFrame when returning
         updated_rows: list[pd.Series] = []
 
-        # Recreate the search, but for our given best route in order
-        for _, row in best_route_df.iterrows():
+        # Recreate the search, but for our given route in order
+        for _, row in route_df.iterrows():
             state = state.copy()
 
             # Return the only transfer in this df, but with scores and such
@@ -107,17 +111,32 @@ class ExploreSet:
 
             updated_rows.append(top_transfer)
             state.update_state(top_transfer)
+        return state, pd.DataFrame(updated_rows)
+
+    def _save_best_route(self):
+        """Save the current best route as a .csv to the routes folder."""
+        hms_driven = int(self.best_distance * 10)  # Convert to hectometers
+        file_path = (self.run_path / f'route_{hms_driven}').with_suffix('.csv')
+
+        # Build route table based on route list containing Stop_IDs
+        best_route_df = construct_route_table(
+            dataset=self.timetable_df,
+            route_list=self.best_state.route,
+        )
+
+        # Reconstruct State and RouteIndicator
+        _, route_with_scores = self.construct_state_from_route(best_route_df)
 
         # Save to designated folder (/routes/version/...)
         save_timetable(
-            timetable_df=pd.DataFrame(updated_rows),
+            timetable_df=route_with_scores,
             timetable_path=file_path
         )
 
         # Log statistics
         self.logger.info(
             f"Saved best route to: {file_path}\n"
-            f"Number of transfers: {len(updated_rows)}\n"
+            f"Number of transfers: {len(route_with_scores)}\n"
             f"Final distance: {self.best_distance:.1f}km\n"
             f"Total iterations: {self.iterations}\n"
             f"End station: {self.best_state.current_station}\n"
@@ -252,19 +271,29 @@ class ExploreSet:
                 self.best_state = new_state.copy()
 
 
-def run_explore_set(timestamp: datetime):
+def run_explore_set(run_path: Path, route_df: pd.DataFrame | None = None):
     """Main function to run the ExploreSet route finding algorithm.
 
     Args:
-    - timestamp (datetime): Current time when running the algorithm
+    - run_path (Path): Path to store files for current run
+    - route_df (pd.DataFrame, optional): If continue from save, contains route
+        done so far, continue from last stop
     """
-    explore_set = ExploreSet(timestamp=timestamp)
+    explore_set = ExploreSet(run_path=run_path)
 
-    initial_state = State()
-    initial_state.set_initial_state(logger=explore_set.logger)
+    # Start fresh new route finding
+    if route_df is None:
+        state = State()
+        state.set_initial_state(logger=explore_set.logger)
 
-    explore_set.explore_state(initial_state)
+    # Continue from save; rebuild State & RouteIndicator
+    else:
+        state, _ = explore_set.construct_state_from_route(route_df)
+        state.logger = explore_set.logger
 
+    explore_set.explore_state(state)
+
+    # Keep iterating over the queue
     while not explore_set.priority_queue.empty():
         best_state = explore_set.priority_queue.get()[1]
         explore_set.explore_state(best_state)

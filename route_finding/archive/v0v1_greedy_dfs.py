@@ -1,7 +1,7 @@
 import signal
 import pandas as pd
+from pathlib import Path
 from logging import Logger
-from datetime import datetime
 
 from ..state import State
 from ..logger import setup_logger
@@ -20,7 +20,7 @@ class GreedyDFS:
     """Greedy Depth-First Search for route finding.
 
     Args:
-    - timestamp (datetime): Current time when running the algorithm
+    - run_path (Path): Path to store files for current run
 
     Attributes:
     - timetable_df (pd.DataFrame): DataFrame containing the timetable data
@@ -30,8 +30,8 @@ class GreedyDFS:
     - iterations (int): Number of recursive dfs calls
     - logger (Logger): Used for logging purposes
     """
-    def __init__(self, timestamp: datetime):
-        self.timestamp = timestamp
+    def __init__(self, run_path: Path):
+        self.run_path = run_path
 
         self.timetable_df: pd.DataFrame \
             = pre_filter_timetable(read_timetable(processed=True))
@@ -53,7 +53,7 @@ class GreedyDFS:
         signal.signal(signal.SIGINT, self._handle_interrupt)
 
         # Setup logger
-        self.logger: Logger = setup_logger(timestamp=self.timestamp)
+        self.logger: Logger = setup_logger(run_path)
         self.logger.info(
             "Starting new route finding run with parameters:\n"
             f"Version: {SETTINGS.VERSION} ({SETTINGS.VERSION_NAME})\n"
@@ -73,7 +73,7 @@ class GreedyDFS:
     def _save_best_route(self):
         """Save the current best route as a .csv to the routes folder."""
         hms_driven = int(self.best_distance * 10)  # Convert to hectometers
-        file_path = SETTINGS.ROUTES_PATH / f"{self.timestamp}_{hms_driven}.csv"
+        file_path = (self.run_path / f'route_{hms_driven}').with_suffix('.csv')
 
         # Construct custom df for the best found route
         best_route_df = pd.DataFrame(data=self.best_state.route)
@@ -227,13 +227,13 @@ class GreedyDFS:
             self.dfs(new_state)
 
 
-def run_greedy_dfs(timestamp: datetime):
+def run_greedy_dfs(run_path: Path):
     """Main function to run the GreedyDFS route finding algorithm.
 
     Args:
-    - timestamp (datetime): Current time when running the algorithm
+    - run_path (Path): Path to store files for current run
     """
-    greedy_dfs = GreedyDFS(timestamp=timestamp)
+    greedy_dfs = GreedyDFS(run_path=run_path)
 
     initial_state = State()
     initial_state.set_initial_state(logger=greedy_dfs.logger)

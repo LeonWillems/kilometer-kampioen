@@ -4,42 +4,40 @@ from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 
-def get_paths() -> tuple[Path, Path, Path]:
-    """Gets the right paths to the three kinds of files.
+def remove_files_in_dir(run_path: Path) -> None:
+    """Will remove all files for a given path.
 
     Args:
-    - version (str): Version of the route finding algo, example 'v0'
-
-    Returns:
-    - tuple: Three paths
+    - run_path (Path): To the right folder
     """
-    logs_path = SETTINGS.LOGS_PATH
-    parameters_path = SETTINGS.PARAMETERS_PATH
-    routes_path = SETTINGS.ROUTES_PATH
-    return (logs_path, parameters_path, routes_path)
+    # List all files in the current dir
+    files = [f for f in run_path.iterdir() if f.is_file()]
+
+    # Remove all files
+    for file_to_remove in files:
+        file_to_remove.unlink()
 
 
-def remove_all_but_last_file(path: Path):
-    """Will remove all but the last file for a given path.
+def remove_all_but_last_dir(runs_path: Path) -> None:
+    """Will remove all but the last dir in a given path.
 
     Args:
-    - path (Path): To the right folder
+    - runs_path (Path): Path containing each run for a specific version
     """
-    # List all files in the directory
-    files = [f for f in path.iterdir() if f.is_file()]
+    # List all dirs for the current path
+    run_paths = [path for path in runs_path.iterdir() if path.is_dir()]
 
-    # If there's nothing or only one file, do nothing
-    if len(files) <= 1:
+    # If there's nothing or only one dir, do nothing
+    if len(run_paths) <= 1:
         return
 
-    # Keep the newest file, remove all others
-    for file_to_remove in files[:-1]:
-        file_to_remove.unlink()
+    # Keep the newest dir, remove all others
+    for run_path in run_paths[:-1]:
+        remove_files_in_dir(run_path)
+        run_path.rmdir()
 
 
 if __name__ == "__main__":
     # Define for which version to delete files
-    paths = get_paths()
-
-    for path in paths:
-        remove_all_but_last_file(path)
+    runs_path: Path = SETTINGS.RUNS_PATH
+    remove_all_but_last_dir(runs_path)

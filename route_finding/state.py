@@ -16,8 +16,7 @@ class State:
     Attributes:
     - total_distance (float): The total distance of the route
         (according to the Kilometer Kampioen rules)
-    - route (list[pd.Series]): A list of pd.Series objects
-        representing the route
+    - route (list[int]): A list of integers, each representing a `Stop_ID`
     - route_indicator (RouteIndicator): An instance of RouteIndicator
     - current_time (int): The current time in the route finding process,
         usually the time of the last train arrival, in minutes after epoch

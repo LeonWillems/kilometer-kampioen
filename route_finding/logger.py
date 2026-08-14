@@ -1,33 +1,28 @@
 import logging
-import pandas as pd
+from pathlib import Path
 
 from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 
-def setup_logger(timestamp: pd.Timestamp) -> logging.Logger:
+def setup_logger(run_path: Path) -> logging.Logger:
     """Setup logger for the route finding algorithm.
 
     Args:
-    - timestamp (datetime): Current time when running the algorithm
+    - run_path (Path): Path to store files for current run
 
     Returns:
     - logging.Logger: Configured logger instance
     """
-    # Create logs directory if it doesn't exist
-    log_dir = SETTINGS.LOGS_PATH
-    log_dir.mkdir(exist_ok=True)
-
-    # Create log file with timestamp
-    log_file = log_dir / \
-        f"{timestamp}_{SETTINGS.VERSION_NAME}.log"
+    # Create log file path including timestamp
+    log_file_path = (run_path / 'logs').with_suffix('.log')
 
     # Configure logger
     logger = logging.getLogger(SETTINGS.VERSION_NAME)
     logger.setLevel(logging.INFO)
 
     # File handler
-    fh = logging.FileHandler(log_file)
+    fh = logging.FileHandler(log_file_path)
     fh.setLevel(logging.INFO)
 
     # Console handler
