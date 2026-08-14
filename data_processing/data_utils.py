@@ -163,8 +163,8 @@ def save_timetable(
     Args:
     - timetable_df (pd.DataFrame): DataFrame containing the
         processed timetable data
-    - version (str): Version of the timetable data (example: 'v0')
     - timetable_path (Path): Path where to save the timetable
+    - from_settings (bool): Whether to determine path from settings
     """
     if from_settings:
         data_path = SETTINGS.DATA_PATH

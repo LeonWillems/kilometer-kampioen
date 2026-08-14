@@ -7,10 +7,9 @@ from queue import PriorityQueue
 from .state import State
 from .logger import setup_logger
 from data_processing.data_utils import (
-    read_timetable, save_timetable,
-    add_duration_in_minutes,
-    filter_timetable, int_to_timestamp,
-    pre_filter_timetable, construct_route_table
+    read_timetable, save_timetable, add_duration_in_minutes,
+    filter_timetable, int_to_timestamp, pre_filter_timetable,
+    construct_route_table
 )
 
 from settings import Parameters, VersionSettings
@@ -79,6 +78,41 @@ class ExploreSet:
         self._save_best_route()
         exit(0)
 
+    def construct_state_from_route(
+        self,
+        route_df: pd.DataFrame
+    ) -> tuple[State, pd.DataFrame]:
+        """Given a route, reconstruct State and RouteIndicator.
+
+        Args:
+        - route_df (pd.DataFrame): Route, may or may not include scores (and
+            other relevant columns)
+
+        Returns:
+        - State: Rebuilt State for given route
+        - pd.DataFrame: Original route_df, but including scores and such in
+            case they were not there yet
+        """
+        # Redo the score calculations; yields more columns for the output df
+        state = State()
+        state.set_initial_state(logger=self.logger)
+
+        # Gradually build route, then convert to pd.DataFrame when returning
+        updated_rows: list[pd.Series] = []
+
+        # Recreate the search, but for our given route in order
+        for _, row in route_df.iterrows():
+            state = state.copy()
+
+            # Return the only transfer in this df, but with scores and such
+            top_transfer = self._apply_score_function(
+                pd.DataFrame([row]), state
+            ).iloc[0]
+
+            updated_rows.append(top_transfer)
+            state.update_state(top_transfer)
+        return state, pd.DataFrame(updated_rows)
+
     def _save_best_route(self):
         """Save the current best route as a .csv to the routes folder."""
         hms_driven = int(self.best_distance * 10)  # Convert to hectometers
@@ -90,34 +124,19 @@ class ExploreSet:
             route_list=self.best_state.route,
         )
 
-        # Redo the score calculations; yields more columns for the output df
-        state = State()
-        state.set_initial_state(logger=self.logger)
-
-        updated_rows: list[pd.Series] = []
-
-        # Recreate the search, but for our given best route in order
-        for _, row in best_route_df.iterrows():
-            state = state.copy()
-
-            # Return the only transfer in this df, but with scores and such
-            top_transfer = self._apply_score_function(
-                pd.DataFrame([row]), state
-            ).iloc[0]
-
-            updated_rows.append(top_transfer)
-            state.update_state(top_transfer)
+        # Reconstruct State and RouteIndicator
+        _, route_with_scores = self.construct_state_from_route(best_route_df)
 
         # Save to designated folder (/routes/version/...)
         save_timetable(
-            timetable_df=pd.DataFrame(updated_rows),
+            timetable_df=route_with_scores,
             timetable_path=file_path
         )
 
         # Log statistics
         self.logger.info(
             f"Saved best route to: {file_path}\n"
-            f"Number of transfers: {len(updated_rows)}\n"
+            f"Number of transfers: {len(route_with_scores)}\n"
             f"Final distance: {self.best_distance:.1f}km\n"
             f"Total iterations: {self.iterations}\n"
             f"End station: {self.best_state.current_station}\n"
@@ -252,19 +271,29 @@ class ExploreSet:
                 self.best_state = new_state.copy()
 
 
-def run_explore_set(run_path: Path):
+def run_explore_set(run_path: Path, route_df: pd.DataFrame | None = None):
     """Main function to run the ExploreSet route finding algorithm.
 
     Args:
     - run_path (Path): Path to store files for current run
+    - route_df (pd.DataFrame, optional): If continue from save, contains route
+        done so far, continue from last stop
     """
     explore_set = ExploreSet(run_path=run_path)
 
-    initial_state = State()
-    initial_state.set_initial_state(logger=explore_set.logger)
+    # Start fresh new route finding
+    if route_df is None:
+        state = State()
+        state.set_initial_state(logger=explore_set.logger)
 
-    explore_set.explore_state(initial_state)
+    # Continue from save; rebuild State & RouteIndicator
+    else:
+        state, _ = explore_set.construct_state_from_route(route_df)
+        state.logger = explore_set.logger
 
+    explore_set.explore_state(state)
+
+    # Keep iterating over the queue
     while not explore_set.priority_queue.empty():
         best_state = explore_set.priority_queue.get()[1]
         explore_set.explore_state(best_state)
