@@ -24,6 +24,13 @@ Drive as many kilometers by train as possible within 24 hours - with the help of
    python -m visualization.plot_route
    ```
 
+7. In case you want to run the algorithm continuing from a specific stop in the last saved route,
+grab its `Stop_ID`, and run:
+   ```bash
+   python -m run <Stop_ID>
+   ```
+It will continue the search from that stop (including).
+
 The main parameters in `settings.py` that you can modify are:
 - `version`: Version of the timetable data (default: 'v1')
 - `start_station`: Starting station (default: 'Ehv' - Eindhoven Centraal)
