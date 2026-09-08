@@ -75,7 +75,11 @@ def _run_algo(
             run_greedy_dfs(run_path)
 
         case 'v2':
-            from route_finding.v2_explore_set import run_explore_set
+            from route_finding.archive.v2_explore_set import run_explore_set
+            run_explore_set(run_path, route_df, time_int)
+
+        case 'v3':
+            from route_finding.v3_explore_set import run_explore_set
             run_explore_set(run_path, route_df, time_int)
 
 

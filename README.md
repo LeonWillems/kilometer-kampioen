@@ -60,7 +60,7 @@ An example for each version can be found in `runs/example/v_/`
 - `data/`
    - `v0/mock_stations.png`: https://en.wikipedia.org/wiki/Railway_stations_in_the_Netherlands, edited with Paint
    - `v0/timetable_raw.csv`: Manually constructed with NS data from 2025-08-02
-   - `v1/services-2025-10.csv`: Not included, need to download from https://www.rijdendetreinen.nl/en/open-data/train-archive
+   - `v_/services-20__-__.csv`: Not included, need to download from https://www.rijdendetreinen.nl/en/open-data/train-archive
    - `v_/timetable.csv`: Obtained from preprocessing the raw dataset for some version
    - `v_/timetable_processed.csv`: Obtained from further processing of `timetable.csv`
    - `v_/intermediate_stations.json`: Contains all stations between any neighboring pair of hubs for some version
@@ -111,3 +111,9 @@ For pseudocode, see `route_finding/pseudocode.py`.
 ## Known Limitations
 - Train times dependent on one particular day, which contains disruptions
 - Same DFS limitations as `V0`
+
+# V2
+# TODO
+
+# V3
+# TODO

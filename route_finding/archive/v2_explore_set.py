@@ -1,0 +1,315 @@
+import signal
+import pandas as pd
+from pathlib import Path
+from logging import Logger
+from queue import PriorityQueue
+
+from ..state import State
+from ..logger import setup_logger
+from data_processing.data_utils import (
+    read_timetable, save_timetable, add_duration_in_minutes,
+    filter_timetable, int_to_timestamp, pre_filter_timetable,
+    construct_route_table
+)
+
+from settings import Parameters, VersionSettings
+SETTINGS = VersionSettings.get_version_settings()
+
+
+class ExploreSet:
+    """A route finding algorithm that keeps a priority queue of states, ergo
+    routes, from best to worst. Runs best, and adds consequent possible states/
+    routes to the queue.
+
+    Args:
+    - run_path (Path): Path to store files for current run
+
+    Attributes:
+    - timetable_df (pd.DataFrame): DataFrame containing the timetable data
+    - timetables (list[pd.DataFrame]): One timetable df for each 'Station'
+    - best_state (State): The best state found during the search
+    - best_distance (float): The best distance found during the search
+    - iterations (int): Number of recursive dfs calls
+    - priority_queue (PriorityQueue): Minheap with the best possible states/
+        routes as the lowest values
+    - logger (Logger): Used for logging purposes
+    """
+    def __init__(self, run_path: Path):
+        self.run_path = run_path
+
+        self.timetable_df: pd.DataFrame \
+            = pre_filter_timetable(read_timetable(processed=True))
+
+        # Create one timetable for each separate station, reducing the
+        # filtering time per call
+        stations = self.timetable_df['Station'].unique()
+
+        self.timetables: dict[str, pd.DataFrame] = {
+            station: self.timetable_df[self.timetable_df['Station'] == station]
+            for station in stations
+        }
+
+        self.best_state: State = State()
+        self.best_distance: float = 0
+        self.iterations: int = 0
+
+        # Will contain pairs: (-State.score, State),
+        # as it will be treated as a min-heap
+        self.priority_queue = PriorityQueue()
+
+        # Setup interrupt handling
+        signal.signal(signal.SIGINT, self._handle_interrupt)
+
+        # Setup logger
+        self.logger: Logger = setup_logger(run_path)
+        self.logger.info(
+            "Starting new route finding run with parameters:\n"
+            f"Version: {SETTINGS.VERSION} ({SETTINGS.VERSION_NAME})\n"
+            f"Duration: {Parameters.DURATION} hours\n"
+            f"Transfer time range: {Parameters.MIN_TRANSFER_TIME}"
+            f"-{Parameters.MAX_TRANSFER_TIME} minutes"
+        )
+
+    def _handle_interrupt(self, signum, frame):
+        """Handle interrupt signal (Ctrl+C) by saving current
+        best state, and exiting the current run.
+        """
+        self.logger.info("Interrupt received")
+        self._save_best_route()
+        exit(0)
+
+    def construct_state_from_route(
+        self,
+        route_df: pd.DataFrame
+    ) -> tuple[State, pd.DataFrame]:
+        """Given a route, reconstruct State and RouteIndicator.
+
+        Args:
+        - route_df (pd.DataFrame): Route, may or may not include scores (and
+            other relevant columns)
+
+        Returns:
+        - State: Rebuilt State for given route
+        - pd.DataFrame: Original route_df, but including scores and such in
+            case they were not there yet
+        """
+        # Redo the score calculations; yields more columns for the output df
+        state = State()
+        state.set_initial_state(logger=self.logger)
+
+        # Gradually build route, then convert to pd.DataFrame when returning
+        updated_rows: list[pd.Series] = []
+
+        # Recreate the search, but for our given route in order
+        for _, row in route_df.iterrows():
+            state = state.copy()
+
+            # Return the only transfer in this df, but with scores and such
+            top_transfer = self._apply_score_function(
+                pd.DataFrame([row]), state
+            ).iloc[0]
+
+            updated_rows.append(top_transfer)
+            state.update_state(top_transfer)
+        return state, pd.DataFrame(updated_rows)
+
+    def _save_best_route(self):
+        """Save the current best route as a .csv to the routes folder."""
+        hms_driven = int(self.best_distance * 10)  # Convert to hectometers
+        file_path = (self.run_path / f'route_{hms_driven}').with_suffix('.csv')
+
+        # Build route table based on route list containing Stop_IDs
+        best_route_df = construct_route_table(
+            dataset=self.timetable_df,
+            route_list=self.best_state.route,
+        )
+
+        # Reconstruct State and RouteIndicator
+        _, route_with_scores = self.construct_state_from_route(best_route_df)
+
+        # Save to designated folder (/routes/version/...)
+        save_timetable(
+            timetable_df=route_with_scores,
+            timetable_path=file_path
+        )
+
+        # Log statistics
+        self.logger.info(
+            f"Saved best route to: {file_path}\n"
+            f"Number of transfers: {len(route_with_scores)}\n"
+            f"Final distance: {self.best_distance:.1f}km\n"
+            f"Total iterations: {self.iterations}\n"
+            f"End station: {self.best_state.current_station}\n"
+            f"End time: {int_to_timestamp(self.best_state.current_time)}"
+        )
+
+    def _apply_score_function(
+        self,
+        transfer_options: pd.DataFrame,
+        state: State,
+    ) -> pd.DataFrame:
+        """Applies a scoring function to the transfer options to
+        prioritize them.
+
+        Steps:
+        1. Calculate waiting time (in minutes) for each transfer option
+        2. Calculate the average speed of each option, including waiting time
+            -> Speed in km/h
+        3. Sort options by score in descending order
+        4. Add 'Section_Driven' for current train type as a column (1 or 0)
+        5. Sort on 'Section_Driven' (ascending, 0 is good)
+        6. Return the top 2 options
+
+        Args:
+        - transfer_options (pd.DataFrame): DataFrame containing
+            transfer options
+        - state (State): Current state of the route finding process
+
+        Returns:
+        - pd.DataFrame: Sorted transfer options based on the score
+        """
+        # 1. Calculate waiting time
+        transfer_options['Current_Time'] = state.current_time
+
+        transfer_options = add_duration_in_minutes(
+            transfer_options,
+            start_col='Current_Time',
+            end_col='Departure_Int',
+            duration_col='Waiting_Time',
+        )
+
+        # 2. Add 'Distance_Counted' as a number of how many kilometers may be
+        #    counted for the current sections. See 'information/rules.py'
+        transfer_options['Distance_Counted'] = transfer_options.apply(
+            lambda row: state.route_indicator.get_distance_counted(
+                from_station=row['Station'],
+                to_station=row['To'],
+            ),
+            axis=1
+        )
+
+        # 3. Calculate score; first km/h for this section (add to transfer)
+        km_per_hour = (
+            60 * transfer_options['Distance_Counted']
+            / (transfer_options['Waiting_Time'] + transfer_options['Duration'])
+        )
+        transfer_options['Speed_With_Stop'] = km_per_hour
+
+        # Then a combination of the score for current section (local)
+        # and the whole route (global)
+        transfer_options['Score'] = (
+            state.total_distance / 10
+            + km_per_hour
+        )
+
+        # 4. Sort by score (descending), higher is better. Then, return all
+        transfer_options = transfer_options.sort_values(
+            by='Score', ascending=False
+        )
+
+        # 5. Add stamp indicator as well
+        transfer_options['Got_Stamp'] = int(state.got_stamp)
+        return transfer_options
+
+    def explore_state(self, current_state: State):
+        """Explore the current state. Finds the top 2 best states and adds
+        these to the priority queue.
+
+        Args:
+        - current_state (State): The current state of the route finding process
+        """
+        self.iterations += 1
+
+        # 1. Get options from current position (station & time filtered)
+        transfer_options = filter_timetable(
+            timetable_df=self.timetables[current_state.current_station],
+            current_time=current_state.current_time,
+            id_previous_train=current_state.id_previous_train,
+        )
+
+        # 2. If no options are available, return
+        if transfer_options.empty:
+            self.logger.debug(
+                "No valid transfers found from "
+                f"{current_state.current_station}."
+            )
+            return
+
+        self.logger.debug(f"Found {len(transfer_options)} transfer options.")
+
+        # 3. Call score function to sort based on some priority
+        top_transfers = self._apply_score_function(
+            transfer_options, current_state
+        )
+
+        # 4. Go over options, add to the priority queue
+        for _, row in top_transfers.iterrows():
+            # a. Create new state for this branch
+            new_state = current_state.copy()
+
+            # b. Update new state with this ride
+            new_state.update_state(row)
+
+            # c. Check if we need a stamp, and if it's not too late
+            if new_state.stamp_missed():
+                continue
+
+            # d. Build a queue pair based on the score of interest. Current
+            # version: min negative total distance (so max total distance)
+            queue_pair = (-new_state.score, new_state)
+            self.priority_queue.put(queue_pair)
+
+            # e. Update best state if better
+            if new_state.total_distance > self.best_state.total_distance:
+                self.logger.info(
+                    "New best route found! Distance: "
+                    f"{new_state.total_distance:.1f}km  (+"
+                    f"{new_state.total_distance - self.best_distance:.1f}"
+                    "km)"
+                )
+                self.best_distance = new_state.total_distance
+                self.best_state = new_state.copy()
+
+
+def run_explore_set(
+    run_path: Path,
+    route_df: pd.DataFrame | None = None,
+    time_int: int | None = None,
+) -> None:
+    """Main function to run the ExploreSet route finding algorithm.
+
+    Args:
+    - run_path (Path): Path to store files for current run
+    - route_df (pd.DataFrame, optional): If continue from save, contains route
+        done so far, continue from last stop
+    """
+    explore_set = ExploreSet(run_path=run_path)
+
+    # Start fresh new route finding
+    if route_df is None:
+        state = State()
+        state.set_initial_state(logger=explore_set.logger)
+
+    # Continue from save; rebuild State & RouteIndicator
+    else:
+        # Just in case the dataset is missing values, reconstruct from Stop_ID
+        # list. Example: when we manually add stops, don't have to include all
+        complete_route_df = construct_route_table(
+            dataset=explore_set.timetable_df,
+            route_list=route_df['Stop_ID'].to_list(),
+        )
+        state, _ = explore_set.construct_state_from_route(complete_route_df)
+        state.logger = explore_set.logger
+
+        # Continue from timestmap if given
+        if time_int is not None:
+            state.current_time = time_int
+
+    explore_set.explore_state(state)
+
+    # Keep iterating over the queue
+    while not explore_set.priority_queue.empty():
+        best_state = explore_set.priority_queue.get()[1]
+        explore_set.explore_state(best_state)
+
+    explore_set._save_best_route()
