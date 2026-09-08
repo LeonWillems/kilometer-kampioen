@@ -1,0 +1,14 @@
+17:33:12 - INFO - Starting new route finding run with parameters:
+Version: v2 (explore_set)
+Duration: 12 hours
+Transfer time range: 3-30 minutes
+17:33:12 - INFO - Starting new route finding run with parameters:
+Current station: Ehv
+Current time: 2026-07-25 07:57:00
+
+17:33:14 - INFO - Saved best route to: C:\VS-Code\Kilometer-Kampioen\kilometer-kampioen\runs\v2\20260829_173311\route_7568.csv
+Number of transfers: 38
+Final distance: 671.1km
+Total iterations: -
+End station: Ht
+End time: 2026-07-25 18:51:00

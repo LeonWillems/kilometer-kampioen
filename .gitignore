@@ -212,6 +212,7 @@ data/*/intermediate_stations.json
 
 # Version specific data files
 data/*/services-2025-10.csv
+data/*/services-2026-07.csv
 
 # For my local development process
 user.txt

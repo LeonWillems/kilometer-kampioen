@@ -7,14 +7,15 @@ from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 COLUMNS_OF_INTEREST = [
-    'Stop:Station code', 'Stop:Arrival time',
-    'Stop:Departure time', 'Stop:RDT-ID',
+    'Stop:Station code', 'Stop:RDT-ID',
+    'Stop:Arrival time', 'Stop:Arrival delay',
+    'Stop:Departure time', 'Stop:Departure delay',
     'Service:Type', 'Service:RDT-ID',
 ]
 
 ACCEPTED_TRAIN_TYPES = [
     'Intercity', 'Snelbus ipv trein', 'Sprinter', 'Sneltrein',
-    'Stoptrein', 'Stopbus ipv trein', 'Intercity direct',
+    'Stoptrein', 'Stopbus ipv trein', 'Intercity direct', 'Nachttrein'
 ]
 
 TRAIN_TYPE_MAPPING = {
@@ -25,7 +26,13 @@ TRAIN_TYPE_MAPPING = {
     'Stoptrein': 'Spr',
     'Stopbus ipv trein': 'Spr',
     'Intercity direct': 'Int',
+    'Nachttrein': 'Int',
 }
+
+ACCEPTED_COMPANIES = [
+    'NS', 'R-net Qb', 'RRReis A', 'R-net NS', 'Arriva',
+    'RRReis K', 'Blauwnet A', 'Blauwnet K', 'R-net Qbuz'
+]
 
 
 def keep_dutch_stations(timetable_df: pd.DataFrame) -> pd.DataFrame:
@@ -48,9 +55,10 @@ def keep_dutch_stations(timetable_df: pd.DataFrame) -> pd.DataFrame:
 def clean_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
     """Cleans the raw data in four steps:
     1. Filter on relevant day
-    2. Keep only columns of interest
-    3. Keep only accepted train types
-    4. Keep only Dutch railway stations
+    2. Keep only accepted train types
+    3. Keep only Dutch railway stations
+    4. Keep only accepted rail operators
+    5. Keep only columns of interest
 
     Args:
     - timetable_df (pd.DataFrame): Timetable data
@@ -63,19 +71,49 @@ def clean_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
         timetable_df['Service:Date'] == SETTINGS.DAY_OF_RUN
     ]
 
-    # 2. Drop unnecessary columns
-    df_filtered_cols = df_filtered_day[COLUMNS_OF_INTEREST]
-
-    # 3. Keep train types that are accepted,
+    # 2. Keep train types that are accepted,
     #    to prevent taking a nighttrain, for example
-    df_filtered_train_types = df_filtered_cols[
-        df_filtered_cols['Service:Type'].isin(ACCEPTED_TRAIN_TYPES)
+    df_filtered_train_types = df_filtered_day[
+        df_filtered_day['Service:Type'].isin(ACCEPTED_TRAIN_TYPES)
     ]
 
-    # 4. Delete rows with international station codes, only keep NL
+    # 3. Delete rows with international station codes, only keep NL
     df_only_dutch_stations = keep_dutch_stations(df_filtered_train_types)
 
-    return df_only_dutch_stations
+    # 4. Keep only rows driven by one of the accepted companies
+    df_accepted_companies = df_only_dutch_stations[
+        df_only_dutch_stations['Service:Company'].isin(ACCEPTED_COMPANIES)
+    ]
+
+    # 5. Drop unnecessary columns
+    df_filtered_cols = df_accepted_companies[COLUMNS_OF_INTEREST]
+
+    return df_filtered_cols
+
+
+def process_datetime(datetime: str, delay: str) -> pd.DatetimeIndex:
+    """Process the dataset's datetime for our purposes.
+    1. Turn to pd.Datetime object given the right format
+    2. If so: apply delay
+
+    Args:
+    - datetime (str): Raw datetime string, e.g. '2026-07-22T12:22:00+02:00'
+    - delay (str): Raw delay string, examples are '' and '4'
+
+    Returns:
+    - pd.Datetime: Pandas datetime object, possible delay accounted for
+    """
+    pd_datetime = pd.to_datetime(
+        datetime,
+        format=SETTINGS.DATETIME_FORMAT,
+    )
+
+    # Delay could be an empty string, which means no delay
+    if delay.isdigit():
+        delay_int = int(delay)
+        pd_datetime -= pd.Timedelta(minutes=delay_int)
+
+    return pd_datetime
 
 
 def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
@@ -124,8 +162,15 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
             to_station = \
                 section_rows.loc[i+1, 'Stop:Station code'].capitalize()
 
-            departure_time = section_rows.loc[i, 'Stop:Departure time']
-            arrival_time = section_rows.loc[i+1, 'Stop:Arrival time']
+            # Apply processor to datetimes, including possible delays
+            departure_time = process_datetime(
+                section_rows.loc[i, 'Stop:Departure time'],
+                section_rows.loc[i, 'Stop:Departure delay'],
+            )
+            arrival_time = process_datetime(
+                section_rows.loc[i+1, 'Stop:Arrival time'],
+                section_rows.loc[i+1, 'Stop:Arrival delay'],
+            )
             stop_id = section_rows.loc[i+1, 'Stop:RDT-ID']
 
             # Each connection will appear as one line in the new dataset
@@ -139,13 +184,9 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
         columns=new_columns,
     )
 
-    # Turn deperture/arrival columns to pd.Datetime
-    # and remove timezone indication (keep date as is)
+    # Remove timezone indication (keep date as is) from datetime cols
     for col in ['Departure', 'Arrival']:
-        structured_df[col] = pd.to_datetime(
-            structured_df[col],
-            format=SETTINGS.DATETIME_FORMAT,
-        ).dt.tz_localize(None)
+        structured_df[col] = structured_df[col].dt.tz_localize(None)
 
     return structured_df
 
@@ -168,7 +209,7 @@ def preprocess():
     16911368, DDR (index 219962)
     16909085, DDR (index 200595)
     """
-    raw_file_name = 'services-2025-10.csv'
+    raw_file_name = 'services-2026-07.csv'
     path_to_raw_file = SETTINGS.DATA_PATH / raw_file_name
     path_to_timetable = SETTINGS.DATA_PATH / SETTINGS.TIMETABLE_FILE
 

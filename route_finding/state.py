@@ -54,9 +54,12 @@ class State:
         Args:
         - logger (Logger): Logger instance for logging information
         """
+        # Subtract the min_transfer_time so that the first train may actually
+        # depart from the starting time
         self.current_time = timestamp_to_int(
             current_timestamp=Parameters.START_TIME
-        )
+        ) - Parameters.MIN_TRANSFER_TIME
+
         self.current_station = Parameters.START_STATION
         self.logger = logger
 

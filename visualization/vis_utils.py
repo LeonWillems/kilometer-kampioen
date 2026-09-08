@@ -45,8 +45,15 @@ def get_latest_route() -> pd.DataFrame:
     Returns:
     - pd.DataFrame: DataFrame containing the latest route
     """
-    routes_path = SETTINGS.ROUTES_PATH
-    route_files_paths = sorted(routes_path.glob('*.csv'))
+    # Get all paths for current version
+    runs_path = SETTINGS.RUNS_PATH
+    run_paths = [path for path in runs_path.iterdir() if path.is_dir()]
+
+    # Grab last one, and get corresponding CSV files (should be only one)
+    last_run_path = run_paths[-1]
+    route_files_paths = sorted(last_run_path.glob('*.csv'))
+
+    # Just in case: read the last CSV from the list to a df
     latest_route_path = route_files_paths[-1]
     route_df = read_csv_to_df(latest_route_path)
 
