@@ -24,8 +24,8 @@ VERSION_SETTINGS = {
         'v1': 12,
         'v2': 12,
     },
-    'min_transfer_time':  2,  # So far, this has not been changed
-    'max_transfer_time': 30,  # So far, this has not been changed
+    'min_transfer_time':  3,
+    'max_transfer_time': 30,
     'name': {
         'v0': 'greedy_dfs',
         'v1': 'whole_day_data',
@@ -34,7 +34,7 @@ VERSION_SETTINGS = {
     'day_of_run': {
         'v0': '2025-08-02',  # Day where the train times come from
         'v1': '2025-10-04',
-        'v2': '2026-07-12',  # Sunday, for 12-hour run
+        'v2': '2026-07-25',  # Saturday, for 11-hour run
     },
     'datetime_format': {
         'v0': 'ISO8601',  # YYYY-MM-DDThh:mm:ss (or similar!)

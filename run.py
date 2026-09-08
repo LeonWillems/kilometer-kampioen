@@ -5,7 +5,7 @@ from time import time
 from pathlib import Path
 from datetime import datetime
 from dataclasses import asdict
-from data_processing.data_utils import read_timetable
+from data_processing.data_utils import read_timetable, timestamp_to_int
 
 from settings import Parameters, VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
@@ -53,7 +53,11 @@ def _get_route_so_far(route_df: pd.DataFrame, stop_id: int) -> pd.DataFrame:
     return route_df_until_stop
 
 
-def _run_algo(run_path: Path, route_df: pd.DataFrame | None = None):
+def _run_algo(
+    run_path: Path,
+    route_df: pd.DataFrame | None = None,
+    time_int: int | None = None,
+) -> None:
     """Calls the right path finding algorithm based on the version.
 
     Args:
@@ -72,21 +76,32 @@ def _run_algo(run_path: Path, route_df: pd.DataFrame | None = None):
 
         case 'v2':
             from route_finding.v2_explore_set import run_explore_set
-            run_explore_set(run_path, route_df)
+            run_explore_set(run_path, route_df, time_int)
 
 
 if __name__ == "__main__":
     runs_path: Path = SETTINGS.RUNS_PATH
+    stop_id = None
+    current_time_int = None
 
     # The last `Stop_ID` value to use, continue from there (if so)
+    # May include some time from which to continue as well (e.g. `12:30`)
     try:
         stop_id = int(sys.argv[1])
+        print(f"Continuing last route from stop `{stop_id}`.")
+
+        if len(sys.argv) > 2:
+            current_time: str = sys.argv[2]
+            current_time_int: int = timestamp_to_int(current_time)
+            print(f"Continuing with current time `{current_time}`")
+
         continue_from_save = True
+
         last_run_df = _read_last_run_df(runs_path)
         df_until_stop = _get_route_so_far(last_run_df, stop_id)
-        print(f"Continuing last route from stop `{stop_id}`")
 
-    except Exception:
+    except Exception as e:
+        print(f"Debug: {e}")
         print("Running new route finder")
         continue_from_save = False
 
@@ -107,7 +122,7 @@ if __name__ == "__main__":
 
     # If a Stop_ID has been provided, continue from there
     if continue_from_save and stop_id is not None:
-        _run_algo(current_run_path, df_until_stop)
+        _run_algo(current_run_path, df_until_stop, current_time_int)
 
     else:
         _run_algo(current_run_path)

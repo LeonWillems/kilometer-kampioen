@@ -25,11 +25,13 @@ Drive as many kilometers by train as possible within 24 hours - with the help of
    ```
 
 7. In case you want to run the algorithm continuing from a specific stop in the last saved route,
-grab its `Stop_ID`, and run:
+grab its `Stop_ID`, and run the below command. Optionally: include a timestamp as well. The format
+is simple; `12:30` for example. Useful for delays.
    ```bash
-   python -m run <Stop_ID>
+   python -m run <Stop_ID> <time>
    ```
-It will continue the search from that stop (including).
+It will continue the search from that stop (including) and optionally time.
+An example: `python -m run 171120151 12:30`
 
 The main parameters in `settings.py` that you can modify are:
 - `version`: Version of the timetable data (default: 'v1')

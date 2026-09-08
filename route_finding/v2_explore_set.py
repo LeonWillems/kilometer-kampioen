@@ -271,7 +271,11 @@ class ExploreSet:
                 self.best_state = new_state.copy()
 
 
-def run_explore_set(run_path: Path, route_df: pd.DataFrame | None = None):
+def run_explore_set(
+    run_path: Path,
+    route_df: pd.DataFrame | None = None,
+    time_int: int | None = None,
+) -> None:
     """Main function to run the ExploreSet route finding algorithm.
 
     Args:
@@ -288,8 +292,18 @@ def run_explore_set(run_path: Path, route_df: pd.DataFrame | None = None):
 
     # Continue from save; rebuild State & RouteIndicator
     else:
-        state, _ = explore_set.construct_state_from_route(route_df)
+        # Just in case the dataset is missing values, reconstruct from Stop_ID
+        # list. Example: when we manually add stops, don't have to include all
+        complete_route_df = construct_route_table(
+            dataset=explore_set.timetable_df,
+            route_list=route_df['Stop_ID'].to_list(),
+        )
+        state, _ = explore_set.construct_state_from_route(complete_route_df)
         state.logger = explore_set.logger
+
+        # Continue from timestmap if given
+        if time_int is not None:
+            state.current_time = time_int
 
     explore_set.explore_state(state)
 
