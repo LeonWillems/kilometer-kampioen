@@ -4,7 +4,6 @@ import pandas as pd
 from time import time
 from pathlib import Path
 from datetime import datetime
-from dataclasses import asdict
 from data_processing.data_utils import read_timetable, timestamp_to_int
 
 from settings import Parameters, VersionSettings
@@ -53,6 +52,34 @@ def _get_route_so_far(route_df: pd.DataFrame, stop_id: int) -> pd.DataFrame:
     return route_df_until_stop
 
 
+def _get_parameters_dict() -> dict:
+    attributes = list(Parameters.__annotations__.keys())
+    params_dict = {
+        attr: Parameters.__getattribute__(Parameters, attr)
+        for attr in attributes
+    }
+    return params_dict
+
+
+def _setup(runs_path: Path) -> Path:
+    """Setup timestamp related business, a JSON file and current run path."""
+    timestamp: str = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    # Create path for new run
+    current_run_path: Path = runs_path / timestamp
+    current_run_path.mkdir(exist_ok=True)
+
+    # Copy the given Parameters (from `settings.py`)
+    params_dict = _get_parameters_dict()
+    params_dict['TIMESTAMP'] = timestamp
+
+    json_file_path = (current_run_path / 'parameters').with_suffix('.json')
+    with open(json_file_path, 'w') as f:
+        json.dump(params_dict, f)
+
+    return current_run_path
+
+
 def _run_algo(
     run_path: Path,
     route_df: pd.DataFrame | None = None,
@@ -64,6 +91,7 @@ def _run_algo(
     - run_path (Path): Path in which to store files for current run
     - route_df (pd.DataFrame, optional): If continue from save, contains route
         done so far, continue from last stop
+    - time_int (int, optional): Time int to continue from
     """
     match SETTINGS.VERSION:
         case 'v0' | 'v1' if route_df is not None:
@@ -110,19 +138,7 @@ if __name__ == "__main__":
         continue_from_save = False
 
     time_start = time()
-    timestamp: str = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    # Create path for new run
-    current_run_path: Path = runs_path / timestamp
-    current_run_path.mkdir(exist_ok=True)
-
-    # Copy the given Parameters (from `settings.py`)
-    params_dict = asdict(Parameters())
-    params_dict['TIMESTAMP'] = timestamp
-
-    json_file_path = (current_run_path / 'parameters').with_suffix('.json')
-    with open(json_file_path, 'w') as f:
-        json.dump(params_dict, f)
+    current_run_path = _setup(runs_path)
 
     # If a Stop_ID has been provided, continue from there
     if continue_from_save and stop_id is not None:

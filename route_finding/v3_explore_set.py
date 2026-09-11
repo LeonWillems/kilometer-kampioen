@@ -1,5 +1,6 @@
 import signal
 import pandas as pd
+from time import time
 from pathlib import Path
 from logging import Logger
 from queue import PriorityQueue
@@ -14,6 +15,7 @@ from data_processing.data_utils import (
 
 from settings import Parameters, VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
+TIMEOUT = Parameters.TIMEOUT
 
 
 class ExploreSet:
@@ -59,6 +61,8 @@ class ExploreSet:
 
         # Setup interrupt handling
         signal.signal(signal.SIGINT, self._handle_interrupt)
+        signal.signal(signal.SIGTERM, self._handle_interrupt)
+        signal.signal(signal.SIGBREAK, self._handle_interrupt)
 
         # Setup logger
         self.logger: Logger = setup_logger(run_path)
@@ -133,7 +137,7 @@ class ExploreSet:
             timetable_path=file_path
         )
 
-        # Log statistics
+        # Log statistics and empty handlers to re-init for next run
         self.logger.info(
             f"Saved best route to: {file_path}\n"
             f"Number of transfers: {len(route_with_scores)}\n"
@@ -142,6 +146,7 @@ class ExploreSet:
             f"End station: {self.best_state.current_station}\n"
             f"End time: {int_to_timestamp(self.best_state.current_time)}"
         )
+        self.logger.handlers = []
 
     def _apply_score_function(
         self,
@@ -282,6 +287,7 @@ def run_explore_set(
     - run_path (Path): Path to store files for current run
     - route_df (pd.DataFrame, optional): If continue from save, contains route
         done so far, continue from last stop
+    - time_int (int, optional): Time int to continue from
     """
     explore_set = ExploreSet(run_path=run_path)
 
@@ -305,10 +311,17 @@ def run_explore_set(
         if time_int is not None:
             state.current_time = time_int
 
+    start_time = time()
     explore_set.explore_state(state)
 
     # Keep iterating over the queue
     while not explore_set.priority_queue.empty():
+        if TIMEOUT and (time() - start_time) >= TIMEOUT:
+            explore_set.logger.info(
+                f"Timeout of {TIMEOUT}s reached. Saving best route..."
+            )
+            break
+
         best_state = explore_set.priority_queue.get()[1]
         explore_set.explore_state(best_state)
 

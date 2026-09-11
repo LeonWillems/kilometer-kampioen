@@ -74,6 +74,7 @@ class Parameters:
     DURATION: str = VERSION_SETTINGS['duration'][VERSION]
     MIN_TRANSFER_TIME: int = VERSION_SETTINGS['min_transfer_time']
     MAX_TRANSFER_TIME: int = VERSION_SETTINGS['max_transfer_time']
+    TIMEOUT: int = 0  # Placeholder for experiments; run for x seconds
 
 
 STAMP_DICT: dict = VERSION_SETTINGS['stamp'][Parameters.VERSION]
