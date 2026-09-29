@@ -41,6 +41,7 @@ class State:
         self.logger: Logger = None
         self.score: int = 0
         self.got_stamp: bool = False
+        self.tree_depth: int = 0
 
     def __lt__(self, other: "State"):
         """< comparison for min-heap purposes, see the explore_set algo.
@@ -88,6 +89,7 @@ class State:
         new_state.id_previous_train = self.id_previous_train
         new_state.score = self.score
         new_state.got_stamp = self.got_stamp
+        new_state.tree_depth = self.tree_depth
         return new_state
 
     def _check_stamp(self, station: str, arrival_int: int):
@@ -133,6 +135,7 @@ class State:
         self.id_previous_train = row['Section_ID']
         self.score = row['Score']
         self.got_stamp = self._check_stamp(row['To'], row['Arrival_Int'])
+        self.tree_depth += 1
 
     def stamp_missed(self) -> bool:
         """Check if we missed the stamp; ergo we do not have it yet, and it is

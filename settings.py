@@ -13,13 +13,13 @@ VERSION_SETTINGS = {
         'v0': 'Ehv',
         'v1': 'Ehv',
         'v2': 'Ehv',
-        'v3': 'Ehv',
+        'v3': 'Mp',  # Meppel
     },
     'start_time': {
         'v0': '12:00',
         'v1': '08:00',
         'v2': '08:00',
-        'v3': '00:00',
+        'v3': '00:04',
     },
     'duration': {  # In number of hours
         'v0': 3,
@@ -27,7 +27,7 @@ VERSION_SETTINGS = {
         'v2': 12,
         'v3': 24,
     },
-    'min_transfer_time':  3,
+    'min_transfer_time':  2,
     'max_transfer_time': 30,
     'name': {
         'v0': 'greedy_dfs',

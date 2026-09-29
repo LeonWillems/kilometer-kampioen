@@ -1,3 +1,4 @@
+import json
 import signal
 import pandas as pd
 from time import time
@@ -54,6 +55,7 @@ class ExploreSet:
         self.best_state: State = State()
         self.best_distance: float = 0
         self.iterations: int = 0
+        self.depths: list[int] = []
 
         # Will contain pairs: (-State.score, State),
         # as it will be treated as a min-heap
@@ -137,6 +139,10 @@ class ExploreSet:
             timetable_path=file_path
         )
 
+        # Save the depths list
+        with open(self.run_path / 'depths.json', mode='w') as f:
+            json.dump(self.depths, f, indent=4)
+
         # Log statistics and empty handlers to re-init for next run
         self.logger.info(
             f"Saved best route to: {file_path}\n"
@@ -200,12 +206,8 @@ class ExploreSet:
         )
         transfer_options['Speed_With_Stop'] = km_per_hour
 
-        # Then a combination of the score for current section (local)
-        # and the whole route (global)
-        transfer_options['Score'] = (
-            state.total_distance / 10
-            + km_per_hour
-        )
+        # Basic score. Might need a better one in the future
+        transfer_options['Score'] = km_per_hour
 
         # 4. Sort by score (descending), higher is better. Then, return all
         transfer_options = transfer_options.sort_values(
@@ -224,6 +226,7 @@ class ExploreSet:
         - current_state (State): The current state of the route finding process
         """
         self.iterations += 1
+        self.depths.append(current_state.tree_depth)
 
         # 1. Get options from current position (station & time filtered)
         transfer_options = filter_timetable(

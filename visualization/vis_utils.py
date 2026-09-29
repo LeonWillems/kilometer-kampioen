@@ -4,6 +4,7 @@ import pandas as pd
 from copy import deepcopy
 import matplotlib.pyplot as plt
 
+from utils import get_file_path
 from data_processing.data_utils import read_csv_to_df
 
 from settings import VersionSettings
@@ -45,22 +46,13 @@ def get_latest_route() -> pd.DataFrame:
     Returns:
     - pd.DataFrame: DataFrame containing the latest route
     """
-    # Get all paths for current version
-    runs_path = SETTINGS.RUNS_PATH
-    run_paths = [path for path in runs_path.iterdir() if path.is_dir()]
-
-    # Grab last one, and get corresponding CSV files (should be only one)
-    last_run_path = run_paths[-1]
-    route_files_paths = sorted(last_run_path.glob('*.csv'))
-
-    # Just in case: read the last CSV from the list to a df
-    latest_route_path = route_files_paths[-1]
+    latest_route_path = get_file_path('.csv')
     route_df = read_csv_to_df(latest_route_path)
 
     return route_df
 
 
-def get_corners() -> dict:
+def get_corners() -> dict[str, dict[str, list[list[int]]]]:
     """Gets the coordinates of the corners in the spoorkaart (simple). These
     have been manually determined and are stored in a JSON file. Here we also
     inverse the direction and add to the dict to make it symmetric.

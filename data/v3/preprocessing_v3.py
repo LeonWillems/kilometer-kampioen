@@ -1,7 +1,7 @@
 import pandas as pd
 
 from data_processing.data_utils import (
-    read_csv_to_df, save_timetable, load_stations, load_intermediate_stations
+    read_csv_to_df, save_timetable, load_stations
 )
 from settings import VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
@@ -34,12 +34,14 @@ ACCEPTED_COMPANIES = [
     'RRReis K', 'Blauwnet A', 'Blauwnet K', 'R-net Qbuz'
 ]
 
-RAILWORK_PAIRS = [
-    ('Vl', 'Rv'),  # Venlo <-> Reuver
-    ('Rv', 'Rm'),  # Reuver <-> Roermond
-    ('Dld', 'Amf'),  # Den Dolder <-> Amersfoort Centraal
-    ('Ht', 'Ehv'),  # 's-Hertogenbosch <-> Eindhoven Centraal
-    ('Ht', 'Tb'),  # 's-Hertogenbosch <-> Tilburg
+RAILWORK_PAIRS_TO_DELETE = [
+    ('Vl', 'Rm'), ('Rm', 'Vl'), ('Vl', 'Tg'), ('Tg', 'Vl'),
+    ('Tg', 'Rv'), ('Rv', 'Tg'), ('Rv', 'Sm'), ('Sm', 'Rv'),
+    ('Sm', 'Rm'), ('Rm', 'Sm'),  # Venlo <-> Roermond
+    ('Dld', 'Amf'),  ('Amf', 'Dld'),  # Den Dolder <-> Amersfoort Centraal
+    ('Ht', 'Btl'), ('Btl', 'Ht'), ('Ht', 'Vg'), ('Vg', 'Ht'),
+    ('Vg', 'Btl'), ('Btl', 'Vg'), ('Ht', 'Ehv'), ('Ehv', 'Ht'),  # Ht <-> Btl
+    ('Ht', 'Tb'), ('Tb', 'Ht'),  # 's-Hertogenbosch <-> Tilburg
 ]
 
 
@@ -74,9 +76,7 @@ def clean_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
     Returns:
     - pd.DataFrame: Same table, but cleaned
     """
-    # 1. Only keep the relevant day
-    # TODO: Quick dirty fix, I was under time pressure. Make better later.
-    # Have 3 days to account for overrun on both ends
+    # 1. Only keep the relevant day(s)
     df_filtered_day = timetable_df[
         timetable_df['Service:Date'].isin(
             ['2026-08-28', '2026-08-29', '2026-08-30']
@@ -210,50 +210,15 @@ def filter_empty_dates(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def _get_all_station_pairs_to_delete() -> list[tuple]:
-    """Based on a list of intercity station pair tuples, construct a list of
-    all intermediate station pairs. Both ways.
-
-    Example in
-    [('Shl', 'Rtd')]
-
-    Example out
-    [
-        ('Shl', 'Rtd'), ('Shl', 'Hfd'), ('Hfd', 'Rtd'),
-        ('Rtd', 'Shl'), ('Hfd', 'Shl'), ('Rtd', 'Hfd'),
-    ]
-    """
-    all_station_pairs = []
-    intermediate_stations = load_intermediate_stations()
-
-    # TODO: document
-    for pair in RAILWORK_PAIRS:
-        all_station_pairs.append(pair)
-        all_station_pairs.append(pair[::-1])
-
-        sprinter_pairs = intermediate_stations[pair[0]][pair[1]]
-
-        for (from_station, to_station) in zip(
-            sprinter_pairs[:-1], sprinter_pairs[1:]
-        ):
-            if (from_station, to_station) not in all_station_pairs:
-                all_station_pairs.append((from_station, to_station))
-                all_station_pairs.append((from_station, to_station)[::-1])
-
-    return all_station_pairs
-
-
 def delete_railwork(df: pd.DataFrame) -> pd.DataFrame:
     """Delete all known railwork sections. Based on manual NS website
     inspection. The idea: delete all sections (both sprinters and intercities)
     between two stations."""
-    all_pairs_to_delete = _get_all_station_pairs_to_delete()
-
     row_indices_to_delete = []
 
     for i, row in df.iterrows():
         station_pair = (row['Station'], row['To'])
-        if station_pair in all_pairs_to_delete:
+        if station_pair in RAILWORK_PAIRS_TO_DELETE:
             row_indices_to_delete.append(i)
 
     return df.drop(index=row_indices_to_delete)
