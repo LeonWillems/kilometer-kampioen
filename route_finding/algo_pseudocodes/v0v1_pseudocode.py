@@ -1,4 +1,3 @@
-
 """
 
 Pseudocode for the route finding algorithm.
@@ -7,7 +6,7 @@ file serves the purpose of giving a rough
 idea what happens under the hood. Enjoy!
 
 
-===== V0: Greedy DFS =====
+===== V0/1: Greedy DFS =====
 
 == Global constants:
 - min_transfer_time (3 (minutes))
@@ -23,8 +22,6 @@ idea what happens under the hood. Enjoy!
         current_time = start_time,
         current_station = start_station
     )
-
-== Important stuff t
 
 
 === algorithm GreedyDFS(..)

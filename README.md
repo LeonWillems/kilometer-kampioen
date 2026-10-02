@@ -3,13 +3,14 @@ Drive as many kilometers by train as possible within 24 hours - with the help of
 
 ## Setup and Usage
 1. Install requirements.txt
-2. First, process the raw timetable data by running:
+2. Make sure to have the raw timetable data ready, and process it by running:
    ```bash
    python -m data_processing.process_timetable
    ```
    This will create the necessary processed timetable files in the `data` directory.
 
-4. Fill in some parameters in the file below and run the route finding algorithm:
+3. Fill in some parameters in the `settings.py` file
+4. Run the route finding algorithm:
    ```bash
    python -m run
    ```
@@ -44,9 +45,9 @@ The main parameters in `settings.py` that you can modify are:
 
 ### Output
 The algorithm will create:
-- Log files in `runs/logs/v_/` with detailed information about the search process
-- Parameters files in `runs/parameters/v_/` containing parameters filled in by user
-- Route files in `runs/routes/v_/` containing the best routes found, named with timestamp and distance in hectometers
+- Logs `runs/v_/2026___/logs.log` with detailed information about the search process
+- Parameters `runs/v_/2026___/parameters.json` containing parameters filled in by user
+- Route `runs/v_/2026___/route___.csv` containing the best route found, named with timestamp and distance in hectometers
 An example for each version can be found in `runs/example/v_/`
 
 # Sources
@@ -60,20 +61,20 @@ An example for each version can be found in `runs/example/v_/`
 - `data/`
    - `v0/mock_stations.png`: https://en.wikipedia.org/wiki/Railway_stations_in_the_Netherlands, edited with Paint
    - `v0/timetable_raw.csv`: Manually constructed with NS data from 2025-08-02
-   - `v1/services-2025-10.csv`: Not included, need to download from https://www.rijdendetreinen.nl/en/open-data/train-archive
+   - `v_/services-20__-__.csv`: Not included, need to download from https://www.rijdendetreinen.nl/en/open-data/train-archive
    - `v_/timetable.csv`: Obtained from preprocessing the raw dataset for some version
    - `v_/timetable_processed.csv`: Obtained from further processing of `timetable.csv`
-   - `v_/intermediate_stations.json`: Contains all stations between any neighboring pair of hubs for some version
+   - `v_/intermediate_stations.json`: Contains all stations between any neighboring pair of hubs for some version (based on `timetable.csv`)
    - `station_distances_processed.json`: The processed version of `information/station_distances.json`
 - `information/`
-   - `kilometer_count_rules.png`: https://github.com/nanderv/trainkms/blob/main/rulesSuggestion.png
-   - `rules.py`: https://www.kilometerkampioen.nl/handleiding
+   - `kilometer_count_rules.png`: https://github.com/nanderv/trainkms/blob/main/rulesSuggestion.png (depracated, 2024 and prior)
+   - `rules-202_.py` & `.png`: https://www.kilometerkampioen.nl/handleiding
    - `scorecard.csv`: `scorekaart2023.xlsx`, but with the following changes: deleted both of the 'via HSL' lines, and adjusted some name to match `stations-2023-09.csv`. Cleaned up and kept the relevant information
    - `scorekaart2023.xlsx`: https://www.kilometerkampioen.nl/ -> 'Download Scorekaart'. Contains the kilometers between hub stations
    - `station_distances.json`: https://github.com/nanderv/trainkms/blob/main/routes.json -> With one minor change 'dtz' -> 'dtcp' (Delft Zuid -> Delft Campus)
    - `stations-2023-09.csv`: https://www.rijdendetreinen.nl/en/open-data/stations -> One minor change: ';' -> ',' for consistency among datasets
 - `visualization/`
-   - `route_plotted.png`: Obtained by running `plot_route.py`
+   - `route_plotted.png`: Obtained by running `python -m visualization.plot_route`
    - `spoorkaart-simple.png`: https://en.wikipedia.org/wiki/Railway_stations_in_the_Netherlands
    - `spoorkaart-extended.pdf`: https://www.treinreiziger.nl/spoorkaart-2019-deze-vier-versies-zijn-er/
    - `station-coordinates.json`: F*ckton of manual labor to get all coordinates
@@ -90,8 +91,8 @@ An example for each version can be found in `runs/example/v_/`
 - Scoring function: counted_distance/(waiting_time + travel_time)
   - counted_distance is determined by how many kilometers of the full sections may be counted according to the rules set 
 - Limited to top 2 options per station to reduce computational complexity
-- Official section-driven calculation: see `information/rules.py`
-For pseudocode, see `route_finding/pseudocode.py`.
+- Official section-driven calculation: see `information/rules-2024.py`
+- For pseudocode, see `route_finding/algo_pseudocodes/v0v1_pseudocode.py`
 
 ## Known Limitations
 - Limited to a 3-hour timeframe
@@ -102,7 +103,7 @@ For pseudocode, see `route_finding/pseudocode.py`.
 # V1
 ## Data (see `data/v1/` files)
 - All Dutch rail stations
-- Timeframe: Saturday: 08:00 - 20:00 (12 hours)
+- Timeframe: Saturday, 08:00 - 20:00 (12 hours)
 - Actual train times for Saturday October 4th, 2025
 
 ## Algorithm
@@ -111,3 +112,29 @@ For pseudocode, see `route_finding/pseudocode.py`.
 ## Known Limitations
 - Train times dependent on one particular day, which contains disruptions
 - Same DFS limitations as `V0`
+
+# V2
+## Data (see `data/v2/` files)
+- Same as for `V1`
+- Actual train times for Saturday July 25th, 2026
+
+## Algorithm
+- `ExploreSet` algorithm for route finding. Main idsea is to explore the most potential route in a queue first, rather than using a purely greedy approach. We hop between States as lot
+- Official section-driven calculation: see `information/rules-2026.py`
+- For pseudocode, see `route_finding/algo_pseudocodes/v2v3_pseudocode.py`
+
+## Known Limitations
+- It's hard to balance local versus global optimization
+- The dataset is not the actual planned data, but historic data. Thus not representative of the day of run
+- The algorithm may still miss globally optimal routes due to its heuristic nature
+
+# V3
+## Data (see `data/v3/` files)
+- Timeframe: Saturday, 00:00 - Sunday, 04:00 (28 hours)
+- Actual train times for Saturday & Sunday August 29-30th, 2026
+
+## Algorithm
+- Same as for `V2`
+
+## Known Limitations
+- Same as for `V2`

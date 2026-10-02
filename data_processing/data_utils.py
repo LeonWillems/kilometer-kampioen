@@ -313,7 +313,7 @@ def filter_timetable(
     df_filtered = timetable_df[
         (timetable_df['Departure_Int'] <= max_departure_time)
         & ((timetable_df['Departure_Int'] >= min_departure_time)
-            | ((timetable_df['Departure_Int'] >= current_time)
+            | ((timetable_df['Departure_Int'] >= current_time - 3)
                 & (timetable_df['Section_ID'].values == id_previous_train)))
     ]
 

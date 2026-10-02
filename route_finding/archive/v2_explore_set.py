@@ -4,8 +4,8 @@ from pathlib import Path
 from logging import Logger
 from queue import PriorityQueue
 
-from .state import State
-from .logger import setup_logger
+from ..state import State
+from ..logger import setup_logger
 from data_processing.data_utils import (
     read_timetable, save_timetable, add_duration_in_minutes,
     filter_timetable, int_to_timestamp, pre_filter_timetable,

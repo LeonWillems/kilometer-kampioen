@@ -31,19 +31,19 @@ Pseudocode for BFS:
     - The starting vertex root of G (a station)
 - Output: Goal state. The parent links trace the shortest path back to root
 
- 1  procedure BFS(G, root):
- 2      let Q be a queue
- 3      label root as explored
- 4      Q.enqueue(root)
- 5      while Q is not empty do
- 6          v := Q.dequeue()
- 7          if v is the goal then
- 8              return v
- 9          for all edges from v to w in G.adjacentEdges(v) do
-10              if w is not labeled as explored then
-11                  label w as explored
-12                  w.parent := v
-13                  Q.enqueue(w)
+Procedure BFS(G, root):
+ 1  let Q be a queue
+ 2  label root as explored
+ 3  Q.enqueue(root)
+ 4  while Q is not empty do
+ 5     v := Q.dequeue()
+ 6     if v is the goal then
+ 7        return v
+ 8     for all edges from v to w in G.adjacentEdges(v) do
+ 9        if w is not labeled as explored then
+10           label w as explored
+11           w.parent := v
+12           Q.enqueue(w)
 
 Important to note! BFS will not actually find the shortest distance for any
 graph, but it will find a direct path with least nodes. For now, that is fine.

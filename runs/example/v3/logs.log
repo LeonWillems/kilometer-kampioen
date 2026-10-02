@@ -1,0 +1,37 @@
+14:40:16 - INFO - Starting new route finding run with parameters:
+Version: v3 (real_event)
+Duration: 24 hours
+Transfer time range: 2-30 minutes
+14:40:16 - INFO - Starting new route finding run with parameters:
+Current station: Mp
+Current time: 2026-08-29 00:02:00
+
+14:40:16 - INFO - New best route found! Distance: 1339.3km  (+1339.3km)
+14:40:16 - INFO - New best route found! Distance: 1364.2km  (+24.9km)
+14:40:16 - INFO - New best route found! Distance: 1392.2km  (+28.0km)
+14:40:16 - INFO - New best route found! Distance: 1401.4km  (+9.2km)
+14:40:16 - INFO - New best route found! Distance: 1453.8km  (+52.4km)
+14:40:16 - INFO - New best route found! Distance: 1499.6km  (+45.8km)
+14:40:16 - INFO - New best route found! Distance: 1521.2km  (+21.6km)
+14:40:16 - INFO - New best route found! Distance: 1558.1km  (+36.9km)
+14:40:16 - INFO - New best route found! Distance: 1588.1km  (+30.0km)
+14:40:16 - INFO - New best route found! Distance: 1611.7km  (+23.6km)
+14:40:16 - INFO - New best route found! Distance: 1636.1km  (+24.4km)
+14:40:16 - INFO - New best route found! Distance: 1658.0km  (+21.9km)
+14:40:16 - INFO - New best route found! Distance: 1659.6km  (+1.6km)
+14:40:17 - INFO - New best route found! Distance: 1677.2km  (+17.6km)
+14:40:17 - INFO - New best route found! Distance: 1707.2km  (+30.0km)
+14:40:17 - INFO - New best route found! Distance: 1730.8km  (+23.6km)
+14:40:17 - INFO - New best route found! Distance: 1755.2km  (+24.4km)
+14:40:17 - INFO - New best route found! Distance: 1777.1km  (+21.9km)
+14:40:24 - INFO - Interrupt received
+14:40:24 - INFO - Starting new route finding run with parameters:
+Current station: Mp
+Current time: 2026-08-29 00:02:00
+
+14:40:25 - INFO - Saved best route to: C:\VS-Code\Kilometer-Kampioen\kilometer-kampioen\runs\v3\20260919_144015\route_17771.csv
+Number of transfers: 107
+Final distance: 1777.1km
+Total iterations: 1443
+End station: Mt
+End time: 2026-08-30 00:03:00
