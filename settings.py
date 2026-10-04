@@ -3,29 +3,32 @@ from pandas import Timestamp
 from dataclasses import dataclass, asdict, field
 
 # Choose version first
-VERSION = 'v3'  # 'v0' / 'v1' / 'v2' / 'v3'
+VERSION = 'v4'  # 'v0' / 'v1' / 'v2' / 'v3' / 'v4'
 
 # These are just the proposed standard values. Feel free to play around
 # with any of the values. For value constraints, see the READMM.
 VERSION_SETTINGS = {
-    'versions': ['v0', 'v1', 'v2', 'v3'],
+    'versions': ['v0', 'v1', 'v2', 'v3', 'v4'],
     'start_station': {
         'v0': 'Ehv',
         'v1': 'Ehv',
         'v2': 'Ehv',
         'v3': 'Mp',  # Meppel
+        'v4': 'Ehv',
     },
     'start_time': {
         'v0': '12:00',
         'v1': '08:00',
         'v2': '08:00',
         'v3': '00:04',
+        'v4': '00:00',
     },
     'duration': {  # In number of hours
         'v0': 3,
         'v1': 12,
         'v2': 12,
         'v3': 24,
+        'v4': 24,
     },
     'min_transfer_time':  2,
     'max_transfer_time': 30,
@@ -34,18 +37,21 @@ VERSION_SETTINGS = {
         'v1': 'whole_day_data',
         'v2': 'explore_set',
         'v3': 'real_event',
+        'v4': 'aftermath',
     },
     'day_of_run': {
         'v0': '2025-08-02',  # Day where the train times come from
         'v1': '2025-10-04',
         'v2': '2026-07-25',  # Saturday, for 11-hour run
         'v3': '2026-08-29',  # Saturday, for 24-hour run
+        'v4': '2026-09-19',  # Saturday, actual 24-hour competition run
     },
     'datetime_format': {
         'v0': 'ISO8601',  # YYYY-MM-DDThh:mm:ss (or similar!)
         'v1': 'ISO8601',  # 'RFC3339'
         'v2': 'ISO8601',  # 'RFC3339'
         'v3': 'ISO8601',  # 'RFC3339'
+        'v4': 'ISO8601',  # 'RFC3339'
     },
     'stamp': {
         'v0': {'need_stamp': False},
@@ -61,14 +67,20 @@ VERSION_SETTINGS = {
             'start_time': '11:00',
             'end_time': '15:00',
             'station': 'Rtd',  # Rotterdam Centraal
-        }
+        },
+        'v4': {
+            'need_stamp': True,
+            'start_time': '11:00',
+            'end_time': '15:00',
+            'station': 'Rtd',  # Rotterdam Centraal
+        },
     }
 }
 
 
 @dataclass
 class Parameters:
-    VERSION: str = VERSION  # 'v0' / 'v1' / 'v2' / 'v3'
+    VERSION: str = VERSION  # 'v0' / 'v1' / 'v2' / 'v3' / 'v4'
     START_STATION: str = VERSION_SETTINGS['start_station'][VERSION]
     START_TIME: str = VERSION_SETTINGS['start_time'][VERSION]
     DURATION: str = VERSION_SETTINGS['duration'][VERSION]

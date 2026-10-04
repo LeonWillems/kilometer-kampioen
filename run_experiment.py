@@ -11,15 +11,18 @@ from settings import Parameters, VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 # Run each for x seconds
-Parameters.TIMEOUT = 30
+Parameters.TIMEOUT = 300
 
 # List of starting conditions. Fill in either this one, or the two variables
 # below. This one should be of type list[tuple] = [('Ht', '00:00'), ...]
-STARTING_CONDITIONS = None
+STARTING_CONDITIONS = [
+    ('Gvc', '00:10'), ('Ah', '00:00'), ('Ehv', '00:27'), ('Gn', '01:41'),
+    ('Asn', '00:05')
+]
 
 # Lists of starting stations & times. Both list of strings
-STARTING_STATIONS = ['Ut', 'Rtd']
-STARTING_TIMES = ['00:00', '00:30']
+STARTING_STATIONS = []
+STARTING_TIMES = []
 
 
 def get_starting_conditions() -> list[tuple]:

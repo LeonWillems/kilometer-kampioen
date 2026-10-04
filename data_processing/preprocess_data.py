@@ -20,3 +20,7 @@ def perform_preprocesing():
         case 'v3':
             from data.v3 import preprocessing_v3
             preprocessing_v3.preprocess()
+
+        case 'v4':
+            from data.v4 import preprocessing_v4
+            preprocessing_v4.preprocess()

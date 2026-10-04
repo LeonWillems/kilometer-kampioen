@@ -98,8 +98,7 @@ def _run_algo(
             print("Run from save only available from v2 onwards")
 
         case 'v0' | 'v1' if route_df is None:
-            from route_finding.archive.v0v1_greedy_dfs \
-                import run_greedy_dfs
+            from route_finding.archive.v0v1_greedy_dfs import run_greedy_dfs
             run_greedy_dfs(run_path)
 
         case 'v2':
@@ -107,7 +106,11 @@ def _run_algo(
             run_explore_set(run_path, route_df, time_int)
 
         case 'v3':
-            from route_finding.v3_explore_set import run_explore_set
+            from route_finding.archive.v3_explore_set import run_explore_set
+            run_explore_set(run_path, route_df, time_int)
+
+        case 'v4':
+            from route_finding.v4_explore_set import run_explore_set
             run_explore_set(run_path, route_df, time_int)
 
 
