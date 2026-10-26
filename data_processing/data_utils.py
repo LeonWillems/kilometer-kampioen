@@ -110,9 +110,7 @@ def load_stations() -> pd.DataFrame:
     Returns:
     - pd.DataFrame
     """
-    all_stations = read_csv_to_df(
-        path_to_file=SETTINGS.STATIONS_PATH
-    )
+    all_stations = read_csv_to_df(path_to_file=SETTINGS.STATIONS_PATH)
     return all_stations
 
 
