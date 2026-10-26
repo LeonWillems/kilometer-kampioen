@@ -21,7 +21,7 @@ VERSION_SETTINGS = {
         'v1': '08:00',
         'v2': '08:00',
         'v3': '00:04',
-        'v4': '00:00',
+        'v4': '01:42',
     },
     'duration': {  # In number of hours
         'v0': 3,
@@ -30,8 +30,8 @@ VERSION_SETTINGS = {
         'v3': 24,
         'v4': 24,
     },
-    'min_transfer_time':  2,
-    'max_transfer_time': 30,
+    'min_transfer_time':  1,
+    'max_transfer_time': 90,
     'name': {
         'v0': 'greedy_dfs',
         'v1': 'whole_day_data',
