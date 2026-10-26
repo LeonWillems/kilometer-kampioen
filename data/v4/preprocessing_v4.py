@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 
 from data_processing.data_utils import (
@@ -93,7 +94,34 @@ def clean_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
     return df_filtered_cols
 
 
-def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
+def _transform_indicator_list(indicator_list: list[int]) -> list[tuple[int]]:
+    """Turns a list of indicator into a list of pairs, each pair containing
+    the indices of consecutive ones. Example:
+    [0, 1, 1, 0, 0, 0, 1, 0, 1] -> [(1,2), (2,6), (6,8)]
+
+    Args:
+    - indicator_list (list[int]): List of ones and zeroes
+
+    Returns:
+    - list[tuple[int]]: List of two-sized tuples (pairs). Each pair being the
+        indices of consecutive ones in the original list
+    """
+    indicator_tuples = []
+    previous_i = 10**10
+
+    for i, indicator in enumerate(indicator_list):
+        if indicator:
+            if i > previous_i:
+                indicator_tuples.append((previous_i, i))
+            previous_i = i
+
+    return indicator_tuples
+
+
+def structure_data(
+    timetable_df: pd.DataFrame,
+    knooppunt_indicator_mapping: dict[str, int]
+) -> pd.DataFrame:
     """Restructure the data. Before: each line represents a stop at a station,
     with train data, station, arrival & departue et cetera. After: each line
     represents a section from one station to another (between two stops).
@@ -132,12 +160,18 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
         service_type = section_rows.loc[0, 'Service:Type']
         mapped_train_type = TRAIN_TYPE_MAPPING[service_type]
 
-        # Turn each consecutive pair into a row for the new dataset
-        for i in range(len(section_rows) - 1):
+        # Get list of knooppunt indicators for current section
+        knooppunt_indicators = [
+            knooppunt_indicator_mapping[station_code.capitalize()]
+            for station_code in section_rows['Stop:Station code'].to_list()
+        ]
+        indicator_index_pairs = _transform_indicator_list(knooppunt_indicators)
+
+        for i, j in indicator_index_pairs:
             from_station = \
                 section_rows.loc[i, 'Stop:Station code'].capitalize()
             to_station = \
-                section_rows.loc[i+1, 'Stop:Station code'].capitalize()
+                section_rows.loc[j, 'Stop:Station code'].capitalize()
 
             # Process datetimes
             departure_time = pd.to_datetime(
@@ -145,10 +179,10 @@ def structure_data(timetable_df: pd.DataFrame) -> pd.DataFrame:
                 format=SETTINGS.DATETIME_FORMAT,
             )
             arrival_time = pd.to_datetime(
-                section_rows.loc[i+1, 'Stop:Arrival time'],
+                section_rows.loc[j, 'Stop:Arrival time'],
                 format=SETTINGS.DATETIME_FORMAT,
             )
-            stop_id = section_rows.loc[i+1, 'Stop:RDT-ID']
+            stop_id = section_rows.loc[j, 'Stop:RDT-ID']
 
             # Each connection will appear as one line in the new dataset
             new_df_lines.append([
@@ -178,12 +212,18 @@ def filter_empty_dates(df: pd.DataFrame) -> pd.DataFrame:
 def preprocess():
     """Function to preprocess the raw dataset."""
     raw_file_name = 'services-2026-09.csv'
+    indicator_file_name = 'knooppunt_indicator.json'
+
     path_to_raw_file = SETTINGS.DATA_PATH / raw_file_name
     path_to_timetable = SETTINGS.DATA_PATH / SETTINGS.TIMETABLE_FILE
 
+    path_to_indicator = SETTINGS.DATA_PATH / indicator_file_name
+    with open(path_to_indicator, mode='r') as f:
+        knooppunt_indicator_mapping = json.load(f)
+
     raw_df = read_csv_to_df(path_to_raw_file)
     cleaned_df = clean_data(raw_df)
-    structured_df = structure_data(cleaned_df)
+    structured_df = structure_data(cleaned_df, knooppunt_indicator_mapping)
     filtered_df = filter_empty_dates(structured_df)
 
     save_timetable(

@@ -17,7 +17,7 @@ Parameters.TIMEOUT = 300
 # below. This one should be of type list[tuple] = [('Ht', '00:00'), ...]
 STARTING_CONDITIONS = [
     ('Gvc', '00:10'), ('Ah', '00:00'), ('Ehv', '00:27'), ('Gn', '01:41'),
-    ('Asn', '00:05')
+    ('Asn', '00:05'),
 ]
 
 # Lists of starting stations & times. Both list of strings

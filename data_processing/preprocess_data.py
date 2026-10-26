@@ -22,5 +22,7 @@ def perform_preprocesing():
             preprocessing_v3.preprocess()
 
         case 'v4':
+            from data.v4 import process_station_types
             from data.v4 import preprocessing_v4
+            process_station_types.process()
             preprocessing_v4.preprocess()
