@@ -1,0 +1,98 @@
+11:38:19 - INFO - Starting new route finding run with parameters:
+Version: v4 (aftermath)
+Duration: 24 hours
+Transfer time range: 1-90 minutes
+11:38:19 - INFO - Starting new route finding run with parameters:
+Current station: Mp
+Current time: 2026-09-19 00:03:00
+
+11:38:19 - INFO - New best route found! Distance: 225.9km  (+225.9km)
+11:38:19 - INFO - New best route found! Distance: 275.9km  (+50.0km)
+11:38:19 - INFO - New best route found! Distance: 300.8km  (+24.9km)
+11:38:19 - INFO - New best route found! Distance: 329.3km  (+28.5km)
+11:38:19 - INFO - New best route found! Distance: 346.7km  (+17.4km)
+11:38:19 - INFO - New best route found! Distance: 348.9km  (+2.2km)
+11:38:19 - INFO - New best route found! Distance: 365.7km  (+16.8km)
+11:38:19 - INFO - New best route found! Distance: 373.5km  (+7.8km)
+11:38:19 - INFO - New best route found! Distance: 389.3km  (+15.8km)
+11:38:19 - INFO - New best route found! Distance: 396.7km  (+7.4km)
+11:38:19 - INFO - New best route found! Distance: 411.6km  (+14.9km)
+11:38:19 - INFO - New best route found! Distance: 459.4km  (+47.8km)
+11:38:19 - INFO - New best route found! Distance: 473.7km  (+14.3km)
+11:38:19 - INFO - New best route found! Distance: 481.5km  (+7.8km)
+11:38:19 - INFO - New best route found! Distance: 515.9km  (+34.4km)
+11:38:19 - INFO - New best route found! Distance: 569.5km  (+53.6km)
+11:38:19 - INFO - New best route found! Distance: 593.9km  (+24.4km)
+11:38:19 - INFO - New best route found! Distance: 615.8km  (+21.9km)
+11:38:19 - INFO - New best route found! Distance: 624.2km  (+8.4km)
+11:38:19 - INFO - New best route found! Distance: 626.8km  (+2.6km)
+11:38:19 - INFO - New best route found! Distance: 645.4km  (+18.6km)
+11:38:19 - INFO - New best route found! Distance: 651.5km  (+6.1km)
+11:38:19 - INFO - New best route found! Distance: 674.6km  (+23.1km)
+11:38:19 - INFO - New best route found! Distance: 691.0km  (+16.4km)
+11:38:19 - INFO - New best route found! Distance: 718.3km  (+27.3km)
+11:38:19 - INFO - New best route found! Distance: 720.3km  (+2.0km)
+11:38:19 - INFO - New best route found! Distance: 720.7km  (+0.4km)
+11:38:19 - INFO - New best route found! Distance: 729.9km  (+9.2km)
+11:38:19 - INFO - New best route found! Distance: 787.2km  (+57.3km)
+11:38:19 - INFO - New best route found! Distance: 803.2km  (+16.0km)
+11:38:19 - INFO - New best route found! Distance: 830.9km  (+27.7km)
+11:38:19 - INFO - New best route found! Distance: 839.0km  (+8.1km)
+11:38:19 - INFO - New best route found! Distance: 855.6km  (+16.6km)
+11:38:19 - INFO - New best route found! Distance: 896.5km  (+40.9km)
+11:38:19 - INFO - New best route found! Distance: 903.1km  (+6.6km)
+11:38:19 - INFO - New best route found! Distance: 918.1km  (+15.0km)
+11:38:19 - INFO - New best route found! Distance: 920.5km  (+2.4km)
+11:38:19 - INFO - New best route found! Distance: 955.0km  (+34.5km)
+11:38:19 - INFO - New best route found! Distance: 1008.6km  (+53.6km)
+11:38:19 - INFO - New best route found! Distance: 1033.0km  (+24.4km)
+11:38:19 - INFO - New best route found! Distance: 1054.9km  (+21.9km)
+11:38:19 - INFO - New best route found! Distance: 1063.3km  (+8.4km)
+11:38:19 - INFO - New best route found! Distance: 1065.9km  (+2.6km)
+11:38:19 - INFO - New best route found! Distance: 1109.0km  (+43.1km)
+11:38:19 - INFO - New best route found! Distance: 1136.8km  (+27.8km)
+11:38:19 - INFO - New best route found! Distance: 1144.0km  (+7.2km)
+11:38:19 - INFO - New best route found! Distance: 1166.4km  (+22.4km)
+11:38:19 - INFO - New best route found! Distance: 1191.3km  (+24.9km)
+11:38:19 - INFO - New best route found! Distance: 1191.3km  (+0.0km)
+11:38:19 - INFO - New best route found! Distance: 1208.4km  (+17.1km)
+11:38:19 - INFO - New best route found! Distance: 1214.8km  (+6.4km)
+11:38:19 - INFO - New best route found! Distance: 1257.8km  (+43.0km)
+11:38:20 - INFO - New best route found! Distance: 1274.3km  (+16.5km)
+11:38:20 - INFO - New best route found! Distance: 1280.7km  (+6.4km)
+11:38:20 - INFO - New best route found! Distance: 1323.7km  (+43.0km)
+11:38:20 - INFO - New best route found! Distance: 1364.6km  (+40.9km)
+11:38:20 - INFO - New best route found! Distance: 1386.2km  (+21.6km)
+11:38:20 - INFO - New best route found! Distance: 1388.6km  (+2.4km)
+11:38:20 - INFO - New best route found! Distance: 1423.1km  (+34.5km)
+11:38:20 - INFO - New best route found! Distance: 1476.7km  (+53.6km)
+11:38:20 - INFO - New best route found! Distance: 1501.1km  (+24.4km)
+11:38:20 - INFO - New best route found! Distance: 1523.0km  (+21.9km)
+11:38:20 - INFO - New best route found! Distance: 1531.4km  (+8.4km)
+11:38:20 - INFO - New best route found! Distance: 1534.0km  (+2.6km)
+11:38:22 - INFO - New best route found! Distance: 1559.2km  (+25.2km)
+11:38:22 - INFO - New best route found! Distance: 1580.8km  (+21.6km)
+11:38:22 - INFO - New best route found! Distance: 1583.2km  (+2.4km)
+11:38:22 - INFO - New best route found! Distance: 1617.7km  (+34.5km)
+11:38:22 - INFO - New best route found! Distance: 1671.3km  (+53.6km)
+11:38:22 - INFO - New best route found! Distance: 1695.7km  (+24.4km)
+11:38:22 - INFO - New best route found! Distance: 1717.6km  (+21.9km)
+11:38:32 - INFO - New best route found! Distance: 1724.2km  (+6.6km)
+11:38:43 - INFO - New best route found! Distance: 1743.0km  (+18.8km)
+11:38:44 - INFO - New best route found! Distance: 1749.7km  (+6.7km)
+11:38:44 - INFO - New best route found! Distance: 1762.1km  (+12.4km)
+11:39:26 - INFO - New best route found! Distance: 1766.6km  (+4.5km)
+11:39:36 - INFO - New best route found! Distance: 1767.8km  (+1.2km)
+11:39:37 - INFO - New best route found! Distance: 1773.6km  (+5.8km)
+11:43:31 - INFO - New best route found! Distance: 1800.5km  (+26.9km)
+11:49:11 - INFO - Interrupt received
+11:49:11 - INFO - Starting new route finding run with parameters:
+Current station: Mp
+Current time: 2026-09-19 00:03:00
+
+11:49:11 - INFO - Saved best route to: C:\VS-Code\Kilometer-Kampioen\kilometer-kampioen\runs\v4\20261029_113819\route_18005.csv
+Number of transfers: 60
+Final distance: 1800.5km
+Total iterations: 57012
+End station: Shl
+End time: 2026-09-20 00:00:00

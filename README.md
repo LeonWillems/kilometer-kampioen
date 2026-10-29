@@ -138,3 +138,19 @@ An example for each version can be found in `runs/example/v_/`
 
 ## Known Limitations
 - Same as for `V2`
+
+# V4
+## Data (see `data/v4/` files)
+- Timeframe: Saturday, 00:00 - Sunday, 04:00 (28 hours)
+- Actual train times for Saturday & Sunday September 19-20th, 2026, which is the date of the event
+- The data has been processed to reduce search space:
+  - Assign a `knooppunt` indicator to all stations; 1 it being a `knooppunt` station, 0 otherwise
+  - Go over each pair of `knooppunt` stations, and aggregate the travel information between them
+  - In other words: a section will from now on be defined between two `knooppunt` stations rather than individual stations
+
+## Algorithm
+- Same as for `V3`
+
+## Known Limitations
+- We might skip intricacies of the network between `knooppunt` stations due to the aggregation of travel information
+- The approach assumes that the main travel decisions are made at `knooppunt` stations, which might not always hold true in practice

@@ -1,6 +1,8 @@
 """
 Code to run an experiment: multiple starting conditions for some amount of time
 each. Will get terminated after this time per run no matter what.
+
+python -m run_experiment
 """
 
 from pathlib import Path
@@ -11,13 +13,13 @@ from settings import Parameters, VersionSettings
 SETTINGS = VersionSettings.get_version_settings()
 
 # Run each for x seconds
-Parameters.TIMEOUT = 300
+Parameters.TIMEOUT = 600
 
 # List of starting conditions. Fill in either this one, or the two variables
 # below. This one should be of type list[tuple] = [('Ht', '00:00'), ...]
 STARTING_CONDITIONS = [
     ('Gvc', '00:10'), ('Ah', '00:00'), ('Ehv', '00:27'), ('Gn', '01:41'),
-    ('Asn', '00:05'),
+    ('Asn', '00:05'), ('Mp', '00:04'),
 ]
 
 # Lists of starting stations & times. Both list of strings
