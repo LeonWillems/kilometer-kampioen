@@ -1,0 +1,29 @@
+11:03:24 - INFO - Starting new route finding run with parameters:
+Version: v4 (aftermath)
+Duration: 24 hours
+Transfer time range: 1-90 minutes
+11:03:24 - INFO - Starting new route finding run with parameters:
+Current station: Ehv
+Current time: 2026-09-19 01:41:00
+
+11:03:24 - INFO - New best route found! Distance: 1536.0km  (+1536.0km)
+11:03:24 - INFO - New best route found! Distance: 1565.6km  (+29.6km)
+11:03:24 - INFO - New best route found! Distance: 1593.4km  (+27.8km)
+11:03:24 - INFO - New best route found! Distance: 1642.8km  (+49.4km)
+11:03:24 - INFO - New best route found! Distance: 1670.5km  (+27.7km)
+11:03:24 - INFO - New best route found! Distance: 1737.0km  (+66.5km)
+11:03:24 - INFO - New best route found! Distance: 1753.0km  (+16.0km)
+11:03:24 - INFO - New best route found! Distance: 1770.7km  (+17.7km)
+11:03:24 - INFO - New best route found! Distance: 1780.7km  (+10.0km)
+11:03:24 - INFO - New best route found! Distance: 1817.1km  (+36.4km)
+11:21:51 - INFO - Interrupt received
+11:21:51 - INFO - Starting new route finding run with parameters:
+Current station: Ehv
+Current time: 2026-09-19 01:41:00
+
+11:21:52 - INFO - Saved best route to: C:\VS Code\kilometer-kampioen\runs\v4\20261106_110324\route_18171.csv
+Number of transfers: 61
+Final distance: 1817.1km
+Total iterations: 446808
+End station: Ht
+End time: 2026-09-20 01:34:00

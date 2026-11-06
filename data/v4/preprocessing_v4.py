@@ -145,7 +145,7 @@ def structure_data(
 
     new_df_lines = []
     new_columns = [
-        'Station', 'To', 'Departure', 'Arrival',
+        'Station', 'Departure', 'Arrival', 'To',
         'Type', 'Section_ID', 'Stop_ID'
     ]
 
@@ -186,7 +186,7 @@ def structure_data(
 
             # Each connection will appear as one line in the new dataset
             new_df_lines.append([
-                from_station, to_station, departure_time, arrival_time,
+                from_station, departure_time, arrival_time, to_station,
                 mapped_train_type, section_id, stop_id,
             ])
 
